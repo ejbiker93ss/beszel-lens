@@ -147,10 +147,7 @@ function SystemCard({ system, selected, onSelect }: { system: SystemRecord; sele
           <strong title={system.name}>{system.name}</strong>
           <span class="uptime">{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</span>
         </div>
-        <div class={`card-condition tone-${risk.tone}`}>
-          <b>{risk.tone === "normal" ? "Within limits" : risk.label}</b>
-          {risk.tone !== "normal" && <small>{risk.detail}</small>}
-        </div>
+        {risk.tone !== "normal" && <div class={`card-condition tone-${risk.tone}`}><b>{risk.label}</b><small>{risk.detail}</small></div>}
       </button>
       <div class="metric-bars" role="group" aria-label={`${system.name} current utilization`}>
         <MetricBar label="CPU" amount={system.info.cpu} />
@@ -172,7 +169,7 @@ function SystemRow({ system, selected, onSelect }: { system: SystemRecord; selec
           <span><strong title={system.name}>{system.name}</strong><small>{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</small></span>
         </button>
       </th>
-      <td class={`row-condition tone-${risk.tone}`}><strong>{risk.tone === "normal" ? "Within limits" : risk.label}</strong></td>
+      <td class={`row-condition tone-${risk.tone}`}>{risk.tone !== "normal" && <strong>{risk.label}</strong>}</td>
       <td><CompactMeter label={`${system.name} CPU`} amount={system.info.cpu} /></td>
       <td><CompactMeter label={`${system.name} RAM`} amount={system.info.mp} /></td>
       <td><div class="row-drives" role="group" aria-label={`${system.name} drive utilization`}>{drives.map((drive, index) => <CompactMeter label={drive.label} amount={drive.value} warning={80} showLabel key={`${drive.label}-${index}`} />)}</div></td>

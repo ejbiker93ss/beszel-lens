@@ -156,7 +156,7 @@ components:
 
 Beszel Lens is a compact field of live instrument cards that uses the full viewport rather than stopping at an arbitrary desktop container. It keeps the calibration-sheet precision of muted paper by day and charcoal instrument surfaces at night, with exact rules, terse labels, and cobalt measurement ink. The result feels operational and composed rather than decorative.
 
-The interface leads with the system that needs attention most. Each card explains why it holds that position in one compact condition line, then exposes CPU, RAM, the primary disk, and every extra drive as semantic utilization bars. Neutral cards form the steady baseline; exception color appears at the border, condition, and individual bars only when warranted. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.
+The interface leads with the system that needs attention most. Exceptional cards explain why they hold that position in one compact condition line, while normal cards stay quiet; every card exposes CPU, RAM, the primary disk, and every extra drive as semantic utilization bars. Neutral cards form the steady baseline; exception color appears at the border, condition, and individual bars only when warranted. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.
 
 **Key Characteristics:**
 
@@ -302,11 +302,11 @@ Four softly rounded, internally divided cells present system count, online count
 
 ### Risk Card
 
-Each card has three dense bands: status/name/uptime, a compact explanation of the dominant risk condition, and a variable-length stack of utilization bars. No large risk number appears in the grid. Cards are ordered from highest risk to lowest. Every card stretches to the tallest card in its visual grid row, keeping row edges aligned even when only some systems report extra drives. Hover brightens and lifts the card; selection adds a cobalt border and ring. Warning and critical states preserve the neutral surface while coloring the border and condition.
+Each card has an identity band and a variable-length stack of utilization bars, with a compact condition band inserted only for actionable or exceptional states. Normal cards carry no redundant “Within limits” label. No large risk number appears in the grid. Cards are ordered from highest risk to lowest. Every card stretches to the tallest card in its visual grid row, keeping row edges aligned even when only some systems report extra drives. Hover brightens and lifts the card; selection adds a cobalt border and ring. Warning and critical states preserve the neutral surface while coloring the border and condition.
 
 ### Compact Row Grid
 
-Row mode is a semantic table with one server per 42px row and stable System, Condition, CPU, RAM, and Drives columns. The system-name control opens the same inline detail panel used by cards. CPU and RAM place their short semantic track and value side by side; every reported drive places its label, track, and value on that same line inside one nonwrapping drives cell. Normal systems say only “Within limits,” without redundant supporting copy. The table scrolls horizontally on narrow viewports instead of collapsing columns or creating multi-line server rows.
+Row mode is a semantic table with one server per 42px row and stable System, Condition, CPU, RAM, and Drives columns. The system-name control opens the same inline detail panel used by cards. CPU and RAM place their short semantic track and value side by side; every reported drive places its label, track, and value on that same line inside one nonwrapping drives cell. Normal systems leave Condition empty; only actionable or exceptional states earn text. The table scrolls horizontally on narrow viewports instead of collapsing columns or creating multi-line server rows.
 
 ### Utilization Bar
 
