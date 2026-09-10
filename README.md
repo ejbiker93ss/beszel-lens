@@ -21,7 +21,7 @@ Lens connects directly from your browser to an existing Beszel Hub. It leaves co
 - Compare current CPU, RAM, and every reported drive with compact, threshold-colored utilization bars.
 - Rank systems by an explainable risk score so likely problems stay at the top.
 - Surface the dominant condition on every card, including offline systems, failed services, high CPU or memory, load, and the fullest primary or extra filesystem.
-- Inspect 1-hour, 12-hour, and 24-hour history.
+- Click anywhere on a server card or row to inspect its uptime, current CPU, RAM, every reported drive, and 1-hour, 12-hour, or 24-hour history.
 - Receive current system updates through PocketBase realtime events.
 - Jump back to Beszel for administration.
 - Use the full browser width with a fluid card grid that grows readings when space is available and collapses cleanly on mobile.

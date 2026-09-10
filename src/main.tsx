@@ -32,10 +32,6 @@ function storedViewMode(): ViewMode {
   }
 }
 
-function value(amount: number | undefined) {
-  return Number.isFinite(amount) ? Math.round(amount as number) : 0
-}
-
 function formatUptime(seconds: number | undefined) {
   if (!seconds) return "—"
   const days = Math.floor(seconds / 86400)
@@ -69,13 +65,16 @@ function usageTone(amount: number | undefined, warning = 75, critical = 90) {
   return "low"
 }
 
-function Gauge({ label, amount, warning = 75 }: { label: string; amount: number; warning?: number }) {
-  const percent = clampPercent(amount)
-  const tone = metricTone(percent, warning)
+function Gauge({ label, accessibleLabel = label, amount, warning = 75 }: { label: string; accessibleLabel?: string; amount: number | undefined; warning?: number }) {
+  const available = Number.isFinite(amount)
+  const rounded = available ? Math.round(amount as number) : undefined
+  const percent = clampPercent(rounded ?? 0)
+  const tone = available ? metricTone(percent, warning) : "unavailable"
+  const meterProps = available ? { "aria-valuenow": percent } : { "aria-valuetext": "Unavailable" }
   return (
     <div class={`gauge ${tone}`}>
-      <div class="gauge-label"><span>{label}</span><strong>{amount}%</strong></div>
-      <div class="gauge-track" aria-label={`${label} ${amount}%`} role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
+      <div class="gauge-label"><span title={accessibleLabel}>{label}</span><strong>{available ? `${rounded}%` : "—"}</strong></div>
+      <div class="gauge-track" aria-label={`${accessibleLabel} usage`} role="meter" aria-valuemin={0} aria-valuemax={100} {...meterProps}>
         <span style={{ transform: `scaleX(${percent / 100})` }} />
       </div>
     </div>
@@ -147,8 +146,8 @@ function SystemCard({ system, selected, onSelect }: { system: SystemRecord; sele
   const risk = assessSystem(system)
   const drives = driveReadings(system)
   return (
-    <article class={`system-card tone-${risk.tone} ${selected ? "selected" : ""}`}>
-      <button class="card-open" type="button" onClick={onSelect} aria-expanded={selected} aria-controls="system-detail" data-system-id={system.id}>
+    <article class={`system-card tone-${risk.tone} ${selected ? "selected" : ""}`} onClick={onSelect}>
+      <button class="card-open" type="button" onClick={(event) => { event.stopPropagation(); onSelect() }} aria-expanded={selected} aria-controls="system-detail" data-system-id={system.id}>
         <div class="card-header">
           <span class={`status-mark ${system.status}`} />
           <strong title={system.name}>{system.name}</strong>
@@ -169,9 +168,9 @@ function SystemRow({ system, selected, onSelect }: { system: SystemRecord; selec
   const risk = assessSystem(system)
   const drives = driveReadings(system)
   return (
-    <tr class={`system-row tone-${risk.tone} ${selected ? "selected" : ""}`}>
+    <tr class={`system-row tone-${risk.tone} ${selected ? "selected" : ""}`} onClick={onSelect}>
       <th scope="row">
-        <button class="row-open" type="button" onClick={onSelect} aria-expanded={selected} aria-controls="system-detail" data-system-id={system.id}>
+        <button class="row-open" type="button" onClick={(event) => { event.stopPropagation(); onSelect() }} aria-expanded={selected} aria-controls="system-detail" data-system-id={system.id}>
           <span class={`status-mark ${system.status}`} />
           <span><strong title={system.name}>{system.name}</strong><small>{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</small></span>
         </button>
@@ -195,17 +194,20 @@ function DetailPanel({ system, stats, range, loading, error, onRange, onReload, 
   onClose: () => void
 }) {
   const risk = assessSystem(system)
+  const drives = driveReadings(system)
+  const uptime = system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status
+  const systemSummary = [system.info.o || "System", system.info.m, uptime].filter(Boolean).join(" · ")
   return (
     <section class="detail-panel" id="system-detail" aria-label={`${system.name} details`}>
       <div class="detail-heading">
-        <div><span class={`status-mark ${system.status}`} /><div><h2>{system.name}</h2><p>{system.info.o || "System"}{system.info.m ? ` · ${system.info.m}` : ""}</p></div></div>
+        <div><span class={`status-mark ${system.status}`} /><div><h2>{system.name}</h2><p>{systemSummary}</p></div></div>
         <button class="close-button" type="button" onClick={onClose}><CloseIcon /> Close</button>
       </div>
       <div class={`detail-alert tone-${risk.tone}`}><span>{risk.label}</span><strong>{risk.value}</strong>{risk.detail && <small>{risk.detail}</small>}</div>
       <div class="gauges">
-        <Gauge label="CPU" amount={value(system.info.cpu)} />
-        <Gauge label="Memory" amount={value(system.info.mp)} />
-        <Gauge label="Disk" amount={value(system.info.dp)} warning={80} />
+        <Gauge label="CPU" amount={system.info.cpu} />
+        <Gauge label="RAM" accessibleLabel="Memory" amount={system.info.mp} />
+        {drives.map((drive, index) => <Gauge label={compactDriveLabel(drive.label, drive.primary)} accessibleLabel={drive.label} amount={drive.value} warning={80} key={`${drive.label}-${index}`} />)}
       </div>
       <div class="history-heading">
         <div><h3>Utilization history</h3><span>{loading ? "Loading readings…" : `${stats.length} readings`}</span></div>

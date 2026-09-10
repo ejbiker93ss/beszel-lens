@@ -156,7 +156,7 @@ components:
 
 Beszel Lens is a compact field of live instrument cards that uses the full viewport rather than stopping at an arbitrary desktop container. It keeps the calibration-sheet precision of muted paper by day and charcoal instrument surfaces at night, with exact rules, terse labels, and cobalt measurement ink. The result feels operational and composed rather than decorative.
 
-The interface leads with the system that needs attention most. Exceptional cards explain why they hold that position in one compact condition line, while normal cards stay quiet; every card exposes CPU, RAM, the primary disk, and every extra drive as semantic utilization bars. Neutral cards form the steady baseline; exception color appears at the border, condition, and individual bars only when warranted. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.
+The interface leads with the system that needs attention most. Exceptional cards explain why they hold that position in one compact condition line, while normal cards stay quiet; every card exposes CPU, RAM, the primary disk, and every extra drive as semantic utilization bars. Neutral cards form the steady baseline; exception color appears at the border, condition, and individual bars only when warranted. Clicking anywhere on a card or row expands a nonmodal inspection panel directly above the fleet while preserving its ranked order. The panel identifies the system and uptime, then shows current CPU, RAM, and every reported drive before the historical CPU, memory, and primary-disk graph. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.
 
 **Key Characteristics:**
 
@@ -168,7 +168,7 @@ The interface leads with the system that needs attention most. Exceptional cards
 - Fourteen-pixel cards and nine-pixel controls soften the instrument language without becoming pill-heavy.
 - Compact condition copy explains rank without a large risk number.
 - Circular status marks and size-responsive, fully capped utilization bars provide live-state cues.
-- A full-width inline detail panel places current and historical readings directly before the ranked grid.
+- A full-width inline detail panel places system identity, uptime, all current utilization, and historical readings directly before the ranked grid.
 
 ## Colors
 
@@ -242,7 +242,7 @@ The dashboard occupies the full viewport width with fluid 10–28px horizontal p
 
 Cards establish an inline-size container so header type and utilization-track thickness respond to the actual card width rather than only the viewport. Every CSS-grid row stretches its cards to the tallest card in that row, so systems without extra drives retain a complete aligned card surface. The navigation's Cards/Rows switch is stored locally and changes only presentation, never risk order or selection. Row mode uses a compact table with one 42px server row and columns for identity, condition, CPU, RAM, and drives; identity, condition, tracks, labels, and values all stay in one horizontal band. The condition column takes 16% of the table while drives receive 46%, prioritizing live telemetry over short status labels. Extra drives remain on that same row and overflow horizontally inside their cell when necessary. At 720px, the summary becomes three count cells with refresh spanning the next row. At 520px, the card grid becomes a single full-width column, navigation switch labels disappear while its icons retain 44px touch targets, the external action becomes icon-only, gauges stack, and range tabs stretch across the detail panel. The row table preserves its compact desktop geometry inside deliberate horizontal overflow. The history plot keeps a 520px minimum width inside deliberate horizontal overflow.
 
-Selecting a card inserts a full-width detail panel between the priority heading and the card grid. The panel participates in normal document flow, remains nonmodal, and leaves every fleet card available below it. Closing the panel removes that inspection region without changing risk order.
+Clicking anywhere on a card or row inserts a full-width detail panel between the priority heading and the fleet. The system-name control remains the keyboard entry point. The panel participates in normal document flow, remains nonmodal, and leaves every fleet item available below it. It shows identity, uptime, current CPU, RAM, and all reported drives above the CPU, memory, and primary-disk history graph. Closing the panel removes that inspection region without changing risk order.
 
 ## Elevation & Depth
 

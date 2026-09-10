@@ -171,7 +171,7 @@ a { color: inherit; text-underline-offset: 3px; }
 .fleet-heading > span { color: var(--muted); font: 0.7rem ui-monospace, SFMono-Regular, Consolas, monospace; }
 
 .system-grid, .card-skeleton { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(clamp(230px, 14vw, 320px), 100%), 1fr)); gap: clamp(8px, 0.7vw, 14px); align-items: stretch; }
-.system-card { min-width: 0; height: 100%; display: grid; align-content: start; gap: 12px; padding: clamp(11px, 0.8vw, 16px); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); overflow: hidden; container-type: inline-size; transition: border-color 150ms ease-out, background 150ms ease-out, transform 150ms ease-out, box-shadow 150ms ease-out; }
+.system-card { min-width: 0; height: 100%; display: grid; align-content: start; gap: 12px; padding: clamp(11px, 0.8vw, 16px); border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--paper); overflow: hidden; cursor: pointer; container-type: inline-size; transition: border-color 150ms ease-out, background 150ms ease-out, transform 150ms ease-out, box-shadow 150ms ease-out; }
 .system-card:hover { border-color: var(--line-strong); background: var(--paper-raised); transform: translateY(-1px); box-shadow: var(--card-shadow); }
 .system-card.selected { border-color: var(--blue); box-shadow: 0 0 0 2px color-mix(in srgb, var(--blue) 20%, transparent); }
 .system-card.tone-warning { border-color: color-mix(in srgb, var(--orange) 58%, transparent); }
@@ -213,6 +213,7 @@ a { color: inherit; text-underline-offset: 3px; }
 .system-table th:nth-child(2) { width: 16%; }
 .system-table th:nth-child(3), .system-table th:nth-child(4) { width: 9%; }
 .system-table th:nth-child(5) { width: 46%; }
+.system-row { cursor: pointer; }
 .system-row > th, .system-row > td { height: 42px; padding: 5px 12px; border-top: 1px solid var(--line); vertical-align: middle; }
 .system-row:first-child > th, .system-row:first-child > td { border-top: 0; }
 .system-row:hover { background: var(--paper-raised); }
@@ -259,8 +260,8 @@ a { color: inherit; text-underline-offset: 3px; }
 .detail-alert.tone-critical { background: var(--error-wash); color: var(--critical-ink); }
 .detail-alert.tone-warning small, .detail-alert.tone-critical small { color: currentColor; opacity: 0.75; }
 
-.gauges { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.gauge { padding: 14px 15px 16px; border-right: 1px solid var(--line); }
+.gauges { display: flex; overflow-x: auto; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.gauge { min-width: 150px; flex: 1 0 150px; padding: 14px 15px 16px; border-right: 1px solid var(--line); }
 .gauge:last-child { border-right: 0; }
 .gauge-label { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
 .gauge-label span { color: var(--muted); font: 0.66rem ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: 0.06em; }
@@ -269,6 +270,8 @@ a { color: inherit; text-underline-offset: 3px; }
 .gauge-track span { display: block; width: 100%; height: 100%; background: var(--blue); transform-origin: left; transition: transform 350ms cubic-bezier(.2,.8,.2,1); border-radius: inherit; }
 .gauge.warning .gauge-track span { background: var(--orange); }
 .gauge.critical .gauge-track span { background: var(--red); }
+.gauge.unavailable .gauge-track { background: repeating-linear-gradient(135deg, var(--track) 0 4px, var(--surface-hover) 4px 8px); }
+.gauge.unavailable .gauge-label strong { color: var(--muted); }
 
 .history-heading { padding: 16px 15px 2px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 .history-heading > div:first-child { min-width: 0; }
@@ -349,7 +352,7 @@ a { color: inherit; text-underline-offset: 3px; }
   .system-grid, .card-skeleton { grid-template-columns: 1fr; gap: 8px; }
   .detail-heading { align-items: flex-start; }
   .detail-heading p { max-width: 42vw; }
-  .gauges { grid-template-columns: 1fr; }
+  .gauges { display: grid; grid-template-columns: 1fr; overflow: visible; }
   .gauge { border-right: 0; border-bottom: 1px solid var(--line); }
   .gauge:last-child { border-bottom: 0; }
   .history-heading { align-items: flex-start; flex-direction: column; }
