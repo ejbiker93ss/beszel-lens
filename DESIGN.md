@@ -141,6 +141,11 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.card}"
     width: "100%"
+  system-table:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.card}"
+    rowHeight: "58px"
 ---
 
 # Design System: Beszel Lens
@@ -158,6 +163,7 @@ The interface leads with the system that needs attention most. Each card explain
 - A full-viewport auto-fill grid fluidly targets 230–320px cards and puts the highest-risk system first.
 - Automatic light and dark palettes follow the operating system without a manual mode toggle.
 - Desktop navigation stays off-canvas until the pointer reaches the top edge or keyboard focus enters it; touch navigation remains visible.
+- A persistent Cards/Rows switch in the navigation offers either equal-height telemetry cards or one compact server per data-grid row.
 - Warm neutral surfaces carry normal state; color is concentrated on interaction and exceptions.
 - Fourteen-pixel cards and nine-pixel controls soften the instrument language without becoming pill-heavy.
 - Compact condition copy explains rank without a large risk number.
@@ -234,7 +240,7 @@ Dark mode replaces the paper field with charcoal canvas and instrument surfaces 
 
 The dashboard occupies the full viewport width with fluid 10–28px horizontal padding. On precise-pointer devices, the low ruled header is a fixed overlay translated fully above the viewport; a transparent 22px top-edge proximity zone, pointer hover, or keyboard focus reveals it without moving the fleet. Touch and non-hover devices retain the header in normal flow. The rounded fleet summary therefore leads the resting desktop view directly into the priority grid. The fleet uses `auto-fill` tracks whose target minimum is itself fluid from 230px to 320px (`clamp(230px, 14vw, 320px)`), while never exceeding the available width. Gaps scale from 8px to 14px. Risk tone, weighted score, name, and stable ID determine DOM and reading order.
 
-Cards establish an inline-size container so header type and utilization-track thickness respond to the actual card width rather than only the viewport. At 720px, the summary becomes three count cells with refresh spanning the next row. At 520px, the grid becomes a single full-width column, the external action becomes icon-only, gauges stack, and range tabs stretch across the detail panel. The history plot keeps a 520px minimum width inside deliberate horizontal overflow.
+Cards establish an inline-size container so header type and utilization-track thickness respond to the actual card width rather than only the viewport. Every CSS-grid row stretches its cards to the tallest card in that row, so systems without extra drives retain a complete aligned card surface. The navigation's Cards/Rows switch is stored locally and changes only presentation, never risk order or selection. Row mode uses a compact table with one 58px server row and columns for identity, condition, CPU, RAM, and drives; extra drives remain on the same row and overflow horizontally inside their cell when necessary. At 720px, the summary becomes three count cells with refresh spanning the next row. At 520px, the card grid becomes a single full-width column, navigation switch labels disappear while its icons retain 44px touch targets, the external action becomes icon-only, gauges stack, and range tabs stretch across the detail panel. The row table preserves its compact desktop geometry inside deliberate horizontal overflow. The history plot keeps a 520px minimum width inside deliberate horizontal overflow.
 
 Selecting a card inserts a full-width detail panel between the priority heading and the card grid. The panel participates in normal document flow, remains nonmodal, and leaves every fleet card available below it. Closing the panel removes that inspection region without changing risk order.
 
@@ -288,7 +294,7 @@ Circular geometry is reserved for live indicators and motion tracks: status mark
 
 ### Navigation
 
-The top bar is a low, bottom-ruled instrument header. On mouse and trackpad systems it remains completely off-canvas until the pointer reaches the top 22px or focus enters a control, then arrives as a fixed overlay with a short ease-out transition. It hides again when pointer and focus leave. Touch systems keep it visible so navigation never depends on hover. The brand index uses cobalt mono text; product name and actions remain neutral. External navigation is labeled on wider screens and collapses to a 40px icon target below 520px.
+The top bar is a low, bottom-ruled instrument header. On mouse and trackpad systems it remains completely off-canvas until the pointer reaches the top 22px or focus enters a control, then arrives as a fixed overlay with a short ease-out transition. It hides again when pointer and focus leave. Touch systems keep it visible so navigation never depends on hover. A compact two-option Cards/Rows segmented control changes fleet presentation and uses `aria-pressed` to expose its current state. The brand index uses cobalt mono text; product name and actions remain neutral. Below 520px the view labels disappear while their authored grid/row icons remain in 44px targets, and the external action becomes icon-only.
 
 ### Fleet Summary
 
@@ -296,7 +302,11 @@ Four softly rounded, internally divided cells present system count, online count
 
 ### Risk Card
 
-Each card has three dense bands: status/name/uptime, a compact explanation of the dominant risk condition, and a variable-length stack of utilization bars. No large risk number appears in the grid. Cards are ordered from highest risk to lowest. Hover brightens and lifts the card; selection adds a cobalt border and ring. Warning and critical states preserve the neutral surface while coloring the border and condition.
+Each card has three dense bands: status/name/uptime, a compact explanation of the dominant risk condition, and a variable-length stack of utilization bars. No large risk number appears in the grid. Cards are ordered from highest risk to lowest. Every card stretches to the tallest card in its visual grid row, keeping row edges aligned even when only some systems report extra drives. Hover brightens and lifts the card; selection adds a cobalt border and ring. Warning and critical states preserve the neutral surface while coloring the border and condition.
+
+### Compact Row Grid
+
+Row mode is a semantic table with one server per 58px row and stable System, Condition, CPU, RAM, and Drives columns. The system-name control opens the same inline detail panel used by cards. CPU and RAM use short semantic meters; every reported drive appears as a labeled mini-meter within a single nonwrapping drives cell. The table scrolls horizontally on narrow viewports instead of collapsing columns or creating multi-line server rows.
 
 ### Utilization Bar
 
@@ -325,6 +335,8 @@ Gauges use five-pixel fully capped tracks. Fill changes from cobalt to warning o
 - **Do** honor reduced-motion preferences while keeping default transitions brief and mechanical.
 - **Do** follow the operating-system color preference and preserve semantic meaning and contrast in both palettes.
 - **Do** keep top-bar actions keyboard-accessible and permanently visible on devices without hover.
+- **Do** stretch every card to the tallest card in its CSS-grid row.
+- **Do** preserve identical risk ordering, selection, and telemetry in Cards and Rows views.
 
 ### Don't:
 
@@ -337,3 +349,4 @@ Gauges use five-pixel fully capped tracks. Fill changes from cobalt to warning o
 - **Don't** collapse the chart's information density on mobile; preserve the plot and allow deliberate horizontal inspection.
 - **Don't** imply that Beszel Lens replaces Beszel administration or is an official Beszel product.
 - **Don't** make critical navigation depend on hover for touch or keyboard users.
+- **Don't** let extra drives wrap a server into multiple table rows; contain horizontal overflow within the drives cell.

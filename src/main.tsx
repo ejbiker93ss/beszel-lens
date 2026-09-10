@@ -16,9 +16,21 @@ import {
   type TimeRange,
 } from "./beszel"
 import { MetricChart } from "./chart"
-import { CloseIcon, ExternalIcon, LogoutIcon, RefreshIcon, ServerIcon } from "./icons"
+import { CloseIcon, ExternalIcon, GridIcon, LogoutIcon, RefreshIcon, RowsIcon, ServerIcon } from "./icons"
 import { assessSystem, driveReadings, rankSystems } from "./risk"
 import "./styles.css"
+
+type ViewMode = "cards" | "rows"
+
+const viewModeKey = "beszel-lens-view"
+
+function storedViewMode(): ViewMode {
+  try {
+    return localStorage.getItem(viewModeKey) === "rows" ? "rows" : "cards"
+  } catch {
+    return "cards"
+  }
+}
 
 function value(amount: number | undefined) {
   return Number.isFinite(amount) ? Math.round(amount as number) : 0
@@ -80,6 +92,23 @@ function MetricBar({ label, amount, warning = 75 }: { label: string; amount: num
   )
 }
 
+function CompactMeter({ label, amount, warning = 75, showLabel = false }: { label: string; amount: number | undefined; warning?: number; showLabel?: boolean }) {
+  const available = Number.isFinite(amount)
+  const rounded = available ? Math.round(amount as number) : undefined
+  const percent = clampPercent(rounded ?? 0)
+  const tone = usageTone(rounded, warning)
+  const meterProps = available ? { "aria-valuenow": percent } : { "aria-valuetext": "Unavailable" }
+
+  return (
+    <div class={`compact-meter ${tone}`}>
+      <div class="compact-meter-label">{showLabel && <span title={label}>{label}</span>}<strong>{available ? `${rounded}%` : "—"}</strong></div>
+      <div class="compact-meter-track" role="meter" aria-label={`${label} usage`} aria-valuemin={0} aria-valuemax={100} {...meterProps}>
+        <span style={{ transform: `scaleX(${percent / 100})` }} />
+      </div>
+    </div>
+  )
+}
+
 function Login({ onConnect, busy, error }: { onConnect: (hub: string, email: string, password: string) => void; busy: boolean; error: string }) {
   const [hub, setHub] = useState(storedHubUrl())
   const [email, setEmail] = useState("")
@@ -131,6 +160,25 @@ function SystemCard({ system, selected, onSelect }: { system: SystemRecord; sele
   )
 }
 
+function SystemRow({ system, selected, onSelect }: { system: SystemRecord; selected: boolean; onSelect: () => void }) {
+  const risk = assessSystem(system)
+  const drives = driveReadings(system)
+  return (
+    <tr class={`system-row tone-${risk.tone} ${selected ? "selected" : ""}`}>
+      <th scope="row">
+        <button class="row-open" type="button" onClick={onSelect} aria-expanded={selected} aria-controls="system-detail" data-system-id={system.id}>
+          <span class={`status-mark ${system.status}`} />
+          <span><strong title={system.name}>{system.name}</strong><small>{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</small></span>
+        </button>
+      </th>
+      <td class={`row-condition tone-${risk.tone}`}><strong>{risk.tone === "normal" ? "Within limits" : risk.label}</strong><small>{risk.detail}</small></td>
+      <td><CompactMeter label={`${system.name} CPU`} amount={system.info.cpu} /></td>
+      <td><CompactMeter label={`${system.name} RAM`} amount={system.info.mp} /></td>
+      <td><div class="row-drives" role="group" aria-label={`${system.name} drive utilization`}>{drives.map((drive, index) => <CompactMeter label={drive.label} amount={drive.value} warning={80} showLabel key={`${drive.label}-${index}`} />)}</div></td>
+    </tr>
+  )
+}
+
 function DetailPanel({ system, stats, range, loading, error, onRange, onReload, onClose }: {
   system: SystemRecord
   stats: StatsPoint[]
@@ -176,6 +224,7 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
   const [historyLoading, setHistoryLoading] = useState(false)
   const [fleetError, setFleetError] = useState("")
   const [historyError, setHistoryError] = useState("")
+  const [viewMode, setViewMode] = useState<ViewMode>(storedViewMode)
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
   const historyRequest = useRef(0)
 
@@ -261,12 +310,21 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
     requestAnimationFrame(() => document.getElementById("system-detail")?.scrollIntoView({ block: "nearest", behavior: "smooth" }))
   }
 
+  const changeViewMode = (mode: ViewMode) => {
+    setViewMode(mode)
+    try { localStorage.setItem(viewModeKey, mode) } catch { /* Storage can be unavailable in hardened browsers. */ }
+  }
+
   return (
     <main class="dashboard-shell">
       <div class="topbar-dock">
         <header class="topbar">
           <div class="brand-lockup"><span class="brand-index">BL—01</span><strong>Beszel Lens</strong></div>
           <div class="topbar-actions">
+            <div class="view-switch" role="group" aria-label="Fleet view">
+              <button type="button" aria-pressed={viewMode === "cards"} title="Card view" onClick={() => changeViewMode("cards")}><GridIcon /><span>Cards</span></button>
+              <button type="button" aria-pressed={viewMode === "rows"} title="Row view" onClick={() => changeViewMode("rows")}><RowsIcon /><span>Rows</span></button>
+            </div>
             <a class="icon-button labeled" href={hubUrl} target="_blank" rel="noreferrer"><ExternalIcon /> Open Beszel</a>
             <button class="icon-button" type="button" onClick={onLogout} aria-label="Sign out" title="Sign out"><LogoutIcon /></button>
           </div>
@@ -290,9 +348,16 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
         {selected && <DetailPanel system={selected} stats={stats} range={range} loading={historyLoading} error={historyError} onRange={setRange} onReload={() => void loadHistory()} onClose={closeDetails} />}
         {loading ? (
           <div class="card-skeleton" aria-label="Loading systems"><span/><span/><span/><span/><span/><span/></div>
-        ) : rankedSystems.length ? (
+        ) : rankedSystems.length && viewMode === "cards" ? (
           <div class="system-grid">
             {rankedSystems.map((system) => <SystemCard system={system} selected={selectedId === system.id} onSelect={() => selectSystem(system.id)} key={system.id} />)}
+          </div>
+        ) : rankedSystems.length ? (
+          <div class="row-view">
+            <table class="system-table">
+              <thead><tr><th scope="col">System</th><th scope="col">Condition</th><th scope="col">CPU</th><th scope="col">RAM</th><th scope="col">Drives</th></tr></thead>
+              <tbody>{rankedSystems.map((system) => <SystemRow system={system} selected={selectedId === system.id} onSelect={() => selectSystem(system.id)} key={system.id} />)}</tbody>
+            </table>
           </div>
         ) : (
           <div class="empty-state"><ServerIcon /><h3>No systems found</h3><p>This account does not have access to any Beszel systems yet.</p><a href={hubUrl} target="_blank" rel="noreferrer">Open Beszel to add one <ExternalIcon /></a></div>

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-10T12:00:00-05:00",
+  "generatedAt": "2026-09-10T12:30:00-05:00",
   "title": "Design System: Beszel Lens",
   "extensions": {
     "colorMeta": {
@@ -74,7 +74,7 @@
     {
       "name": "Instrument Navigation",
       "kind": "nav",
-      "description": "A low ruled product header that hides off-canvas on precise-pointer devices, reveals from a 22px top-edge zone or keyboard focus, and remains visible on touch devices.",
+      "description": "A low ruled product header that hides off-canvas on precise-pointer devices, reveals from a 22px top-edge zone or keyboard focus, remains visible on touch devices, and contains the persistent Cards/Rows switch.",
       "html": "<nav class=\"ds-nav\"><div class=\"ds-nav-brand\"><span>BL—01</span><strong>Beszel Lens</strong></div><button class=\"ds-nav-action\">↗ OPEN BESZEL</button></nav>",
       "css": ".ds-nav { min-height: 54px; padding: 0 4px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line-strong, #98968b); color: var(--ink, #171713); } .ds-nav-brand { display: flex; align-items: center; gap: 14px; } .ds-nav-brand span { color: var(--blue, #244fc7); font: 700 .75rem/1 ui-monospace, Consolas, monospace; letter-spacing: .08em; } .ds-nav-brand strong { font: 700 1.02rem/1.2 ui-sans-serif, system-ui, sans-serif; letter-spacing: -.02em; } .ds-nav-action { min-height: 38px; padding: 0 12px; border: 1px solid transparent; border-radius: var(--radius-control, 9px); background: transparent; color: inherit; font: 700 .8125rem/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-nav-action:hover { border-color: var(--line-strong, #98968b); background: var(--paper, #f8f7f1); } .ds-nav-action:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
     },
@@ -103,6 +103,14 @@
       "css": ".ds-unavailable-bar { width: min(100%, 300px); color: var(--muted, #68675f); font: .59rem/1 ui-monospace, Consolas, monospace; letter-spacing: .035em; } .ds-unavailable-bar > span { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; } .ds-unavailable-bar b { font-size: .68rem; } .ds-unavailable-bar i { display: block; height: clamp(6px,2.5cqw,9px); overflow: hidden; border-radius: 99px; background: repeating-linear-gradient(135deg,#d8d6cc 0 4px,#eeede6 4px 8px); } .ds-unavailable-bar:hover i { outline: 1px solid var(--line-strong, #98968b); } .ds-unavailable-bar:focus-within { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
     },
     {
+      "name": "Compact Row Grid",
+      "kind": "table",
+      "refersTo": "system-table",
+      "description": "A semantic, risk-ranked table with one 58px server row and compact CPU, RAM, and nonwrapping drive meters.",
+      "html": "<table class=\"ds-system-table\"><thead><tr><th>System</th><th>Condition</th><th>CPU</th><th>RAM</th><th>Drives</th></tr></thead><tbody><tr><th><button>edge-node-01</button></th><td>Memory pressure</td><td>42%</td><td>84%</td><td>C: 61% · Archive 78%</td></tr></tbody></table>",
+      "css": ".ds-system-table { width: 100%; min-width: 900px; border-collapse: collapse; table-layout: fixed; border-radius: var(--radius-card, 14px); background: var(--paper, #f8f7f1); color: var(--ink, #171713); } .ds-system-table tbody tr { height: 58px; border-top: 1px solid var(--line, #c9c7ba); } .ds-system-table th, .ds-system-table td { padding: 7px 12px; text-align: left; }"
+    },
+    {
       "name": "Detail Panel",
       "kind": "custom",
       "refersTo": "detail-panel",
@@ -125,6 +133,7 @@
       "A full-viewport auto-fill grid fluidly targets 230–320px cards and puts the highest-risk system first.",
       "Automatic light and dark palettes follow the operating system without a manual toggle.",
       "Desktop navigation reveals from the top edge while touch navigation remains visible.",
+      "A persistent Cards/Rows switch offers equal-height telemetry cards or one compact server per table row.",
       "Warm neutral surfaces carry normal state; color is concentrated on interaction and exceptions.",
       "Fourteen-pixel cards and nine-pixel controls soften the instrument language without becoming pill-heavy.",
       "Compact condition copy explains rank without a large risk number.",
@@ -151,7 +160,9 @@
       "Do inspect a selected system in the inline panel above the grid while preserving the risk-ranked card order.",
       "Do honor reduced-motion preferences while keeping default transitions brief and mechanical.",
       "Do follow the operating-system color preference and preserve semantic contrast in both palettes.",
-      "Do keep top-bar actions keyboard-accessible and permanently visible on devices without hover."
+      "Do keep top-bar actions keyboard-accessible and permanently visible on devices without hover.",
+      "Do stretch every card to the tallest card in its CSS-grid row.",
+      "Do preserve identical risk ordering, selection, and telemetry in Cards and Rows views."
     ],
     "donts": [
       "Don't turn the fleet back into a sequential table or manually arranged dashboard grid.",
@@ -162,7 +173,8 @@
       "Don't add elevation to resting cards or summary cells.",
       "Don't collapse the chart's information density on mobile; preserve the plot and allow deliberate horizontal inspection.",
       "Don't imply that Beszel Lens replaces Beszel administration or is an official Beszel product.",
-      "Don't make critical navigation depend on hover for touch or keyboard users."
+      "Don't make critical navigation depend on hover for touch or keyboard users.",
+      "Don't let extra drives wrap a server into multiple table rows; contain overflow within the drives cell."
     ]
   }
 }

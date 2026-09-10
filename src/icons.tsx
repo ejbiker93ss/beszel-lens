@@ -33,3 +33,11 @@ export function ServerIcon(props: IconProps) {
 export function CloseIcon(props: IconProps) {
   return <svg {...base} {...props}><path d="m6 6 12 12M18 6 6 18"/></svg>
 }
+
+export function GridIcon(props: IconProps) {
+  return <svg {...base} {...props}><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>
+}
+
+export function RowsIcon(props: IconProps) {
+  return <svg {...base} {...props}><rect x="4" y="5" width="16" height="5" rx="1"/><rect x="4" y="14" width="16" height="5" rx="1"/></svg>
+}

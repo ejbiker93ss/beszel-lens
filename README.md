@@ -27,6 +27,7 @@ Lens connects directly from your browser to an existing Beszel Hub. It leaves co
 - Use the full browser width with a fluid card grid that grows readings when space is available and collapses cleanly on mobile.
 - Follow the operating system's light or dark appearance automatically.
 - Keep desktop navigation out of the way until the pointer reaches the top edge, while preserving visible controls on touch devices.
+- Switch between aligned telemetry cards and a compact one-server-per-row data grid; the selected view is remembered in the browser.
 
 ## Run locally
 
