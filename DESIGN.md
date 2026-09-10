@@ -1,8 +1,9 @@
 ---
 name: Beszel Lens
-description: A live calibration ledger for fleet health.
+description: A live calibration index for risk-ranked fleet health.
 colors:
   paper: "#f8f7f1"
+  paper-raised: "#fffef9"
   canvas: "#e8e7df"
   ink: "#171713"
   muted-ink: "#68675f"
@@ -13,7 +14,8 @@ colors:
   healthy-green: "#217451"
   warning-orange: "#c95416"
   critical-red: "#b92f38"
-  selected-wash: "#e8ecfa"
+  neutral-wash: "#efeee7"
+  warning-wash: "#fff0e8"
   error-wash: "#fff0ef"
 typography:
   display:
@@ -22,6 +24,12 @@ typography:
     fontWeight: 700
     lineHeight: 0.95
     letterSpacing: "-0.04em"
+  signal:
+    fontFamily: "Archivo Variable, sans-serif"
+    fontSize: "1.42rem"
+    fontWeight: 760
+    lineHeight: 1
+    letterSpacing: "-0.03em"
   title:
     fontFamily: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
     fontSize: "1rem"
@@ -36,25 +44,29 @@ typography:
     letterSpacing: "normal"
   label:
     fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace"
-    fontSize: "0.75rem"
+    fontSize: "0.68rem"
     fontWeight: 700
     lineHeight: 1
     letterSpacing: "0.06em"
   reading:
     fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace"
-    fontSize: "1.15rem"
+    fontSize: "1.08rem"
     fontWeight: 700
     lineHeight: 1
     letterSpacing: "normal"
 rounded:
-  control: "2px"
+  control: "9px"
+  alert: "11px"
+  card: "14px"
+  cap: "99px"
   status-dot: "50%"
 spacing:
   xs: "6px"
   sm: "8px"
+  dense: "10px"
   md: "12px"
-  lg: "18px"
-  xl: "24px"
+  lg: "14px"
+  xl: "16px"
   sheet: "42px"
 components:
   button-primary:
@@ -68,82 +80,90 @@ components:
     backgroundColor: "#193da4"
     textColor: "#ffffff"
   input:
-    backgroundColor: "#fffef9"
+    backgroundColor: "{colors.paper-raised}"
     textColor: "{colors.ink}"
     typography: "{typography.body}"
     rounded: "{rounded.control}"
     padding: "12px 13px"
-  system-row:
-    backgroundColor: "transparent"
+  system-card:
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    rounded: "0"
-    padding: "14px 18px"
-  system-row-selected:
-    backgroundColor: "{colors.selected-wash}"
+    rounded: "{rounded.card}"
+    padding: "11px 12px 10px"
+    height: "146px"
+  system-card-hover:
+    backgroundColor: "{colors.paper-raised}"
     textColor: "{colors.ink}"
+    rounded: "{rounded.card}"
   range-tab:
     backgroundColor: "transparent"
     textColor: "{colors.ink}"
     typography: "{typography.label}"
     rounded: "0"
-    width: "44px"
+    width: "42px"
     height: "32px"
   range-tab-active:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.paper}"
+  detail-panel:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.card}"
+    width: "100%"
 ---
 
 # Design System: Beszel Lens
 
 ## Overview
 
-**Creative North Star: "The Live Calibration Ledger"**
+**Creative North Star: "The Risk Calibration Index"**
 
-Beszel Lens looks like an instrument sheet that happens to be live: warm paper and canvas, exact black rules, compact measurements, and cobalt annotation ink. Its authority comes from precision and legibility rather than decorative chrome. The interface is dense enough for operators, but never cramped; generous outer margins frame tightly ruled internal regions.
+Beszel Lens is a warm, compact field of live instrument cards. It keeps the calibration-sheet precision of muted paper, exact rules, terse labels, and cobalt measurement ink, then makes the fleet easier to scan through restrained rounding and a risk-driven reading order. The result feels operational and composed rather than decorative.
 
-The system deliberately refuses the generic rounded-card dashboard. Panels join a shared visual ledger, readings align, and status color stays quiet until it carries operational meaning. Motion is brief and mechanical: controls acknowledge input, gauges calibrate, and loading bars scan.
+The interface leads with the system that needs attention most. Neutral cards form the steady baseline; exception color appears at the border and dominant signal only when risk warrants it. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.
 
 **Key Characteristics:**
 
-- Warm paper surfaces on a slightly darker canvas.
-- Exact one-pixel rules organize information more often than whitespace or shadows.
-- Cobalt marks interaction and measurement; indigo and green distinguish normal data series.
-- Monospaced, tabular readings sit beside compact sans-serif titles and labels.
-- Orange and red appear only when the system needs attention.
+- Dense 220px auto-fill cards put the highest-risk system first.
+- Warm neutral surfaces carry normal state; color is concentrated on interaction and exceptions.
+- Fourteen-pixel cards and nine-pixel controls soften the instrument language without becoming pill-heavy.
+- Circular status marks and fully capped progress tracks provide compact live-state cues.
+- A full-width inline detail panel places current and historical readings directly before the ranked grid.
 
 ## Colors
 
-The palette combines archival neutrals with a single cobalt interaction ink and strictly semantic status colors.
+The palette preserves archival neutrals and cobalt interaction ink while using orange and red as concentrated exception signals.
 
 ### Primary
 
-- **Cobalt Measurement Ink:** The sole interaction accent for primary actions, focus, selection rails, CPU plots, progress, and loading motion.
+- **Cobalt Measurement Ink:** Owns primary actions, focus, selection rings, CPU plots, progress, and loading motion.
 
 ### Secondary
 
-- **Neutral Indigo Reading:** Distinguishes memory history without competing with the primary interaction color.
-- **Healthy Green:** Marks online state and disk history; it reports health rather than decorating surfaces.
+- **Neutral Indigo Reading:** Distinguishes memory history without competing with selection and interaction.
+- **Healthy Green:** Marks online status and disk history; it reports health rather than decorating card surfaces.
 
 ### Tertiary
 
-- **Warning Orange:** Reserved for readings at or above the warning threshold and pending system state.
-- **Critical Red:** Reserved for critical readings, unavailable systems, fleet attention, and error boundaries.
+- **Warning Orange:** Marks warning-card borders, dominant warning signals, elevated readings, and pending state.
+- **Critical Red:** Marks critical-card borders, dominant critical signals, unavailable systems, and failure boundaries.
 
 ### Neutral
 
-- **Warm Paper:** The working surface for sheets, panels, and hover-raised controls.
-- **Workshop Canvas:** The page field behind the ruled interface and its loading skeletons.
-- **Exact Ink:** Primary text and the strongest structural rules.
+- **Warm Paper:** The default card, summary, drawer, and sheet surface.
+- **Raised Paper:** A brighter hover and input surface that provides quiet tactile feedback.
+- **Workshop Canvas:** The page field behind the fleet.
+- **Exact Ink:** Primary text and active segmented controls.
 - **Muted Ledger Ink:** Supporting copy, labels, timestamps, and secondary metadata.
-- **Rule and Strong Rule:** Two levels of division for internal cells and control boundaries.
-- **Selected Wash:** A cool, pale field that makes the selected row legible without turning it into a card.
-- **Error Wash:** A pale red field behind inline failures and notices.
+- **Rule and Strong Rule:** Two levels of quiet structure for card borders, dividers, and controls.
+- **Neutral Wash:** The normal risk-summary field and neutral hover fill.
+- **Warning and Error Washes:** Localized fields inside the detail panel and inline error boundaries.
 
 ### Named Rules
 
-**The Exception Ink Rule.** Orange and red communicate degraded, pending, critical, or failed states only; they never serve as general accents.
+**The Exception Edge Rule.** Warning and critical color belongs on the card edge and its dominant signal; keep the card body neutral so the fleet remains scannable.
 
-**The One Cobalt Rule.** Cobalt owns action, focus, active measurement, and selected-edge emphasis. Do not introduce a second interactive accent.
+**The One Cobalt Rule.** Cobalt owns action, focus, active measurement, and selection. Do not introduce a second interactive accent.
 
 ## Typography
 
@@ -151,104 +171,115 @@ The palette combines archival neutrals with a single cobalt interaction ink and 
 **Body Font:** Native UI sans-serif stack  
 **Label/Mono Font:** Native UI monospace stack
 
-**Character:** Archivo gives the sign-in title a compressed, technical confidence. Everywhere else, native sans keeps the interface immediate while monospaced numerals make the telemetry feel measured and align reliably.
+**Character:** Archivo gives both the connection title and each card's dominant risk value compact technical authority. Native sans keeps names and explanations immediate, while monospaced tabular readings preserve measurement alignment.
 
 ### Hierarchy
 
-- **Display:** Bold, tightly tracked, and compact; used only for the Beszel Lens sign-in title.
-- **Title:** Bold native sans with slightly tightened tracking; used for panel, system, and product titles.
+- **Display:** Bold, tightly tracked, and compact; used for the Beszel Lens connection title.
+- **Signal:** Heavy Archivo with tight tracking; used for the dominant risk value on cards and in the drawer alert.
+- **Title:** Bold native sans with slightly tightened tracking; used for fleet, product, and selected-system titles.
 - **Body:** Regular native sans with a relaxed reading line height; used for instructions, notices, and empty-state copy.
-- **Label:** Bold mono with expanded tracking; used for the brand index, metric names, counts, timestamps, and uppercase utility labels.
-- **Reading:** Bold mono with tabular numerals; used for percentages and fleet totals.
+- **Label:** Bold compact mono with expanded tracking; used for the brand index, metric names, counts, timestamps, and range controls.
+- **Reading:** Bold mono with tabular numerals; used for gauges, percentages, and fleet totals.
 
 ### Named Rules
 
-**The Measured Number Rule.** Operational numbers use monospaced, tabular figures; prose never imitates telemetry styling.
+**The Dominant Signal Rule.** Every system card gets one large risk value and one plain-language risk label; supporting telemetry stays smaller.
 
-**The One Display Moment Rule.** Archivo's large display treatment belongs to the connection sheet only. The dashboard stays compact.
+**The Measured Number Rule.** Operational numbers use Archivo signal type or monospaced tabular figures according to hierarchy; prose never imitates telemetry styling.
 
 ## Layout
 
-The dashboard is a centered working sheet with a maximum width of 1560px and fluid horizontal padding. A ruled top bar leads into a four-cell fleet summary, followed by an 18px-gapped workspace. On wide screens the fleet index occupies the narrower left column and the selected-system readings occupy the wider right column.
+The dashboard is a centered, fluid fleet index with a maximum width of 1780px and compact outer padding. A low ruled header leads into a rounded four-cell fleet summary and then the priority heading. The fleet uses an auto-fill grid whose cards grow from a 220px minimum, separated by 10px gaps. Risk ranking determines DOM and reading order, with name used as the stable tie-breaker.
 
-At 920px, the workspace becomes one column and the selected system moves before the fleet index so the inspection task remains primary. The summary keeps three equal count cells while refresh spans the full row. At 580px, the canvas padding and workspace gap tighten to 12px, gauges stack, range tabs stretch evenly, the labeled external link collapses to its icon, and the chart preserves a 560px plotting width inside horizontal overflow.
+At 720px, the summary becomes three count cells with refresh spanning the next row. At 520px, outer padding tightens to 10px, cards may contract from a 190px minimum, the external action becomes icon-only, gauges stack, and range tabs stretch across the detail panel. The history plot keeps a 520px minimum width inside deliberate horizontal overflow.
 
-Internal spacing follows a compact 6/8/12/18/24px rhythm, with 42px reserved for the generous inset of the connection sheet. Structural regions use borders and aligned cells; avoid scattering unrelated floating modules across the canvas.
+Selecting a card inserts a full-width detail panel between the priority heading and the card grid. The panel participates in normal document flow, remains nonmodal, and leaves every fleet card available below it. Closing the panel removes that inspection region without changing risk order.
 
 ## Elevation & Depth
 
-The dashboard is flat by default. Depth comes from the contrast between canvas and paper plus exact one-pixel rules. The fleet summary receives a very low ambient shadow, while the centered connection sheet alone uses the full sheet shadow. Rows express selection with a tinted wash and an inset cobalt rail, not elevation.
+Depth is functional and state-based. Resting cards, the fleet summary, and ordinary controls remain flat against the canvas. A card gains a slight one-pixel lift and small ambient shadow on hover; selection uses a cobalt border plus focus-like ring. The connection sheet receives the strongest shadow, while the expanded inline detail panel uses a moderate shadow to distinguish inspection from the grid that follows.
 
 ### Shadow Vocabulary
 
-- **Sheet Lift** (`0 18px 50px rgba(37, 35, 26, 0.1)`): Used only to separate the connection sheet from the gridded canvas.
-- **Summary Lift** (`0 8px 28px rgba(37, 35, 26, 0.05)`): A restrained ambient cue beneath the fleet summary.
-- **Selection Rail** (`inset 3px 0 #244fc7`): Marks the active system without lifting it out of the ledger.
+- **Sheet Lift** (`0 18px 50px rgba(37, 35, 26, 0.1)`): Separates the connection sheet from its gridded canvas.
+- **Card Hover** (`0 7px 18px rgba(37, 35, 26, 0.07)`): Accompanies the one-pixel hover lift of an actionable card.
+- **Card Selection Ring** (`0 0 0 2px rgba(36, 79, 199, 0.16)`): Confirms the selected system without recoloring the surface.
+- **Detail Panel Lift** (`0 12px 32px rgba(23, 23, 19, 0.09)`): Separates the expanded inline inspection region from the ranked grid.
 
 ### Named Rules
 
-**The Flat Ledger Rule.** Panels and cells remain flat at rest; use rules, tonal fields, and a selection rail before adding elevation.
+**The State Earns Depth Rule.** Resting fleet surfaces stay flat. Elevation appears only for actionable hover, explicit selection, or the expanded inspection region.
 
 ## Shapes
 
-The form language is rectilinear. Sheets, panels, summary cells, tabs, gauges, and rows use square corners. Interactive controls allow only a nearly imperceptible 2px radius to keep focus rings and touch surfaces crisp. The sole circular shape is the 9px system-status mark, whose geometry makes it readable at a glance.
+The form language is restrained and rounded. System cards, the fleet summary, empty state, connection sheet, and inline detail panel use a 14px radius. Buttons, inputs, notices, and segmented-control shells use 9px. Risk alerts use an intermediate 11px radius.
 
-**The Two-Pixel Ceiling Rule.** Controls may soften to 2px; structural containers remain square. Never turn the ledger into a collection of pills or rounded cards.
+Circular geometry is reserved for live indicators and motion tracks: status marks use a true circle, while gauge, boot, loading, and scrollbar tracks use fully capped ends. Internal card dividers and range-tab seams stay straight to preserve measurement precision.
+
+**The Radius Hierarchy Rule.** Use 14px for cards, 9px for controls, and full caps only for status or progress geometry. Do not apply pill shapes to text actions or containers.
 
 ## Components
 
 ### Buttons
 
-- **Shape:** Compact rectangular controls with a 2px radius; segmented range tabs stay square.
-- **Primary:** Cobalt fill, white text, a matching one-pixel border, 46px minimum height, and 20px horizontal inset.
-- **Hover / Focus:** Primary actions deepen to dark cobalt; active press moves down 1px. All keyboard focus receives a 3px translucent cobalt outline with 2px offset.
+- **Shape:** Compact controls with a 9px radius; internal range-tab seams remain square inside their rounded group.
+- **Primary:** Cobalt fill, white text, matching one-pixel border, 46px minimum height, and 20px horizontal inset.
+- **Hover / Focus:** Primary actions deepen to dark cobalt; active press moves down 1px. Keyboard focus receives a 3px translucent cobalt outline with 2px offset.
 - **Icon / Ghost:** Transparent 40px targets gain a paper fill and strong neutral rule on hover.
-- **Range Tabs:** Three joined 44-by-32px mono controls; the active range reverses to exact ink on warm paper.
+- **Close:** A bordered, 38px-high detail-panel control pairs a compact icon with a text label.
+- **Range Tabs:** Three joined 42-by-32px mono controls; the 9px group clips the active exact-ink fill.
 
 ### Cards / Containers
 
-- **Corner Style:** Square.
-- **Background:** Warm paper over workshop canvas.
-- **Shadow Strategy:** Flat except for the connection sheet and the subtly lifted fleet summary.
-- **Border:** One-pixel exact-ink outer rules with lighter internal divisions.
-- **Internal Padding:** Usually 18px; the connection sheet expands to 42px on larger screens and 24px on small screens.
+- **Corner Style:** Restrained 14px rounding for fleet cards and primary surfaces, including the inline detail panel.
+- **Background:** Warm paper at rest and raised paper on card hover.
+- **Shadow Strategy:** Flat at rest; slight lift on hover, cobalt ring on selection, and moderate separation for the expanded detail panel.
+- **Border:** One-pixel neutral rules; warning and critical cards shift only their border and dominant signal to semantic color.
+- **Internal Padding:** Cards use a dense 11px by 12px inset and a three-band header/signal/metrics structure.
 
 ### Inputs / Fields
 
-- **Style:** Near-white input field, one-pixel strong neutral stroke, 2px radius, and 12px by 13px inset.
+- **Style:** Raised-paper field, one-pixel strong neutral stroke, 9px radius, and 12px by 13px inset.
 - **Focus:** Border changes to cobalt and gains a 3px translucent cobalt outline.
 - **Error / Disabled:** Errors use critical red rules and a pale red wash. Busy controls reduce opacity and retain an explicit wait cursor.
 
 ### Navigation
 
-The top bar is a ruled instrument header rather than a raised app bar. The brand index uses cobalt mono text; product name and actions remain neutral. External navigation is labeled on wider screens and collapses to a 40px icon target below 580px.
+The top bar is a low, bottom-ruled instrument header. The brand index uses cobalt mono text; product name and actions remain neutral. External navigation is labeled on wider screens and collapses to a 40px icon target below 520px.
 
 ### Fleet Summary
 
-Four ruled cells present system count, online count, attention count, and freshness/action. Labels are small uppercase text; values are large tabular mono readings. Attention changes to critical red only when nonzero.
+Four softly rounded, internally divided cells present system count, online count, attention count, and freshness/action. Labels are small uppercase text; values are larger tabular mono readings. Attention changes to critical red only when nonzero.
 
-### System Row
+### Risk Card
 
-Each row is a full-width button with identity at left and three right-aligned measurements. Hover adds a neutral wash. Selection uses the pale selected wash and a 3px inset cobalt rail. Threshold color changes at 75% for warning and 90% for critical.
+Each 146px-tall card has three dense bands: status/name/uptime, dominant risk signal, and a divided CPU/memory/disk footer. Cards are ordered from highest risk to lowest. Hover brightens and lifts the card; selection adds a cobalt border and ring. Warning and critical states preserve the neutral surface while coloring the border and dominant signal.
+
+### Detail Panel
+
+The nonmodal detail panel is a full-width inspection region placed immediately above the grid. Its header contains system identity and a close action; a localized alert summarizes dominant risk; capped gauges show current CPU, memory, and disk; the plot and range controls show history. Escape and the close button collapse it without changing fleet order.
 
 ### Gauge and History Plot
 
-Gauges are thin four-pixel tracks divided into three equal cells on desktop and stacked on mobile. Fill changes from cobalt to warning orange or critical red at the same thresholds as rows. Historical CPU, memory, and disk lines use cobalt, indigo, and green respectively against a light ruled grid; axes and timestamps remain muted mono.
+Gauges use five-pixel fully capped tracks. Fill changes from cobalt to warning orange or critical red at the same thresholds as card telemetry. Historical CPU, memory, and disk lines use cobalt, indigo, and green respectively against a light ruled grid; axes and timestamps remain muted mono.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** organize dense information with one-pixel rules, aligned cells, and the 6/8/12/18/24px spacing rhythm.
-- **Do** keep current readings and historical series visually adjacent to the selected system.
-- **Do** preserve native sans for prose, Archivo for the single display moment, and mono tabular numerals for telemetry.
-- **Do** make abnormal state immediately scannable through semantic color and plain-language error boundaries.
+- **Do** rank system cards by computed operational risk, using name only as the stable tie-breaker.
+- **Do** use a dense auto-fill grid with a 220px card minimum and 10px gaps on larger screens.
+- **Do** keep normal card surfaces neutral and concentrate exception color on borders, dominant signals, and localized alerts.
+- **Do** use 14px cards, 9px controls, and full caps for status and progress geometry.
+- **Do** inspect a selected system in the inline panel above the grid while preserving the risk-ranked card order.
 - **Do** honor reduced-motion preferences while keeping default transitions brief and mechanical.
 
 ### Don't:
 
-- **Don't** introduce rounded cards, pill controls, glass effects, or decorative gradients.
-- **Don't** use orange or red as brand decoration or for normal readings.
-- **Don't** add shadows to ordinary panels, rows, gauges, or charts.
+- **Don't** turn the fleet back into a sequential table or manually arranged dashboard grid.
+- **Don't** flood warning or critical cards with saturated background color.
+- **Don't** use pill shapes for text actions, cards, or general containers.
+- **Don't** add elevation to resting cards or summary cells.
 - **Don't** collapse the chart's information density on mobile; preserve the plot and allow deliberate horizontal inspection.
 - **Don't** imply that Beszel Lens replaces Beszel administration or is an official Beszel product.

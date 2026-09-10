@@ -19,6 +19,8 @@ Lens connects directly from your browser to an existing Beszel Hub. It leaves co
 - Authenticate as a normal Beszel user.
 - Scan online, offline, paused, and pending systems.
 - Compare current CPU, memory, and disk utilization.
+- Rank systems by an explainable risk score so likely problems stay at the top.
+- Surface the dominant condition on every card, including offline systems, failed services, high CPU or memory, load, and the fullest primary or extra filesystem.
 - Inspect 1-hour, 12-hour, and 24-hour history.
 - Receive current system updates through PocketBase realtime events.
 - Jump back to Beszel for administration.
@@ -83,6 +85,10 @@ Serve the generated `dist` directory from any internal static host. If the dashb
 - Authentication state is stored by the PocketBase browser SDK.
 - Use a normal Beszel user account. Never expose a PocketBase superuser token or administrator password in this app.
 - Host both services over HTTPS outside a trusted local network.
+
+## Risk ranking
+
+Lens scores current system state with nonlinear warning and critical thresholds. Offline systems and failed services rank first, followed by storage, memory, CPU, and normalized system load. Multiple elevated signals add urgency, while system name and ID provide stable tie-breakers. The score is used only to order the dashboard; Lens never changes Beszel settings or alerts.
 
 ## Compatibility
 

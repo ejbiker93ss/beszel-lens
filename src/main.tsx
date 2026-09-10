@@ -16,11 +16,12 @@ import {
   type TimeRange,
 } from "./beszel"
 import { MetricChart } from "./chart"
-import { ExternalIcon, LogoutIcon, RefreshIcon, ServerIcon } from "./icons"
+import { CloseIcon, ExternalIcon, LogoutIcon, RefreshIcon, ServerIcon } from "./icons"
+import { assessSystem, rankSystems } from "./risk"
 import "./styles.css"
 
-function value(value: number | undefined) {
-  return Number.isFinite(value) ? Math.round(value as number) : 0
+function value(amount: number | undefined) {
+  return Number.isFinite(amount) ? Math.round(amount as number) : 0
 }
 
 function formatUptime(seconds: number | undefined) {
@@ -30,14 +31,14 @@ function formatUptime(seconds: number | undefined) {
   return days ? `${days}d ${hours}h` : `${hours}h`
 }
 
-function metricTone(amount: number) {
-  if (amount >= 90) return "critical"
-  if (amount >= 75) return "warning"
+function metricTone(amount: number, warning = 75, critical = 90) {
+  if (amount >= critical) return "critical"
+  if (amount >= warning) return "warning"
   return "normal"
 }
 
-function Gauge({ label, amount }: { label: string; amount: number }) {
-  const tone = metricTone(amount)
+function Gauge({ label, amount, warning = 75 }: { label: string; amount: number; warning?: number }) {
+  const tone = metricTone(amount, warning)
   return (
     <div class={`gauge ${tone}`}>
       <div class="gauge-label"><span>{label}</span><strong>{amount}%</strong></div>
@@ -74,6 +75,74 @@ function Login({ onConnect, busy, error }: { onConnect: (hub: string, email: str
   )
 }
 
+function SystemCard({ system, selected, onSelect }: { system: SystemRecord; selected: boolean; onSelect: () => void }) {
+  const risk = assessSystem(system)
+  const cpu = value(system.info.cpu)
+  const memory = value(system.info.mp)
+  const disk = value(system.info.dp)
+  return (
+    <button
+      class={`system-card tone-${risk.tone} ${selected ? "selected" : ""}`}
+      type="button"
+      onClick={onSelect}
+      aria-expanded={selected}
+      aria-controls="system-detail"
+      data-system-id={system.id}
+    >
+      <div class="card-header">
+        <span class={`status-mark ${system.status}`} />
+        <strong title={system.name}>{system.name}</strong>
+        <span class="uptime">{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</span>
+      </div>
+      <div class="card-signal">
+        <strong>{risk.value}</strong>
+        <span><b>{risk.label}</b><small>{risk.detail}</small></span>
+      </div>
+      <div class="card-metrics">
+        <span>CPU <b class={metricTone(cpu)}>{cpu}%</b></span>
+        <span>MEM <b class={metricTone(memory)}>{memory}%</b></span>
+        <span>DISK <b class={metricTone(disk, 80)}>{disk}%</b></span>
+      </div>
+    </button>
+  )
+}
+
+function DetailPanel({ system, stats, range, loading, error, onRange, onReload, onClose }: {
+  system: SystemRecord
+  stats: StatsPoint[]
+  range: TimeRange
+  loading: boolean
+  error: string
+  onRange: (range: TimeRange) => void
+  onReload: () => void
+  onClose: () => void
+}) {
+  const risk = assessSystem(system)
+  return (
+    <section class="detail-panel" id="system-detail" aria-label={`${system.name} details`}>
+      <div class="detail-heading">
+        <div><span class={`status-mark ${system.status}`} /><div><h2>{system.name}</h2><p>{system.info.o || "System"}{system.info.m ? ` · ${system.info.m}` : ""}</p></div></div>
+        <button class="close-button" type="button" onClick={onClose}><CloseIcon /> Close</button>
+      </div>
+      <div class={`detail-alert tone-${risk.tone}`}><span>{risk.label}</span><strong>{risk.value}</strong><small>{risk.detail}</small></div>
+      <div class="gauges">
+        <Gauge label="CPU" amount={value(system.info.cpu)} />
+        <Gauge label="Memory" amount={value(system.info.mp)} />
+        <Gauge label="Disk" amount={value(system.info.dp)} warning={80} />
+      </div>
+      <div class="history-heading">
+        <div><h3>Utilization history</h3><span>{loading ? "Loading readings…" : `${stats.length} readings`}</span></div>
+        <div class="range-tabs" aria-label="History range">
+          {(["1h", "12h", "24h"] as TimeRange[]).map((option) => <button type="button" aria-pressed={range === option} class={range === option ? "active" : ""} onClick={() => onRange(option)} key={option}>{option}</button>)}
+        </div>
+      </div>
+      {error ? (
+        <div class="history-error" role="alert"><strong>History unavailable</strong><span>{error}</span><button type="button" onClick={onReload}>Reload history</button></div>
+      ) : loading ? <div class="chart-loading"><span /></div> : <MetricChart points={stats} />}
+    </section>
+  )
+}
+
 function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: string; onLogout: () => void }) {
   const [systems, setSystems] = useState<SystemRecord[]>([])
   const [selectedId, setSelectedId] = useState("")
@@ -84,13 +153,12 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
   const [fleetError, setFleetError] = useState("")
   const [historyError, setHistoryError] = useState("")
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
+  const historyRequest = useRef(0)
 
   const load = useCallback(async () => {
     setFleetError("")
     try {
-      const records = await listSystems(client)
-      setSystems(records)
-      setSelectedId((current) => current || records[0]?.id || "")
+      setSystems(await listSystems(client))
       setUpdatedAt(new Date())
     } catch (cause) {
       setFleetError(cause instanceof Error ? cause.message : "Could not load systems from this hub.")
@@ -101,16 +169,25 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
 
   const loadHistory = useCallback(async () => {
     if (!selectedId) return
+    const request = ++historyRequest.current
     setHistoryError("")
     setHistoryLoading(true)
     try {
-      setStats(await listStats(client, selectedId, range))
+      const nextStats = await listStats(client, selectedId, range)
+      if (request === historyRequest.current) setStats(nextStats)
     } catch (cause) {
-      setHistoryError(cause instanceof Error ? cause.message : "Could not load system history.")
+      if (request === historyRequest.current) setHistoryError(cause instanceof Error ? cause.message : "Could not load system history.")
     } finally {
-      setHistoryLoading(false)
+      if (request === historyRequest.current) setHistoryLoading(false)
     }
   }, [client, selectedId, range])
+
+  const closeDetails = useCallback(() => {
+    const systemId = selectedId
+    historyRequest.current += 1
+    setSelectedId("")
+    requestAnimationFrame(() => document.querySelector<HTMLButtonElement>(`[data-system-id="${systemId}"]`)?.focus())
+  }, [selectedId])
 
   useEffect(() => {
     void load()
@@ -119,7 +196,7 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
       setSystems((current) => {
         if (event.action === "delete") return current.filter((system) => system.id !== event.record.id)
         const index = current.findIndex((system) => system.id === event.record.id)
-        if (index < 0) return [...current, event.record].sort((a, b) => a.name.localeCompare(b.name))
+        if (index < 0) return [...current, event.record]
         return current.map((system) => system.id === event.record.id ? event.record : system)
       })
       setUpdatedAt(new Date())
@@ -128,15 +205,37 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
   }, [client, load])
 
   useEffect(() => {
-    if (!selectedId) return
-    void loadHistory()
+    if (selectedId) void loadHistory()
   }, [loadHistory, selectedId])
 
+  useEffect(() => {
+    if (!selectedId) return
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeDetails()
+    }
+    window.addEventListener("keydown", closeOnEscape)
+    return () => window.removeEventListener("keydown", closeOnEscape)
+  }, [closeDetails, selectedId])
+
+  const rankedSystems = useMemo(() => rankSystems(systems), [systems])
   const selected = systems.find((system) => system.id === selectedId)
   const counts = useMemo(() => ({
     up: systems.filter((system) => system.status === "up").length,
-    attention: systems.filter((system) => system.status !== "up").length,
+    attention: systems.filter((system) => assessSystem(system).tone !== "normal").length,
   }), [systems])
+
+  const selectSystem = (systemId: string) => {
+    if (systemId === selectedId) {
+      document.getElementById("system-detail")?.scrollIntoView({ block: "nearest", behavior: "smooth" })
+      return
+    }
+    historyRequest.current += 1
+    setStats([])
+    setHistoryError("")
+    setHistoryLoading(true)
+    setSelectedId(systemId)
+    requestAnimationFrame(() => document.getElementById("system-detail")?.scrollIntoView({ block: "nearest", behavior: "smooth" }))
+  }
 
   return (
     <main class="dashboard-shell">
@@ -157,56 +256,23 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
 
       {fleetError && <div class="notice" role="alert"><strong>Fleet unavailable</strong><span>{fleetError}</span><button type="button" onClick={() => void load()}>Reload fleet</button></div>}
 
-      <div class="workspace">
-        <section class="fleet-panel">
-          <div class="section-heading"><div><ServerIcon /><h2>Fleet</h2></div><span>{systems.length} registered</span></div>
-          {loading ? (
-            <div class="system-skeleton" aria-label="Loading systems"><span/><span/><span/></div>
-          ) : systems.length ? (
-            <div class="system-list">
-              {systems.map((system) => {
-                const cpu = value(system.info.cpu)
-                const memory = value(system.info.mp)
-                const disk = value(system.info.dp)
-                return (
-                  <button class={`system-row ${selectedId === system.id ? "selected" : ""}`} type="button" key={system.id} onClick={() => setSelectedId(system.id)}>
-                    <div class="system-identity"><span class={`status-mark ${system.status}`} /><span><strong>{system.name}</strong><small>{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</small></span></div>
-                    <div class="mini-metric"><span>CPU</span><strong class={metricTone(cpu)}>{cpu}%</strong></div>
-                    <div class="mini-metric"><span>MEM</span><strong class={metricTone(memory)}>{memory}%</strong></div>
-                    <div class="mini-metric"><span>DISK</span><strong class={metricTone(disk)}>{disk}%</strong></div>
-                  </button>
-                )
-              })}
-            </div>
-          ) : (
-            <div class="empty-state"><ServerIcon /><h3>No systems found</h3><p>This account does not have access to any Beszel systems yet.</p><a href={hubUrl} target="_blank" rel="noreferrer">Open Beszel to add one <ExternalIcon /></a></div>
-          )}
-        </section>
+      <section class="fleet-section">
+        <div class="fleet-heading">
+          <div><ServerIcon /><div><h1>Fleet priority</h1><p>Highest risk first</p></div></div>
+          <span>{systems.length} registered</span>
+        </div>
+        {selected && <DetailPanel system={selected} stats={stats} range={range} loading={historyLoading} error={historyError} onRange={setRange} onReload={() => void loadHistory()} onClose={closeDetails} />}
+        {loading ? (
+          <div class="card-skeleton" aria-label="Loading systems"><span/><span/><span/><span/><span/><span/></div>
+        ) : rankedSystems.length ? (
+          <div class="system-grid">
+            {rankedSystems.map((system) => <SystemCard system={system} selected={selectedId === system.id} onSelect={() => selectSystem(system.id)} key={system.id} />)}
+          </div>
+        ) : (
+          <div class="empty-state"><ServerIcon /><h3>No systems found</h3><p>This account does not have access to any Beszel systems yet.</p><a href={hubUrl} target="_blank" rel="noreferrer">Open Beszel to add one <ExternalIcon /></a></div>
+        )}
+      </section>
 
-        <section class="detail-panel">
-          {selected ? (
-            <>
-              <div class="detail-heading">
-                <div><span class={`status-mark ${selected.status}`} /><div><h2>{selected.name}</h2><p>{selected.info.o || "System"}{selected.info.m ? ` · ${selected.info.m}` : ""}</p></div></div>
-                <div class="range-tabs" aria-label="History range">
-                  {(["1h", "12h", "24h"] as TimeRange[]).map((option) => <button type="button" aria-pressed={range === option} class={range === option ? "active" : ""} onClick={() => setRange(option)} key={option}>{option}</button>)}
-                </div>
-              </div>
-              <div class="gauges">
-                <Gauge label="CPU" amount={value(selected.info.cpu)} />
-                <Gauge label="Memory" amount={value(selected.info.mp)} />
-                <Gauge label="Disk" amount={value(selected.info.dp)} />
-              </div>
-              <div class="history-heading"><h3>Utilization history</h3><span>{historyLoading ? "Loading readings…" : `${stats.length} readings`}</span></div>
-              {historyError ? (
-                <div class="history-error" role="alert"><strong>History unavailable</strong><span>{historyError}</span><button type="button" onClick={() => void loadHistory()}>Reload history</button></div>
-              ) : historyLoading ? <div class="chart-loading"><span /></div> : <MetricChart points={stats} />}
-            </>
-          ) : (
-            <div class="empty-detail"><span>SELECT</span><p>Choose a system to inspect its readings.</p></div>
-          )}
-        </section>
-      </div>
       <footer class="app-footer"><span>Unofficial companion for Beszel</span><span>Read-only by design</span></footer>
     </main>
   )

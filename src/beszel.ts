@@ -12,8 +12,14 @@ export interface SystemInfo {
   dt?: number
   g?: number
   c?: number
+  t?: number
   m?: string
   o?: string
+  os?: number
+  efs?: Record<string, number>
+  rdn?: string
+  la?: [number, number, number]
+  sv?: [number, number]
 }
 
 export interface SystemRecord {
@@ -108,4 +114,3 @@ export function subscribeToSystems(
     fields: "id,name,status,info,updated",
   })
 }
-

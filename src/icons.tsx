@@ -30,3 +30,6 @@ export function ServerIcon(props: IconProps) {
   return <svg {...base} {...props}><rect x="4" y="4" width="16" height="6" rx="1"/><rect x="4" y="14" width="16" height="6" rx="1"/><path d="M8 7h.01M8 17h.01M12 7h4M12 17h4"/></svg>
 }
 
+export function CloseIcon(props: IconProps) {
+  return <svg {...base} {...props}><path d="m6 6 12 12M18 6 6 18"/></svg>
+}

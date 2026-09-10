@@ -1,10 +1,11 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-10T09:19:28.9225768-05:00",
+  "generatedAt": "2026-09-10T10:35:04.3599651-05:00",
   "title": "Design System: Beszel Lens",
   "extensions": {
     "colorMeta": {
       "paper": { "role": "neutral", "displayName": "Warm Paper", "canonical": "#f8f7f1", "tonalRamp": ["oklch(15% 0.01 95)", "oklch(27% 0.01 95)", "oklch(39% 0.01 95)", "oklch(51% 0.01 95)", "oklch(63% 0.01 95)", "oklch(75% 0.01 95)", "oklch(87% 0.01 95)", "oklch(95% 0.01 95)"] },
+      "paper-raised": { "role": "neutral", "displayName": "Raised Paper", "canonical": "#fffef9", "tonalRamp": ["oklch(15% 0.008 95)", "oklch(27% 0.008 95)", "oklch(39% 0.008 95)", "oklch(51% 0.008 95)", "oklch(63% 0.008 95)", "oklch(75% 0.008 95)", "oklch(87% 0.008 95)", "oklch(95% 0.008 95)"] },
       "canvas": { "role": "neutral", "displayName": "Workshop Canvas", "canonical": "#e8e7df", "tonalRamp": ["oklch(15% 0.012 95)", "oklch(27% 0.012 95)", "oklch(39% 0.012 95)", "oklch(51% 0.012 95)", "oklch(63% 0.012 95)", "oklch(75% 0.012 95)", "oklch(87% 0.012 95)", "oklch(95% 0.012 95)"] },
       "ink": { "role": "neutral", "displayName": "Exact Ink", "canonical": "#171713", "tonalRamp": ["oklch(15% 0.008 105)", "oklch(27% 0.008 105)", "oklch(39% 0.008 105)", "oklch(51% 0.008 105)", "oklch(63% 0.008 105)", "oklch(75% 0.008 105)", "oklch(87% 0.008 105)", "oklch(95% 0.008 105)"] },
       "muted-ink": { "role": "neutral", "displayName": "Muted Ledger Ink", "canonical": "#68675f", "tonalRamp": ["oklch(15% 0.012 95)", "oklch(27% 0.012 95)", "oklch(39% 0.012 95)", "oklch(51% 0.012 95)", "oklch(63% 0.012 95)", "oklch(75% 0.012 95)", "oklch(87% 0.012 95)", "oklch(95% 0.012 95)"] },
@@ -15,30 +16,34 @@
       "healthy-green": { "role": "secondary", "displayName": "Healthy Green", "canonical": "#217451", "tonalRamp": ["oklch(15% 0.06 158)", "oklch(27% 0.08 158)", "oklch(39% 0.1 158)", "oklch(51% 0.11 158)", "oklch(63% 0.095 158)", "oklch(75% 0.07 158)", "oklch(87% 0.04 158)", "oklch(95% 0.02 158)"] },
       "warning-orange": { "role": "tertiary", "displayName": "Warning Orange", "canonical": "#c95416", "tonalRamp": ["oklch(15% 0.07 48)", "oklch(27% 0.11 48)", "oklch(39% 0.15 48)", "oklch(51% 0.18 48)", "oklch(63% 0.16 48)", "oklch(75% 0.12 48)", "oklch(87% 0.07 48)", "oklch(95% 0.03 48)"] },
       "critical-red": { "role": "tertiary", "displayName": "Critical Red", "canonical": "#b92f38", "tonalRamp": ["oklch(15% 0.07 24)", "oklch(27% 0.12 24)", "oklch(39% 0.16 24)", "oklch(51% 0.19 24)", "oklch(63% 0.16 24)", "oklch(75% 0.12 24)", "oklch(87% 0.07 24)", "oklch(95% 0.03 24)"] },
-      "selected-wash": { "role": "neutral", "displayName": "Selected Wash", "canonical": "#e8ecfa", "tonalRamp": ["oklch(15% 0.025 265)", "oklch(27% 0.03 265)", "oklch(39% 0.035 265)", "oklch(51% 0.04 265)", "oklch(63% 0.04 265)", "oklch(75% 0.035 265)", "oklch(87% 0.025 265)", "oklch(95% 0.012 265)"] },
+      "neutral-wash": { "role": "neutral", "displayName": "Neutral Wash", "canonical": "#efeee7", "tonalRamp": ["oklch(15% 0.01 95)", "oklch(27% 0.01 95)", "oklch(39% 0.01 95)", "oklch(51% 0.01 95)", "oklch(63% 0.01 95)", "oklch(75% 0.01 95)", "oklch(87% 0.01 95)", "oklch(95% 0.01 95)"] },
+      "warning-wash": { "role": "neutral", "displayName": "Warning Wash", "canonical": "#fff0e8", "tonalRamp": ["oklch(15% 0.03 48)", "oklch(27% 0.04 48)", "oklch(39% 0.05 48)", "oklch(51% 0.055 48)", "oklch(63% 0.05 48)", "oklch(75% 0.04 48)", "oklch(87% 0.025 48)", "oklch(95% 0.012 48)"] },
       "error-wash": { "role": "neutral", "displayName": "Error Wash", "canonical": "#fff0ef", "tonalRamp": ["oklch(15% 0.025 24)", "oklch(27% 0.035 24)", "oklch(39% 0.045 24)", "oklch(51% 0.05 24)", "oklch(63% 0.045 24)", "oklch(75% 0.035 24)", "oklch(87% 0.02 24)", "oklch(95% 0.01 24)"] }
     },
     "typographyMeta": {
-      "display": { "displayName": "Connection Display", "purpose": "The Beszel Lens title on the connection sheet only." },
-      "title": { "displayName": "Instrument Title", "purpose": "Panel, product, and selected-system titles." },
+      "display": { "displayName": "Connection Display", "purpose": "The Beszel Lens title on the connection sheet." },
+      "signal": { "displayName": "Dominant Risk Signal", "purpose": "The leading risk value on cards and in the drawer alert." },
+      "title": { "displayName": "Instrument Title", "purpose": "Fleet, product, and selected-system titles." },
       "body": { "displayName": "Operator Copy", "purpose": "Instructions, notices, and empty states." },
       "label": { "displayName": "Measurement Label", "purpose": "Compact labels, timestamps, tabs, and the brand index." },
-      "reading": { "displayName": "Telemetry Reading", "purpose": "Tabular fleet counts and percentages." }
+      "reading": { "displayName": "Telemetry Reading", "purpose": "Tabular fleet counts, gauges, and percentages." }
     },
     "shadows": [
       { "name": "sheet-lift", "value": "0 18px 50px rgba(37, 35, 26, 0.1)", "purpose": "Separates the connection sheet from the gridded canvas." },
-      { "name": "summary-lift", "value": "0 8px 28px rgba(37, 35, 26, 0.05)", "purpose": "Gives the fleet summary a restrained ambient cue." },
-      { "name": "selection-rail", "value": "inset 3px 0 #244fc7", "purpose": "Marks the selected system without elevation." }
+      { "name": "card-hover", "value": "0 7px 18px rgba(37, 35, 26, 0.07)", "purpose": "Accompanies the one-pixel hover lift of an actionable card." },
+      { "name": "card-selection-ring", "value": "0 0 0 2px rgba(36, 79, 199, 0.16)", "purpose": "Confirms the selected system without recoloring its surface." },
+      { "name": "detail-panel-lift", "value": "0 12px 32px rgba(23, 23, 19, 0.09)", "purpose": "Separates the expanded inline inspection region from the ranked grid." }
     ],
     "motion": [
-      { "name": "row-response", "value": "140ms ease-out", "purpose": "Row hover and selection response." },
-      { "name": "control-response", "value": "160ms ease-out", "purpose": "Button color and press response." },
+      { "name": "card-response", "value": "150ms ease-out", "purpose": "Card border, surface, lift, and shadow response." },
+      { "name": "control-response", "value": "160ms ease-out", "purpose": "Primary button color and press response." },
+      { "name": "detail-entry", "value": "220ms cubic-bezier(.16, 1, .3, 1)", "purpose": "Short downward arrival of the inline detail panel." },
       { "name": "gauge-calibration", "value": "350ms cubic-bezier(.2,.8,.2,1)", "purpose": "Gauge fill changes." },
       { "name": "reduced-motion", "value": "0.01ms", "purpose": "Effective motion removal when reduced motion is requested." }
     ],
     "breakpoints": [
-      { "name": "stack-workspace", "value": "920px" },
-      { "name": "compact-mobile", "value": "580px" }
+      { "name": "summary-stack", "value": "720px" },
+      { "name": "compact-mobile", "value": "520px" }
     ]
   },
   "components": [
@@ -48,83 +53,94 @@
       "refersTo": "button-primary",
       "description": "The cobalt commit action used to open the dashboard.",
       "html": "<button class=\"ds-btn-primary\">OPEN DASHBOARD</button>",
-      "css": ".ds-btn-primary { min-height: 46px; padding: 0 20px; border: 1px solid var(--blue, #244fc7); border-radius: 2px; background: var(--blue, #244fc7); color: #fff; font: 750 0.875rem/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 160ms ease-out, transform 160ms ease-out; } .ds-btn-primary:hover { background: #193da4; } .ds-btn-primary:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); }"
+      "css": ".ds-btn-primary { min-height: 46px; padding: 0 20px; border: 1px solid var(--blue, #244fc7); border-radius: var(--radius-control, 9px); background: var(--blue, #244fc7); color: #fff; font: 750 .875rem/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 160ms ease-out, transform 160ms ease-out; } .ds-btn-primary:hover { background: #193da4; } .ds-btn-primary:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); }"
     },
     {
       "name": "Connection Field",
       "kind": "input",
       "refersTo": "input",
-      "description": "A precise near-white field for hub credentials.",
+      "description": "A raised-paper field for hub credentials.",
       "html": "<label class=\"ds-field-label\">BESZEL HUB URL<input class=\"ds-field-input\" placeholder=\"https://beszel.example.com\"></label>",
-      "css": ".ds-field-label { display: grid; gap: 8px; color: var(--muted, #68675f); font: 650 .875rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-field-input { width: 100%; border: 1px solid var(--line-strong, #98968b); border-radius: 2px; background: #fffef9; color: var(--ink, #171713); padding: 12px 13px; font: 1rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-field-input:hover { border-color: var(--ink, #171713); } .ds-field-input:focus { border-color: var(--blue, #244fc7); outline: 3px solid rgba(36,79,199,.14); }"
+      "css": ".ds-field-label { display: grid; gap: 8px; color: var(--muted, #68675f); font: 650 .875rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-field-input { width: 100%; border: 1px solid var(--line-strong, #98968b); border-radius: var(--radius-control, 9px); background: var(--paper-raised, #fffef9); color: var(--ink, #171713); padding: 12px 13px; font: 1rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-field-input:hover { border-color: var(--ink, #171713); } .ds-field-input:focus { border-color: var(--blue, #244fc7); outline: 3px solid rgba(36,79,199,.14); }"
     },
     {
       "name": "Instrument Navigation",
       "kind": "nav",
-      "description": "The ruled product header and its compact external action.",
+      "description": "The low ruled product header and compact external action.",
       "html": "<nav class=\"ds-nav\"><div class=\"ds-nav-brand\"><span>BL—01</span><strong>Beszel Lens</strong></div><button class=\"ds-nav-action\">↗ OPEN BESZEL</button></nav>",
-      "css": ".ds-nav { min-height: 58px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--ink, #171713); border-bottom: 1px solid var(--ink, #171713); color: var(--ink, #171713); } .ds-nav-brand { display: flex; align-items: center; gap: 14px; } .ds-nav-brand span { color: var(--blue, #244fc7); font: 700 .75rem/1 ui-monospace, Consolas, monospace; letter-spacing: .08em; } .ds-nav-brand strong { font: 700 1.02rem/1.2 ui-sans-serif, system-ui, sans-serif; letter-spacing: -.02em; } .ds-nav-action { min-height: 38px; padding: 0 12px; border: 1px solid transparent; border-radius: 2px; background: transparent; color: inherit; font: 700 .8125rem/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-nav-action:hover { border-color: var(--line-strong, #98968b); background: var(--paper, #f8f7f1); } .ds-nav-action:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
+      "css": ".ds-nav { min-height: 54px; padding: 0 4px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line-strong, #98968b); color: var(--ink, #171713); } .ds-nav-brand { display: flex; align-items: center; gap: 14px; } .ds-nav-brand span { color: var(--blue, #244fc7); font: 700 .75rem/1 ui-monospace, Consolas, monospace; letter-spacing: .08em; } .ds-nav-brand strong { font: 700 1.02rem/1.2 ui-sans-serif, system-ui, sans-serif; letter-spacing: -.02em; } .ds-nav-action { min-height: 38px; padding: 0 12px; border: 1px solid transparent; border-radius: var(--radius-control, 9px); background: transparent; color: inherit; font: 700 .8125rem/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-nav-action:hover { border-color: var(--line-strong, #98968b); background: var(--paper, #f8f7f1); } .ds-nav-action:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
     },
     {
       "name": "Range Tabs",
       "kind": "button",
       "refersTo": "range-tab-active",
-      "description": "A square segmented control for choosing the history window.",
+      "description": "A rounded segmented control for choosing the history window.",
       "html": "<div class=\"ds-range\"><button class=\"ds-range-tab ds-active\">1h</button><button class=\"ds-range-tab\">12h</button><button class=\"ds-range-tab\">24h</button></div>",
-      "css": ".ds-range { display: inline-flex; border: 1px solid var(--line-strong, #98968b); } .ds-range-tab { min-width: 44px; height: 32px; border: 0; border-right: 1px solid var(--line-strong, #98968b); border-radius: 0; background: transparent; color: var(--ink, #171713); font: 700 .72rem/1 ui-monospace, Consolas, monospace; cursor: pointer; } .ds-range-tab:last-child { border-right: 0; } .ds-range-tab:hover { background: #ecebe4; } .ds-range-tab:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-range-tab.ds-active { background: var(--ink, #171713); color: var(--paper, #f8f7f1); }"
+      "css": ".ds-range { display: inline-flex; overflow: hidden; border: 1px solid var(--line-strong, #98968b); border-radius: var(--radius-control, 9px); } .ds-range-tab { min-width: 42px; height: 32px; border: 0; border-right: 1px solid var(--line-strong, #98968b); border-radius: 0; background: transparent; color: var(--ink, #171713); font: 700 .7rem/1 ui-monospace, Consolas, monospace; cursor: pointer; } .ds-range-tab:last-child { border-right: 0; } .ds-range-tab:hover { background: #ecebe4; } .ds-range-tab:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: -3px; } .ds-range-tab.ds-active { background: var(--ink, #171713); color: var(--paper, #f8f7f1); }"
     },
     {
-      "name": "System Row",
-      "kind": "custom",
-      "refersTo": "system-row-selected",
-      "description": "The selected fleet record with identity and aligned telemetry.",
-      "html": "<button class=\"ds-system-row ds-selected\"><span class=\"ds-system-name\"><i></i><b>edge-node-01</b></span><span><small>CPU</small><b>42%</b></span><span><small>MEM</small><b>68%</b></span><span><small>DISK</small><b>31%</b></span></button>",
-      "css": ".ds-system-row { width: 100%; display: grid; grid-template-columns: minmax(140px,1fr) repeat(3,54px); gap: 13px; align-items: center; border: 0; border-bottom: 1px solid var(--line, #c9c7ba); padding: 14px 18px; background: transparent; color: var(--ink, #171713); text-align: right; cursor: pointer; transition: background 140ms ease-out, box-shadow 140ms ease-out; } .ds-system-row:hover { background: #efeee7; } .ds-system-row:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-system-row.ds-selected { background: #e8ecfa; box-shadow: inset 3px 0 var(--blue, #244fc7); } .ds-system-row span { display: grid; gap: 4px; } .ds-system-row .ds-system-name { grid-template-columns: 9px 1fr; align-items: center; text-align: left; } .ds-system-name i { width: 9px; height: 9px; border-radius: 50%; background: var(--green, #217451); } .ds-system-row small { color: var(--muted, #68675f); font: .62rem/1 ui-monospace, Consolas, monospace; letter-spacing: .06em; } .ds-system-row b { font: 700 .82rem/1 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }"
+      "name": "Risk Card",
+      "kind": "card",
+      "refersTo": "system-card",
+      "description": "A dense fleet card whose dominant signal and position are driven by risk.",
+      "html": "<button class=\"ds-risk-card ds-warning\"><span class=\"ds-card-head\"><i></i><b>edge-node-01</b><small>Up 14d 3h</small></span><span class=\"ds-card-signal\"><strong>84%</strong><span><b>Memory pressure</b><small>Memory utilization</small></span></span><span class=\"ds-card-metrics\"><span>CPU <b>42%</b></span><span>MEM <b class=\"ds-hot\">84%</b></span><span>DISK <b>61%</b></span></span></button>",
+      "css": ".ds-risk-card { width: 240px; min-height: 146px; padding: 11px 12px 10px; display: grid; grid-template-rows: auto 1fr auto; gap: 10px; overflow: hidden; border: 1px solid var(--line, #c9c7ba); border-radius: var(--radius-card, 14px); background: var(--paper, #f8f7f1); color: var(--ink, #171713); text-align: left; cursor: pointer; transition: border-color 150ms ease-out, background 150ms ease-out, transform 150ms ease-out, box-shadow 150ms ease-out; } .ds-risk-card:hover { border-color: var(--line-strong, #98968b); background: var(--paper-raised, #fffef9); transform: translateY(-1px); box-shadow: 0 7px 18px rgba(37,35,26,.07); } .ds-risk-card:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-risk-card.ds-warning { border-color: rgba(201,84,22,.55); } .ds-card-head { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 8px; align-items: center; } .ds-card-head i { width: 8px; height: 8px; border-radius: 50%; background: var(--green, #217451); } .ds-card-head b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 .82rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-card-head small { color: var(--muted, #68675f); font: .62rem/1 ui-monospace, Consolas, monospace; } .ds-card-signal { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 10px; align-items: center; } .ds-card-signal > strong { color: var(--orange, #c95416); font: 760 1.42rem/1 'Archivo Variable', sans-serif; letter-spacing: -.03em; } .ds-card-signal > span { display: grid; gap: 2px; } .ds-card-signal b { color: var(--orange, #c95416); font: 700 .76rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-card-signal small { color: var(--muted, #68675f); font: .65rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-card-metrics { display: grid; grid-template-columns: repeat(3,1fr); padding-top: 8px; border-top: 1px solid var(--line, #c9c7ba); } .ds-card-metrics span { display: flex; justify-content: space-between; gap: 4px; padding: 0 7px; border-right: 1px solid var(--line, #c9c7ba); color: var(--muted, #68675f); font: .59rem/1 ui-monospace, Consolas, monospace; } .ds-card-metrics span:last-child { border-right: 0; padding-right: 0; } .ds-card-metrics span:first-child { padding-left: 0; } .ds-card-metrics b { color: var(--ink, #171713); font-size: .68rem; } .ds-card-metrics .ds-hot { color: var(--orange, #c95416); }"
     },
     {
-      "name": "Utilization Gauge",
+      "name": "Selected Risk Card",
+      "kind": "card",
+      "refersTo": "system-card-hover",
+      "description": "The selected fleet card, confirmed by cobalt border and ring.",
+      "html": "<button class=\"ds-selected-card\"><span>SELECTED SYSTEM</span><strong>edge-node-01</strong><small>Inspecting current and historical readings</small></button>",
+      "css": ".ds-selected-card { width: 240px; min-height: 146px; padding: 11px 12px 10px; display: grid; align-content: center; gap: 8px; border: 1px solid var(--blue, #244fc7); border-radius: var(--radius-card, 14px); background: var(--paper, #f8f7f1); color: var(--ink, #171713); box-shadow: 0 0 0 2px rgba(36,79,199,.16); text-align: left; cursor: pointer; transition: background 150ms ease-out, transform 150ms ease-out; } .ds-selected-card span { color: var(--blue, #244fc7); font: 700 .68rem/1 ui-monospace, Consolas, monospace; letter-spacing: .06em; } .ds-selected-card strong { font: 760 1.1rem/1.1 'Archivo Variable', sans-serif; } .ds-selected-card small { color: var(--muted, #68675f); font: .7rem/1.3 ui-sans-serif, system-ui, sans-serif; } .ds-selected-card:hover { background: var(--paper-raised, #fffef9); transform: translateY(-1px); } .ds-selected-card:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 3px; }"
+    },
+    {
+      "name": "Detail Panel",
       "kind": "custom",
-      "description": "A ruled telemetry cell with a thin calibrated fill.",
-      "html": "<div class=\"ds-gauge\"><div><span>CPU</span><strong>72%</strong></div><div class=\"ds-gauge-track\"><i></i></div></div>",
-      "css": ".ds-gauge { width: 240px; padding: 16px 18px 18px; border: 1px solid var(--line, #c9c7ba); background: var(--paper, #f8f7f1); color: var(--ink, #171713); } .ds-gauge > div:first-child { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; } .ds-gauge span { color: var(--muted, #68675f); font: .68rem/1 ui-monospace, Consolas, monospace; letter-spacing: .06em; } .ds-gauge strong { font: 700 1.15rem/1 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; } .ds-gauge-track { height: 4px; overflow: hidden; background: #d8d6cc; } .ds-gauge-track i { display: block; width: 72%; height: 100%; background: var(--blue, #244fc7); transition: width 350ms cubic-bezier(.2,.8,.2,1); } .ds-gauge:hover .ds-gauge-track i { width: 78%; }"
+      "refersTo": "detail-panel",
+      "description": "The full-width inline inspection region for dominant risk, gauges, and history.",
+      "html": "<section class=\"ds-detail-panel\"><header><span><i></i><b>edge-node-01</b></span><button>CLOSE</button></header><div class=\"ds-alert\"><span>Memory pressure<small>Memory utilization</small></span><strong>84%</strong></div><div class=\"ds-gauges\"><span>CPU <b>42%</b><i><em style=\"width:42%\"></em></i></span><span>MEM <b>84%</b><i><em class=\"ds-warn\" style=\"width:84%\"></em></i></span><span>DISK <b>61%</b><i><em style=\"width:61%\"></em></i></span></div></section>",
+      "css": ".ds-detail-panel { width: 100%; margin-bottom: 10px; overflow: hidden; border: 1px solid var(--line-strong, #98968b); border-radius: var(--radius-card, 14px); background: var(--paper, #f8f7f1); color: var(--ink, #171713); box-shadow: 0 12px 32px rgba(23,23,19,.09); } .ds-detail-panel header { min-height: 70px; padding: 13px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line, #c9c7ba); } .ds-detail-panel header span { display: flex; align-items: center; gap: 10px; } .ds-detail-panel header i { width: 8px; height: 8px; border-radius: 50%; background: var(--green, #217451); } .ds-detail-panel header b { font: 700 1rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-detail-panel button { min-height: 38px; padding: 0 10px; border: 1px solid var(--line, #c9c7ba); border-radius: var(--radius-control, 9px); background: transparent; color: inherit; font: 700 .75rem/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-detail-panel button:hover { background: #eeede6; border-color: var(--line-strong, #98968b); } .ds-detail-panel button:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-alert { margin: 14px; padding: 14px 15px; display: flex; align-items: center; justify-content: space-between; border-radius: 11px; background: var(--neutral-wash, #efeee7); } .ds-alert span { display: grid; gap: 3px; font: 750 .82rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-alert small { color: var(--muted, #68675f); font-size: .7rem; font-weight: 400; } .ds-alert strong { font: 760 1.6rem/1 'Archivo Variable', sans-serif; letter-spacing: -.03em; } .ds-gauges { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid var(--line, #c9c7ba); border-bottom: 1px solid var(--line, #c9c7ba); } .ds-gauges > span { padding: 14px 15px 16px; display: grid; grid-template-columns: 1fr auto; gap: 10px; border-right: 1px solid var(--line, #c9c7ba); color: var(--muted, #68675f); font: .66rem/1 ui-monospace, Consolas, monospace; } .ds-gauges > span:last-child { border-right: 0; } .ds-gauges b { color: var(--ink, #171713); font-size: 1.08rem; } .ds-gauges i { grid-column: 1 / -1; height: 5px; overflow: hidden; border-radius: 99px; background: #d8d6cc; } .ds-gauges em { display: block; height: 100%; border-radius: inherit; background: var(--blue, #244fc7); } .ds-gauges .ds-warn { background: var(--orange, #c95416); }"
     },
     {
       "name": "Critical Notice",
       "kind": "custom",
-      "description": "An inline ruled failure boundary with a visible recovery action.",
+      "description": "A localized rounded failure boundary with a visible recovery action.",
       "html": "<div class=\"ds-notice\"><strong>Fleet unavailable</strong><span>Could not load systems from this hub.</span><button>Reload fleet</button></div>",
-      "css": ".ds-notice { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--red, #b92f38); background: #fff0ef; color: #6f1b22; font: .875rem/1.45 ui-sans-serif, system-ui, sans-serif; } .ds-notice button { border: 0; background: transparent; color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; } .ds-notice button:hover { color: var(--red, #b92f38); } .ds-notice button:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
+      "css": ".ds-notice { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 11px 14px; border: 1px solid var(--red, #b92f38); border-radius: var(--radius-control, 9px); background: var(--error-wash, #fff0ef); color: #6f1b22; font: .875rem/1.45 ui-sans-serif, system-ui, sans-serif; } .ds-notice button { border: 0; background: transparent; color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; } .ds-notice button:hover { color: var(--red, #b92f38); } .ds-notice button:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
     }
   ],
   "narrative": {
-    "northStar": "The Live Calibration Ledger",
-    "overview": "Beszel Lens looks like an instrument sheet that happens to be live: warm paper and canvas, exact black rules, compact measurements, and cobalt annotation ink. Its authority comes from precision and legibility rather than decorative chrome. The interface is dense enough for operators, but never cramped; generous outer margins frame tightly ruled internal regions.\n\nThe system deliberately refuses the generic rounded-card dashboard. Panels join a shared visual ledger, readings align, and status color stays quiet until it carries operational meaning. Motion is brief and mechanical: controls acknowledge input, gauges calibrate, and loading bars scan.",
+    "northStar": "The Risk Calibration Index",
+    "overview": "Beszel Lens is a warm, compact field of live instrument cards. It keeps the calibration-sheet precision of muted paper, exact rules, terse labels, and cobalt measurement ink, then makes the fleet easier to scan through restrained rounding and a risk-driven reading order. The result feels operational and composed rather than decorative.\n\nThe interface leads with the system that needs attention most. Neutral cards form the steady baseline; exception color appears at the border and dominant signal only when risk warrants it. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.",
     "keyCharacteristics": [
-      "Warm paper surfaces on a slightly darker canvas.",
-      "Exact one-pixel rules organize information more often than whitespace or shadows.",
-      "Cobalt marks interaction and measurement; indigo and green distinguish normal data series.",
-      "Monospaced, tabular readings sit beside compact sans-serif titles and labels.",
-      "Orange and red appear only when the system needs attention."
+      "Dense 220px auto-fill cards put the highest-risk system first.",
+      "Warm neutral surfaces carry normal state; color is concentrated on interaction and exceptions.",
+      "Fourteen-pixel cards and nine-pixel controls soften the instrument language without becoming pill-heavy.",
+      "Circular status marks and fully capped progress tracks provide compact live-state cues.",
+      "A full-width inline detail panel places current and historical readings directly before the ranked grid."
     ],
     "rules": [
-      { "name": "The Exception Ink Rule", "body": "Orange and red communicate degraded, pending, critical, or failed states only; they never serve as general accents.", "section": "colors" },
-      { "name": "The One Cobalt Rule", "body": "Cobalt owns action, focus, active measurement, and selected-edge emphasis. Do not introduce a second interactive accent.", "section": "colors" },
-      { "name": "The Measured Number Rule", "body": "Operational numbers use monospaced, tabular figures; prose never imitates telemetry styling.", "section": "typography" },
-      { "name": "The One Display Moment Rule", "body": "Archivo's large display treatment belongs to the connection sheet only. The dashboard stays compact.", "section": "typography" },
-      { "name": "The Flat Ledger Rule", "body": "Panels and cells remain flat at rest; use rules, tonal fields, and a selection rail before adding elevation.", "section": "elevation" },
-      { "name": "The Two-Pixel Ceiling Rule", "body": "Controls may soften to 2px; structural containers remain square. Never turn the ledger into a collection of pills or rounded cards.", "section": "shapes" }
+      { "name": "The Exception Edge Rule", "body": "Warning and critical color belongs on the card edge and its dominant signal; keep the card body neutral so the fleet remains scannable.", "section": "colors" },
+      { "name": "The One Cobalt Rule", "body": "Cobalt owns action, focus, active measurement, and selection. Do not introduce a second interactive accent.", "section": "colors" },
+      { "name": "The Dominant Signal Rule", "body": "Every system card gets one large risk value and one plain-language risk label; supporting telemetry stays smaller.", "section": "typography" },
+      { "name": "The Measured Number Rule", "body": "Operational numbers use Archivo signal type or monospaced tabular figures according to hierarchy; prose never imitates telemetry styling.", "section": "typography" },
+      { "name": "The State Earns Depth Rule", "body": "Resting fleet surfaces stay flat. Elevation appears only for actionable hover, explicit selection, or the expanded inspection region.", "section": "elevation" },
+      { "name": "The Radius Hierarchy Rule", "body": "Use 14px for cards, 9px for controls, and full caps only for status or progress geometry. Do not apply pill shapes to text actions or containers.", "section": "shapes" }
     ],
     "dos": [
-      "Do organize dense information with one-pixel rules, aligned cells, and the 6/8/12/18/24px spacing rhythm.",
-      "Do keep current readings and historical series visually adjacent to the selected system.",
-      "Do preserve native sans for prose, Archivo for the single display moment, and mono tabular numerals for telemetry.",
-      "Do make abnormal state immediately scannable through semantic color and plain-language error boundaries.",
+      "Do rank system cards by computed operational risk, using name only as the stable tie-breaker.",
+      "Do use a dense auto-fill grid with a 220px card minimum and 10px gaps on larger screens.",
+      "Do keep normal card surfaces neutral and concentrate exception color on borders, dominant signals, and localized alerts.",
+      "Do use 14px cards, 9px controls, and full caps for status and progress geometry.",
+      "Do inspect a selected system in the inline panel above the grid while preserving the risk-ranked card order.",
       "Do honor reduced-motion preferences while keeping default transitions brief and mechanical."
     ],
     "donts": [
-      "Don't introduce rounded cards, pill controls, glass effects, or decorative gradients.",
-      "Don't use orange or red as brand decoration or for normal readings.",
-      "Don't add shadows to ordinary panels, rows, gauges, or charts.",
+      "Don't turn the fleet back into a sequential table or manually arranged dashboard grid.",
+      "Don't flood warning or critical cards with saturated background color.",
+      "Don't use pill shapes for text actions, cards, or general containers.",
+      "Don't add elevation to resting cards or summary cells.",
       "Don't collapse the chart's information density on mobile; preserve the plot and allow deliberate horizontal inspection.",
       "Don't imply that Beszel Lens replaces Beszel administration or is an official Beszel product."
     ]
