@@ -449,6 +449,8 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
   const displayedColumns: ColumnKey[] = ["system", ...optionalColumns.map((column) => column.key).filter((column) => visibleColumns.has(column))]
   const tableMinimumWidth = displayedColumns.reduce((total, column) => total + preferences.widths[column], 0)
   const configuredRefreshSeconds = Number.isFinite(refreshIntervalSeconds) && refreshIntervalSeconds >= 15 ? Math.round(refreshIntervalSeconds) : 0
+  const tableTopScroll = useRef<HTMLDivElement>(null)
+  const tableBodyScroll = useRef<HTMLDivElement>(null)
 
   return (
     <main class="dashboard-shell">
@@ -481,12 +483,19 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
             {rankedSystems.map((system) => <SystemCard system={system} selected={selectedId === system.id} visibleColumns={visibleColumns} onSelect={() => selectSystem(system.id)} key={system.id} />)}
           </div>
         ) : rankedSystems.length ? (
-          <div class="row-view">
-            <table class="system-table" style={{ minWidth: `${tableMinimumWidth}px` }}>
-              <colgroup>{displayedColumns.map((column) => <col style={{ width: `${preferences.widths[column]}px` }} key={column} />)}</colgroup>
-              <thead><tr><ResizableHeader label="System" column="system" width={preferences.widths.system} onResize={resizeColumn} />{visibleColumns.has("condition") && <ResizableHeader label="Condition" column="condition" width={preferences.widths.condition} onResize={resizeColumn} />}{visibleColumns.has("cpu") && <ResizableHeader label="CPU" column="cpu" width={preferences.widths.cpu} onResize={resizeColumn} />}{visibleColumns.has("memory") && <ResizableHeader label="RAM" column="memory" width={preferences.widths.memory} onResize={resizeColumn} />}{visibleColumns.has("drives") && <ResizableHeader label="Drives" column="drives" width={preferences.widths.drives} onResize={resizeColumn} />}</tr></thead>
-              <tbody>{rankedSystems.map((system) => <SystemRow system={system} selected={selectedId === system.id} visibleColumns={visibleColumns} onSelect={() => selectSystem(system.id)} key={system.id} />)}</tbody>
-            </table>
+          <div class="row-table-shell">
+            <div class="row-scroll-top" ref={tableTopScroll} role="region" aria-label="Scroll system columns" tabIndex={0} onScroll={(event) => {
+              if (tableBodyScroll.current) tableBodyScroll.current.scrollLeft = event.currentTarget.scrollLeft
+            }}><div style={{ width: `${tableMinimumWidth}px` }} /></div>
+            <div class="row-view" ref={tableBodyScroll} onScroll={(event) => {
+              if (tableTopScroll.current) tableTopScroll.current.scrollLeft = event.currentTarget.scrollLeft
+            }}>
+              <table class="system-table" style={{ minWidth: `${tableMinimumWidth}px` }}>
+                <colgroup>{displayedColumns.map((column) => <col style={{ width: `${preferences.widths[column]}px` }} key={column} />)}</colgroup>
+                <thead><tr><ResizableHeader label="System" column="system" width={preferences.widths.system} onResize={resizeColumn} />{visibleColumns.has("condition") && <ResizableHeader label="Condition" column="condition" width={preferences.widths.condition} onResize={resizeColumn} />}{visibleColumns.has("cpu") && <ResizableHeader label="CPU" column="cpu" width={preferences.widths.cpu} onResize={resizeColumn} />}{visibleColumns.has("memory") && <ResizableHeader label="RAM" column="memory" width={preferences.widths.memory} onResize={resizeColumn} />}{visibleColumns.has("drives") && <ResizableHeader label="Drives" column="drives" width={preferences.widths.drives} onResize={resizeColumn} />}</tr></thead>
+                <tbody>{rankedSystems.map((system) => <SystemRow system={system} selected={selectedId === system.id} visibleColumns={visibleColumns} onSelect={() => selectSystem(system.id)} key={system.id} />)}</tbody>
+              </table>
+            </div>
           </div>
         ) : (
           <div class="empty-state"><ServerIcon /><h3>{systems.length ? "No matching systems" : "No systems found"}</h3><p>{systems.length ? "Try a different quick filter." : "This account does not have access to any Beszel systems yet."}</p>{!systems.length && <a href={hubUrl} target="_blank" rel="noreferrer">Open Beszel to add one <ExternalIcon /></a>}</div>
