@@ -18,13 +18,13 @@ Lens connects directly from your browser to an existing Beszel Hub. It leaves co
 
 - Authenticate as a normal Beszel user.
 - Scan online, offline, paused, and pending systems.
-- Compare current CPU, memory, and disk utilization.
+- Compare current CPU, RAM, and every reported drive with compact, threshold-colored utilization bars.
 - Rank systems by an explainable risk score so likely problems stay at the top.
 - Surface the dominant condition on every card, including offline systems, failed services, high CPU or memory, load, and the fullest primary or extra filesystem.
 - Inspect 1-hour, 12-hour, and 24-hour history.
 - Receive current system updates through PocketBase realtime events.
 - Jump back to Beszel for administration.
-- Responsive desktop and mobile layout.
+- Use the full browser width with a fluid card grid that grows readings when space is available and collapses cleanly on mobile.
 
 ## Run locally
 

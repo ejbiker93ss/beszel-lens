@@ -17,7 +17,7 @@ import {
 } from "./beszel"
 import { MetricChart } from "./chart"
 import { CloseIcon, ExternalIcon, LogoutIcon, RefreshIcon, ServerIcon } from "./icons"
-import { assessSystem, rankSystems } from "./risk"
+import { assessSystem, driveReadings, rankSystems } from "./risk"
 import "./styles.css"
 
 function value(amount: number | undefined) {
@@ -37,13 +37,44 @@ function metricTone(amount: number, warning = 75, critical = 90) {
   return "normal"
 }
 
+function clampPercent(amount: number) {
+  return Math.max(0, Math.min(100, amount))
+}
+
+function usageTone(amount: number | undefined, warning = 75, critical = 90) {
+  if (!Number.isFinite(amount)) return "unavailable"
+  const percent = amount as number
+  if (percent >= critical) return "critical"
+  if (percent >= warning) return "warning"
+  if (percent >= 60) return "elevated"
+  return "low"
+}
+
 function Gauge({ label, amount, warning = 75 }: { label: string; amount: number; warning?: number }) {
-  const tone = metricTone(amount, warning)
+  const percent = clampPercent(amount)
+  const tone = metricTone(percent, warning)
   return (
     <div class={`gauge ${tone}`}>
       <div class="gauge-label"><span>{label}</span><strong>{amount}%</strong></div>
-      <div class="gauge-track" aria-label={`${label} ${amount}%`} role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={amount}>
-        <span style={{ transform: `scaleX(${amount / 100})` }} />
+      <div class="gauge-track" aria-label={`${label} ${amount}%`} role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
+        <span style={{ transform: `scaleX(${percent / 100})` }} />
+      </div>
+    </div>
+  )
+}
+
+function MetricBar({ label, amount, warning = 75 }: { label: string; amount: number | undefined; warning?: number }) {
+  const available = Number.isFinite(amount)
+  const rounded = available ? Math.round(amount as number) : undefined
+  const percent = clampPercent(rounded ?? 0)
+  const tone = usageTone(rounded, warning)
+  const meterProps = available ? { "aria-valuenow": percent } : { "aria-valuetext": "Unavailable" }
+
+  return (
+    <div class={`metric-bar ${tone}`}>
+      <div class="metric-bar-label"><span title={label}>{label}</span><strong>{available ? `${rounded}%` : "—"}</strong></div>
+      <div class="metric-bar-track" role="meter" aria-label={`${label} usage`} aria-valuemin={0} aria-valuemax={100} {...meterProps}>
+        <span style={{ transform: `scaleX(${percent / 100})` }} />
       </div>
     </div>
   )
@@ -77,33 +108,26 @@ function Login({ onConnect, busy, error }: { onConnect: (hub: string, email: str
 
 function SystemCard({ system, selected, onSelect }: { system: SystemRecord; selected: boolean; onSelect: () => void }) {
   const risk = assessSystem(system)
-  const cpu = value(system.info.cpu)
-  const memory = value(system.info.mp)
-  const disk = value(system.info.dp)
+  const drives = driveReadings(system)
   return (
-    <button
-      class={`system-card tone-${risk.tone} ${selected ? "selected" : ""}`}
-      type="button"
-      onClick={onSelect}
-      aria-expanded={selected}
-      aria-controls="system-detail"
-      data-system-id={system.id}
-    >
-      <div class="card-header">
-        <span class={`status-mark ${system.status}`} />
-        <strong title={system.name}>{system.name}</strong>
-        <span class="uptime">{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</span>
+    <article class={`system-card tone-${risk.tone} ${selected ? "selected" : ""}`}>
+      <button class="card-open" type="button" onClick={onSelect} aria-expanded={selected} aria-controls="system-detail" data-system-id={system.id}>
+        <div class="card-header">
+          <span class={`status-mark ${system.status}`} />
+          <strong title={system.name}>{system.name}</strong>
+          <span class="uptime">{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</span>
+        </div>
+        <div class={`card-condition tone-${risk.tone}`}>
+          <b>{risk.tone === "normal" ? "Within limits" : risk.label}</b>
+          <small>{risk.detail}</small>
+        </div>
+      </button>
+      <div class="metric-bars" role="group" aria-label={`${system.name} current utilization`}>
+        <MetricBar label="CPU" amount={system.info.cpu} />
+        <MetricBar label="RAM" amount={system.info.mp} />
+        {drives.map((drive, index) => <MetricBar label={drive.label} amount={drive.value} warning={80} key={`${drive.label}-${index}`} />)}
       </div>
-      <div class="card-signal">
-        <strong>{risk.value}</strong>
-        <span><b>{risk.label}</b><small>{risk.detail}</small></span>
-      </div>
-      <div class="card-metrics">
-        <span>CPU <b class={metricTone(cpu)}>{cpu}%</b></span>
-        <span>MEM <b class={metricTone(memory)}>{memory}%</b></span>
-        <span>DISK <b class={metricTone(disk, 80)}>{disk}%</b></span>
-      </div>
-    </button>
+    </article>
   )
 }
 

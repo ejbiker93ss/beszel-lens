@@ -14,6 +14,12 @@ interface Candidate extends RiskAssessment {
   rawValue: number
 }
 
+export interface DriveReading {
+  label: string
+  value: number | undefined
+  primary: boolean
+}
+
 const toneRank: Record<RiskTone, number> = { normal: 0, warning: 1, critical: 2 }
 
 function percentRisk(rawValue: number, warning: number, critical: number, weight = 1) {
@@ -53,6 +59,23 @@ function diskName(name: string) {
   return /^[a-z]:[\\/]?$/i.test(clean) ? `${clean.slice(0, 2).toUpperCase()} drive` : clean || "Primary disk"
 }
 
+export function driveReadings(system: SystemRecord): DriveReading[] {
+  const primaryName = system.info.rdn || "Primary disk"
+  const drives: DriveReading[] = [{
+    label: diskName(primaryName),
+    value: system.info.dp,
+    primary: true,
+  }]
+
+  for (const [name, amount] of Object.entries(system.info.efs ?? {})) {
+    drives.push({ label: diskName(name), value: amount, primary: false })
+  }
+
+  return drives.sort((left, right) => Number(right.primary) - Number(left.primary)
+    || (right.value ?? -1) - (left.value ?? -1)
+    || left.label.localeCompare(right.label))
+}
+
 export function assessSystem(system: SystemRecord): RiskAssessment {
   if (system.status === "down") return { score: 130, tone: "critical", label: "Offline", detail: "No live telemetry", value: "DOWN" }
   if (system.status === "pending") return { score: 115, tone: "warning", label: "Pending", detail: "Waiting for first reading", value: "WAIT" }
@@ -65,8 +88,8 @@ export function assessSystem(system: SystemRecord): RiskAssessment {
     metric(diskLabel(info.rdn || "Primary disk"), `${diskName(info.rdn || "Primary disk")} usage`, info.dp ?? 0, 80, 90, 1.12),
   ]
 
-  for (const [name, amount] of Object.entries(info.efs ?? {})) {
-    candidates.push(metric(diskLabel(name), `${diskName(name)} usage`, amount, 80, 90, 1.12))
+  for (const drive of driveReadings(system).filter((reading) => !reading.primary)) {
+    candidates.push(metric(diskLabel(drive.label), `${drive.label} usage`, drive.value ?? 0, 80, 90, 1.12))
   }
 
   if ((info.sv?.[1] ?? 0) > 0) {

@@ -12,6 +12,7 @@ colors:
   cobalt-ink: "#244fc7"
   indigo-reading: "#67718e"
   healthy-green: "#217451"
+  elevated-gold: "#9b7211"
   warning-orange: "#c95416"
   critical-red: "#b92f38"
   neutral-wash: "#efeee7"
@@ -26,7 +27,7 @@ typography:
     letterSpacing: "-0.04em"
   signal:
     fontFamily: "Archivo Variable, sans-serif"
-    fontSize: "1.42rem"
+    fontSize: "1.6rem"
     fontWeight: 760
     lineHeight: 1
     letterSpacing: "-0.03em"
@@ -41,6 +42,12 @@ typography:
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.5
+    letterSpacing: "normal"
+  condition:
+    fontFamily: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+    fontSize: "0.72rem"
+    fontWeight: 700
+    lineHeight: 1.2
     letterSpacing: "normal"
   label:
     fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace"
@@ -89,12 +96,16 @@ components:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.card}"
-    padding: "11px 12px 10px"
-    height: "146px"
+    padding: "clamp(11px, 0.8vw, 16px)"
   system-card-hover:
     backgroundColor: "{colors.paper-raised}"
     textColor: "{colors.ink}"
     rounded: "{rounded.card}"
+  metric-bar:
+    backgroundColor: "#d8d6cc"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.cap}"
+    height: "clamp(6px, 2.5cqw, 9px)"
   range-tab:
     backgroundColor: "transparent"
     textColor: "{colors.ink}"
@@ -118,21 +129,22 @@ components:
 
 **Creative North Star: "The Risk Calibration Index"**
 
-Beszel Lens is a warm, compact field of live instrument cards. It keeps the calibration-sheet precision of muted paper, exact rules, terse labels, and cobalt measurement ink, then makes the fleet easier to scan through restrained rounding and a risk-driven reading order. The result feels operational and composed rather than decorative.
+Beszel Lens is a warm, compact field of live instrument cards that uses the full viewport rather than stopping at an arbitrary desktop container. It keeps the calibration-sheet precision of muted paper, exact rules, terse labels, and cobalt measurement ink, then makes the fleet easier to scan through restrained rounding and a risk-driven reading order. The result feels operational and composed rather than decorative.
 
-The interface leads with the system that needs attention most. Neutral cards form the steady baseline; exception color appears at the border and dominant signal only when risk warrants it. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.
+The interface leads with the system that needs attention most. Each card explains why it holds that position in one compact condition line, then exposes CPU, RAM, the primary disk, and every extra drive as semantic utilization bars. Neutral cards form the steady baseline; exception color appears at the border, condition, and individual bars only when warranted. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.
 
 **Key Characteristics:**
 
-- Dense 220px auto-fill cards put the highest-risk system first.
+- A full-viewport auto-fill grid fluidly targets 230–320px cards and puts the highest-risk system first.
 - Warm neutral surfaces carry normal state; color is concentrated on interaction and exceptions.
 - Fourteen-pixel cards and nine-pixel controls soften the instrument language without becoming pill-heavy.
-- Circular status marks and fully capped progress tracks provide compact live-state cues.
+- Compact condition copy explains rank without a large risk number.
+- Circular status marks and size-responsive, fully capped utilization bars provide live-state cues.
 - A full-width inline detail panel places current and historical readings directly before the ranked grid.
 
 ## Colors
 
-The palette preserves archival neutrals and cobalt interaction ink while using orange and red as concentrated exception signals.
+The palette preserves archival neutrals and cobalt interaction ink while assigning a discrete green/gold/orange/red sequence to utilization severity.
 
 ### Primary
 
@@ -141,16 +153,17 @@ The palette preserves archival neutrals and cobalt interaction ink while using o
 ### Secondary
 
 - **Neutral Indigo Reading:** Distinguishes memory history without competing with selection and interaction.
-- **Healthy Green:** Marks online status and disk history; it reports health rather than decorating card surfaces.
+- **Healthy Green:** Marks online status, healthy utilization below 60%, and disk history.
 
 ### Tertiary
 
-- **Warning Orange:** Marks warning-card borders, dominant warning signals, elevated readings, and pending state.
-- **Critical Red:** Marks critical-card borders, dominant critical signals, unavailable systems, and failure boundaries.
+- **Elevated Gold:** Marks utilization from 60% until the warning threshold, distinguishing a rising reading from both healthy and actionable states.
+- **Warning Orange:** Marks utilization at the warning threshold, warning-card borders, compact warning conditions, and pending state.
+- **Critical Red:** Marks utilization at 90% and above, critical-card borders, compact critical conditions, unavailable systems, and failure boundaries.
 
 ### Neutral
 
-- **Warm Paper:** The default card, summary, drawer, and sheet surface.
+- **Warm Paper:** The default card, summary, detail-panel, and sheet surface.
 - **Raised Paper:** A brighter hover and input surface that provides quiet tactile feedback.
 - **Workshop Canvas:** The page field behind the fleet.
 - **Exact Ink:** Primary text and active segmented controls.
@@ -161,7 +174,9 @@ The palette preserves archival neutrals and cobalt interaction ink while using o
 
 ### Named Rules
 
-**The Exception Edge Rule.** Warning and critical color belongs on the card edge and its dominant signal; keep the card body neutral so the fleet remains scannable.
+**The Semantic Bar Rule.** Utilization bars progress through healthy green, elevated gold, warning orange, and critical red. An unavailable reading uses a neutral diagonal stripe, never a fabricated zero.
+
+**The Exception Edge Rule.** Warning and critical color belongs on the card edge and its compact condition; keep the card body neutral so the fleet remains scannable.
 
 **The One Cobalt Rule.** Cobalt owns action, focus, active measurement, and selection. Do not introduce a second interactive accent.
 
@@ -171,28 +186,29 @@ The palette preserves archival neutrals and cobalt interaction ink while using o
 **Body Font:** Native UI sans-serif stack  
 **Label/Mono Font:** Native UI monospace stack
 
-**Character:** Archivo gives both the connection title and each card's dominant risk value compact technical authority. Native sans keeps names and explanations immediate, while monospaced tabular readings preserve measurement alignment.
+**Character:** Archivo gives the connection title and expanded detail alert compact technical authority. Native sans keeps card names and rank explanations immediate, while monospaced tabular readings preserve measurement alignment.
 
 ### Hierarchy
 
 - **Display:** Bold, tightly tracked, and compact; used for the Beszel Lens connection title.
-- **Signal:** Heavy Archivo with tight tracking; used for the dominant risk value on cards and in the drawer alert.
+- **Signal:** Heavy Archivo with tight tracking; reserved for the dominant risk value inside the expanded detail alert, not fleet cards.
 - **Title:** Bold native sans with slightly tightened tracking; used for fleet, product, and selected-system titles.
 - **Body:** Regular native sans with a relaxed reading line height; used for instructions, notices, and empty-state copy.
+- **Condition:** Compact bold native sans; names the reason a card holds its place in the risk order.
 - **Label:** Bold compact mono with expanded tracking; used for the brand index, metric names, counts, timestamps, and range controls.
 - **Reading:** Bold mono with tabular numerals; used for gauges, percentages, and fleet totals.
 
 ### Named Rules
 
-**The Dominant Signal Rule.** Every system card gets one large risk value and one plain-language risk label; supporting telemetry stays smaller.
+**The Condition-First Rule.** Every system card states why it is ranked in one compact condition line; do not repeat a large risk number in the grid.
 
 **The Measured Number Rule.** Operational numbers use Archivo signal type or monospaced tabular figures according to hierarchy; prose never imitates telemetry styling.
 
 ## Layout
 
-The dashboard is a centered, fluid fleet index with a maximum width of 1780px and compact outer padding. A low ruled header leads into a rounded four-cell fleet summary and then the priority heading. The fleet uses an auto-fill grid whose cards grow from a 220px minimum, separated by 10px gaps. Risk ranking determines DOM and reading order, with name used as the stable tie-breaker.
+The dashboard occupies the full viewport width with fluid 10–28px horizontal padding. A low ruled header leads into a rounded four-cell fleet summary and then the priority heading. The fleet uses `auto-fill` tracks whose target minimum is itself fluid from 230px to 320px (`clamp(230px, 14vw, 320px)`), while never exceeding the available width. Gaps scale from 8px to 14px. Risk tone, weighted score, name, and stable ID determine DOM and reading order.
 
-At 720px, the summary becomes three count cells with refresh spanning the next row. At 520px, outer padding tightens to 10px, cards may contract from a 190px minimum, the external action becomes icon-only, gauges stack, and range tabs stretch across the detail panel. The history plot keeps a 520px minimum width inside deliberate horizontal overflow.
+Cards establish an inline-size container so header type and utilization-track thickness respond to the actual card width rather than only the viewport. At 720px, the summary becomes three count cells with refresh spanning the next row. At 520px, the grid becomes a single full-width column, the external action becomes icon-only, gauges stack, and range tabs stretch across the detail panel. The history plot keeps a 520px minimum width inside deliberate horizontal overflow.
 
 Selecting a card inserts a full-width detail panel between the priority heading and the card grid. The panel participates in normal document flow, remains nonmodal, and leaves every fleet card available below it. Closing the panel removes that inspection region without changing risk order.
 
@@ -236,7 +252,7 @@ Circular geometry is reserved for live indicators and motion tracks: status mark
 - **Background:** Warm paper at rest and raised paper on card hover.
 - **Shadow Strategy:** Flat at rest; slight lift on hover, cobalt ring on selection, and moderate separation for the expanded detail panel.
 - **Border:** One-pixel neutral rules; warning and critical cards shift only their border and dominant signal to semantic color.
-- **Internal Padding:** Cards use a dense 11px by 12px inset and a three-band header/signal/metrics structure.
+- **Internal Padding:** Card padding scales from 11px to 16px. Content has three bands: identity, compact rank condition, and a variable-length utilization stack.
 
 ### Inputs / Fields
 
@@ -254,7 +270,11 @@ Four softly rounded, internally divided cells present system count, online count
 
 ### Risk Card
 
-Each 146px-tall card has three dense bands: status/name/uptime, dominant risk signal, and a divided CPU/memory/disk footer. Cards are ordered from highest risk to lowest. Hover brightens and lifts the card; selection adds a cobalt border and ring. Warning and critical states preserve the neutral surface while coloring the border and dominant signal.
+Each card has three dense bands: status/name/uptime, a compact explanation of the dominant risk condition, and a variable-length stack of utilization bars. No large risk number appears in the grid. Cards are ordered from highest risk to lowest. Hover brightens and lifts the card; selection adds a cobalt border and ring. Warning and critical states preserve the neutral surface while coloring the border and condition.
+
+### Utilization Bar
+
+Cards always show CPU, RAM, and the primary drive, followed by every extra drive in descending utilization order. Labels truncate safely; values remain visible as tabular numerals. Track height responds to card width from 6px to 9px. Fills are clamped to 0–100% and use healthy green below 60%, elevated gold from 60%, warning orange from the metric's warning threshold, and critical red from 90%. Missing readings show an em dash and a neutral diagonal-striped track.
 
 ### Detail Panel
 
@@ -268,9 +288,12 @@ Gauges use five-pixel fully capped tracks. Fill changes from cobalt to warning o
 
 ### Do:
 
-- **Do** rank system cards by computed operational risk, using name only as the stable tie-breaker.
-- **Do** use a dense auto-fill grid with a 220px card minimum and 10px gaps on larger screens.
-- **Do** keep normal card surfaces neutral and concentrate exception color on borders, dominant signals, and localized alerts.
+- **Do** rank system cards by risk tone and weighted score, then by name and stable ID.
+- **Do** use the full viewport and the fluid 230–320px auto-fill card tracks with 8–14px gaps.
+- **Do** explain each card's risk rank with a compact condition rather than a large score or percentage.
+- **Do** show CPU, RAM, the primary drive, and every extra drive as size-responsive semantic bars.
+- **Do** distinguish healthy, elevated, warning, critical, and unavailable readings without collapsing them into one accent.
+- **Do** keep normal card surfaces neutral and concentrate exception color on borders, conditions, individual bars, and localized alerts.
 - **Do** use 14px cards, 9px controls, and full caps for status and progress geometry.
 - **Do** inspect a selected system in the inline panel above the grid while preserving the risk-ranked card order.
 - **Do** honor reduced-motion preferences while keeping default transitions brief and mechanical.
@@ -278,6 +301,8 @@ Gauges use five-pixel fully capped tracks. Fill changes from cobalt to warning o
 ### Don't:
 
 - **Don't** turn the fleet back into a sequential table or manually arranged dashboard grid.
+- **Don't** reintroduce a large dominant risk number inside fleet cards.
+- **Don't** omit extra drives or present unavailable readings as zero.
 - **Don't** flood warning or critical cards with saturated background color.
 - **Don't** use pill shapes for text actions, cards, or general containers.
 - **Don't** add elevation to resting cards or summary cells.

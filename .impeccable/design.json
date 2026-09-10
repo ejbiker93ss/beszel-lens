@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-10T10:35:04.3599651-05:00",
+  "generatedAt": "2026-09-10T11:13:02.2169762-05:00",
   "title": "Design System: Beszel Lens",
   "extensions": {
     "colorMeta": {
@@ -14,6 +14,7 @@
       "cobalt-ink": { "role": "primary", "displayName": "Cobalt Measurement Ink", "canonical": "#244fc7", "tonalRamp": ["oklch(15% 0.13 264)", "oklch(27% 0.16 264)", "oklch(39% 0.19 264)", "oklch(51% 0.2 264)", "oklch(63% 0.17 264)", "oklch(75% 0.13 264)", "oklch(87% 0.07 264)", "oklch(95% 0.03 264)"] },
       "indigo-reading": { "role": "secondary", "displayName": "Neutral Indigo Reading", "canonical": "#67718e", "tonalRamp": ["oklch(15% 0.045 267)", "oklch(27% 0.06 267)", "oklch(39% 0.07 267)", "oklch(51% 0.075 267)", "oklch(63% 0.065 267)", "oklch(75% 0.05 267)", "oklch(87% 0.03 267)", "oklch(95% 0.015 267)"] },
       "healthy-green": { "role": "secondary", "displayName": "Healthy Green", "canonical": "#217451", "tonalRamp": ["oklch(15% 0.06 158)", "oklch(27% 0.08 158)", "oklch(39% 0.1 158)", "oklch(51% 0.11 158)", "oklch(63% 0.095 158)", "oklch(75% 0.07 158)", "oklch(87% 0.04 158)", "oklch(95% 0.02 158)"] },
+      "elevated-gold": { "role": "tertiary", "displayName": "Elevated Gold", "canonical": "#9b7211", "tonalRamp": ["oklch(15% 0.05 82)", "oklch(27% 0.08 82)", "oklch(39% 0.11 82)", "oklch(51% 0.13 82)", "oklch(63% 0.12 82)", "oklch(75% 0.09 82)", "oklch(87% 0.05 82)", "oklch(95% 0.02 82)"] },
       "warning-orange": { "role": "tertiary", "displayName": "Warning Orange", "canonical": "#c95416", "tonalRamp": ["oklch(15% 0.07 48)", "oklch(27% 0.11 48)", "oklch(39% 0.15 48)", "oklch(51% 0.18 48)", "oklch(63% 0.16 48)", "oklch(75% 0.12 48)", "oklch(87% 0.07 48)", "oklch(95% 0.03 48)"] },
       "critical-red": { "role": "tertiary", "displayName": "Critical Red", "canonical": "#b92f38", "tonalRamp": ["oklch(15% 0.07 24)", "oklch(27% 0.12 24)", "oklch(39% 0.16 24)", "oklch(51% 0.19 24)", "oklch(63% 0.16 24)", "oklch(75% 0.12 24)", "oklch(87% 0.07 24)", "oklch(95% 0.03 24)"] },
       "neutral-wash": { "role": "neutral", "displayName": "Neutral Wash", "canonical": "#efeee7", "tonalRamp": ["oklch(15% 0.01 95)", "oklch(27% 0.01 95)", "oklch(39% 0.01 95)", "oklch(51% 0.01 95)", "oklch(63% 0.01 95)", "oklch(75% 0.01 95)", "oklch(87% 0.01 95)", "oklch(95% 0.01 95)"] },
@@ -22,9 +23,10 @@
     },
     "typographyMeta": {
       "display": { "displayName": "Connection Display", "purpose": "The Beszel Lens title on the connection sheet." },
-      "signal": { "displayName": "Dominant Risk Signal", "purpose": "The leading risk value on cards and in the drawer alert." },
+      "signal": { "displayName": "Detail Risk Signal", "purpose": "The dominant risk value inside the expanded detail alert only." },
       "title": { "displayName": "Instrument Title", "purpose": "Fleet, product, and selected-system titles." },
       "body": { "displayName": "Operator Copy", "purpose": "Instructions, notices, and empty states." },
+      "condition": { "displayName": "Rank Condition", "purpose": "The compact reason a card holds its position in the fleet." },
       "label": { "displayName": "Measurement Label", "purpose": "Compact labels, timestamps, tabs, and the brand index." },
       "reading": { "displayName": "Telemetry Reading", "purpose": "Tabular fleet counts, gauges, and percentages." }
     },
@@ -82,17 +84,17 @@
       "name": "Risk Card",
       "kind": "card",
       "refersTo": "system-card",
-      "description": "A dense fleet card whose dominant signal and position are driven by risk.",
-      "html": "<button class=\"ds-risk-card ds-warning\"><span class=\"ds-card-head\"><i></i><b>edge-node-01</b><small>Up 14d 3h</small></span><span class=\"ds-card-signal\"><strong>84%</strong><span><b>Memory pressure</b><small>Memory utilization</small></span></span><span class=\"ds-card-metrics\"><span>CPU <b>42%</b></span><span>MEM <b class=\"ds-hot\">84%</b></span><span>DISK <b>61%</b></span></span></button>",
-      "css": ".ds-risk-card { width: 240px; min-height: 146px; padding: 11px 12px 10px; display: grid; grid-template-rows: auto 1fr auto; gap: 10px; overflow: hidden; border: 1px solid var(--line, #c9c7ba); border-radius: var(--radius-card, 14px); background: var(--paper, #f8f7f1); color: var(--ink, #171713); text-align: left; cursor: pointer; transition: border-color 150ms ease-out, background 150ms ease-out, transform 150ms ease-out, box-shadow 150ms ease-out; } .ds-risk-card:hover { border-color: var(--line-strong, #98968b); background: var(--paper-raised, #fffef9); transform: translateY(-1px); box-shadow: 0 7px 18px rgba(37,35,26,.07); } .ds-risk-card:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-risk-card.ds-warning { border-color: rgba(201,84,22,.55); } .ds-card-head { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 8px; align-items: center; } .ds-card-head i { width: 8px; height: 8px; border-radius: 50%; background: var(--green, #217451); } .ds-card-head b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 .82rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-card-head small { color: var(--muted, #68675f); font: .62rem/1 ui-monospace, Consolas, monospace; } .ds-card-signal { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 10px; align-items: center; } .ds-card-signal > strong { color: var(--orange, #c95416); font: 760 1.42rem/1 'Archivo Variable', sans-serif; letter-spacing: -.03em; } .ds-card-signal > span { display: grid; gap: 2px; } .ds-card-signal b { color: var(--orange, #c95416); font: 700 .76rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-card-signal small { color: var(--muted, #68675f); font: .65rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-card-metrics { display: grid; grid-template-columns: repeat(3,1fr); padding-top: 8px; border-top: 1px solid var(--line, #c9c7ba); } .ds-card-metrics span { display: flex; justify-content: space-between; gap: 4px; padding: 0 7px; border-right: 1px solid var(--line, #c9c7ba); color: var(--muted, #68675f); font: .59rem/1 ui-monospace, Consolas, monospace; } .ds-card-metrics span:last-child { border-right: 0; padding-right: 0; } .ds-card-metrics span:first-child { padding-left: 0; } .ds-card-metrics b { color: var(--ink, #171713); font-size: .68rem; } .ds-card-metrics .ds-hot { color: var(--orange, #c95416); }"
+      "description": "A fluid fleet card with a compact rank condition and a variable stack of semantic utilization bars.",
+      "html": "<article class=\"ds-risk-card ds-warning ds-selected\"><button class=\"ds-card-open\"><span class=\"ds-card-head\"><i></i><b>edge-node-01</b><small>Up 14d 3h</small></span><span class=\"ds-card-condition\"><b>Memory pressure</b><small>Memory utilization</small></span></button><div class=\"ds-bars\"><div class=\"ds-bar ds-low\"><span>CPU <b>42%</b></span><i><em style=\"transform:scaleX(.42)\"></em></i></div><div class=\"ds-bar ds-elevated\"><span>RAM <b>68%</b></span><i><em style=\"transform:scaleX(.68)\"></em></i></div><div class=\"ds-bar ds-warning-bar\"><span>C: DRIVE <b>84%</b></span><i><em style=\"transform:scaleX(.84)\"></em></i></div><div class=\"ds-bar ds-critical\"><span>ARCHIVE <b>93%</b></span><i><em style=\"transform:scaleX(.93)\"></em></i></div></div></article>",
+      "css": ".ds-risk-card { width: min(100%, 300px); display: grid; gap: 12px; padding: clamp(11px, 4cqw, 16px); overflow: hidden; border: 1px solid rgba(201,84,22,.55); border-radius: var(--radius-card, 14px); background: var(--paper, #f8f7f1); color: var(--ink, #171713); container-type: inline-size; transition: border-color 150ms ease-out, background 150ms ease-out, transform 150ms ease-out, box-shadow 150ms ease-out; } .ds-risk-card:hover { border-color: var(--line-strong, #98968b); background: var(--paper-raised, #fffef9); transform: translateY(-1px); box-shadow: 0 7px 18px rgba(37,35,26,.07); } .ds-risk-card.ds-selected { border-color: var(--blue, #244fc7); box-shadow: 0 0 0 2px rgba(36,79,199,.16); } .ds-card-open { width: 100%; display: grid; gap: 9px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: inherit; text-align: left; cursor: pointer; } .ds-card-open:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-card-head { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 8px; align-items: center; } .ds-card-head i { width: 8px; height: 8px; border-radius: 50%; background: var(--green, #217451); } .ds-card-head b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 clamp(.82rem,.78rem + .22cqw,.96rem)/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-card-head small { color: var(--muted, #68675f); font: .62rem/1 ui-monospace, Consolas, monospace; } .ds-card-condition { display: flex; align-items: baseline; gap: 7px; min-width: 0; } .ds-card-condition b, .ds-card-condition small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ds-card-condition b { color: var(--orange, #c95416); font: 700 .72rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-card-condition small { color: var(--muted, #68675f); font: .64rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-bars { display: grid; gap: 8px; padding-top: 11px; border-top: 1px solid var(--line, #c9c7ba); } .ds-bar > span { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; color: var(--muted, #68675f); font: .59rem/1 ui-monospace, Consolas, monospace; letter-spacing: .035em; } .ds-bar > span b { color: var(--ink, #171713); font-size: .68rem; } .ds-bar > i { display: block; height: clamp(6px,2.5cqw,9px); overflow: hidden; border-radius: 99px; background: #d8d6cc; } .ds-bar em { display: block; width: 100%; height: 100%; border-radius: inherit; background: var(--green, #217451); transform-origin: left; } .ds-bar.ds-elevated em { background: var(--gold, #9b7211); } .ds-bar.ds-warning-bar em { background: var(--orange, #c95416); } .ds-bar.ds-critical em { background: var(--red, #b92f38); }"
     },
     {
-      "name": "Selected Risk Card",
-      "kind": "card",
-      "refersTo": "system-card-hover",
-      "description": "The selected fleet card, confirmed by cobalt border and ring.",
-      "html": "<button class=\"ds-selected-card\"><span>SELECTED SYSTEM</span><strong>edge-node-01</strong><small>Inspecting current and historical readings</small></button>",
-      "css": ".ds-selected-card { width: 240px; min-height: 146px; padding: 11px 12px 10px; display: grid; align-content: center; gap: 8px; border: 1px solid var(--blue, #244fc7); border-radius: var(--radius-card, 14px); background: var(--paper, #f8f7f1); color: var(--ink, #171713); box-shadow: 0 0 0 2px rgba(36,79,199,.16); text-align: left; cursor: pointer; transition: background 150ms ease-out, transform 150ms ease-out; } .ds-selected-card span { color: var(--blue, #244fc7); font: 700 .68rem/1 ui-monospace, Consolas, monospace; letter-spacing: .06em; } .ds-selected-card strong { font: 760 1.1rem/1.1 'Archivo Variable', sans-serif; } .ds-selected-card small { color: var(--muted, #68675f); font: .7rem/1.3 ui-sans-serif, system-ui, sans-serif; } .ds-selected-card:hover { background: var(--paper-raised, #fffef9); transform: translateY(-1px); } .ds-selected-card:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 3px; }"
+      "name": "Unavailable Utilization Bar",
+      "kind": "custom",
+      "refersTo": "metric-bar",
+      "description": "A missing telemetry reading shown honestly as an em dash and neutral striped track.",
+      "html": "<div class=\"ds-unavailable-bar\"><span>ARCHIVE DRIVE <b>—</b></span><i></i></div>",
+      "css": ".ds-unavailable-bar { width: min(100%, 300px); color: var(--muted, #68675f); font: .59rem/1 ui-monospace, Consolas, monospace; letter-spacing: .035em; } .ds-unavailable-bar > span { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; } .ds-unavailable-bar b { font-size: .68rem; } .ds-unavailable-bar i { display: block; height: clamp(6px,2.5cqw,9px); overflow: hidden; border-radius: 99px; background: repeating-linear-gradient(135deg,#d8d6cc 0 4px,#eeede6 4px 8px); } .ds-unavailable-bar:hover i { outline: 1px solid var(--line-strong, #98968b); } .ds-unavailable-bar:focus-within { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
     },
     {
       "name": "Detail Panel",
@@ -112,32 +114,39 @@
   ],
   "narrative": {
     "northStar": "The Risk Calibration Index",
-    "overview": "Beszel Lens is a warm, compact field of live instrument cards. It keeps the calibration-sheet precision of muted paper, exact rules, terse labels, and cobalt measurement ink, then makes the fleet easier to scan through restrained rounding and a risk-driven reading order. The result feels operational and composed rather than decorative.\n\nThe interface leads with the system that needs attention most. Neutral cards form the steady baseline; exception color appears at the border and dominant signal only when risk warrants it. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.",
+    "overview": "Beszel Lens is a warm, compact field of live instrument cards that uses the full viewport rather than stopping at an arbitrary desktop container. It keeps the calibration-sheet precision of muted paper, exact rules, terse labels, and cobalt measurement ink, then makes the fleet easier to scan through restrained rounding and a risk-driven reading order. The result feels operational and composed rather than decorative.\n\nThe interface leads with the system that needs attention most. Each card explains why it holds that position in one compact condition line, then exposes CPU, RAM, the primary disk, and every extra drive as semantic utilization bars. Neutral cards form the steady baseline; exception color appears at the border, condition, and individual bars only when warranted. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.",
     "keyCharacteristics": [
-      "Dense 220px auto-fill cards put the highest-risk system first.",
+      "A full-viewport auto-fill grid fluidly targets 230–320px cards and puts the highest-risk system first.",
       "Warm neutral surfaces carry normal state; color is concentrated on interaction and exceptions.",
       "Fourteen-pixel cards and nine-pixel controls soften the instrument language without becoming pill-heavy.",
-      "Circular status marks and fully capped progress tracks provide compact live-state cues.",
+      "Compact condition copy explains rank without a large risk number.",
+      "Circular status marks and size-responsive, fully capped utilization bars provide live-state cues.",
       "A full-width inline detail panel places current and historical readings directly before the ranked grid."
     ],
     "rules": [
-      { "name": "The Exception Edge Rule", "body": "Warning and critical color belongs on the card edge and its dominant signal; keep the card body neutral so the fleet remains scannable.", "section": "colors" },
+      { "name": "The Semantic Bar Rule", "body": "Utilization bars progress through healthy green, elevated gold, warning orange, and critical red. An unavailable reading uses a neutral diagonal stripe, never a fabricated zero.", "section": "colors" },
+      { "name": "The Exception Edge Rule", "body": "Warning and critical color belongs on the card edge and its compact condition; keep the card body neutral so the fleet remains scannable.", "section": "colors" },
       { "name": "The One Cobalt Rule", "body": "Cobalt owns action, focus, active measurement, and selection. Do not introduce a second interactive accent.", "section": "colors" },
-      { "name": "The Dominant Signal Rule", "body": "Every system card gets one large risk value and one plain-language risk label; supporting telemetry stays smaller.", "section": "typography" },
+      { "name": "The Condition-First Rule", "body": "Every system card states why it is ranked in one compact condition line; do not repeat a large risk number in the grid.", "section": "typography" },
       { "name": "The Measured Number Rule", "body": "Operational numbers use Archivo signal type or monospaced tabular figures according to hierarchy; prose never imitates telemetry styling.", "section": "typography" },
       { "name": "The State Earns Depth Rule", "body": "Resting fleet surfaces stay flat. Elevation appears only for actionable hover, explicit selection, or the expanded inspection region.", "section": "elevation" },
       { "name": "The Radius Hierarchy Rule", "body": "Use 14px for cards, 9px for controls, and full caps only for status or progress geometry. Do not apply pill shapes to text actions or containers.", "section": "shapes" }
     ],
     "dos": [
-      "Do rank system cards by computed operational risk, using name only as the stable tie-breaker.",
-      "Do use a dense auto-fill grid with a 220px card minimum and 10px gaps on larger screens.",
-      "Do keep normal card surfaces neutral and concentrate exception color on borders, dominant signals, and localized alerts.",
+      "Do rank system cards by risk tone and weighted score, then by name and stable ID.",
+      "Do use the full viewport and the fluid 230–320px auto-fill card tracks with 8–14px gaps.",
+      "Do explain each card's risk rank with a compact condition rather than a large score or percentage.",
+      "Do show CPU, RAM, the primary drive, and every extra drive as size-responsive semantic bars.",
+      "Do distinguish healthy, elevated, warning, critical, and unavailable readings without collapsing them into one accent.",
+      "Do keep normal card surfaces neutral and concentrate exception color on borders, conditions, individual bars, and localized alerts.",
       "Do use 14px cards, 9px controls, and full caps for status and progress geometry.",
       "Do inspect a selected system in the inline panel above the grid while preserving the risk-ranked card order.",
       "Do honor reduced-motion preferences while keeping default transitions brief and mechanical."
     ],
     "donts": [
       "Don't turn the fleet back into a sequential table or manually arranged dashboard grid.",
+      "Don't reintroduce a large dominant risk number inside fleet cards.",
+      "Don't omit extra drives or present unavailable readings as zero.",
       "Don't flood warning or critical cards with saturated background color.",
       "Don't use pill shapes for text actions, cards, or general containers.",
       "Don't add elevation to resting cards or summary cells.",
