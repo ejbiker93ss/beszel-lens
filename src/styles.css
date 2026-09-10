@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Archivo Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("../node_modules/@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2") format("woff2-variations");
+}
+
 :root {
   color-scheme: light;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -11,6 +19,7 @@
   --line: #c9c7ba;
   --line-strong: #98968b;
   --blue: #244fc7;
+  --indigo: #67718e;
   --orange: #c95416;
   --red: #b92f38;
   --green: #217451;
@@ -60,7 +69,7 @@ a { color: inherit; text-underline-offset: 3px; }
 .login-brand { padding: 42px 42px 32px; border-bottom: 1px solid var(--ink); }
 .brand-lockup { display: flex; align-items: center; gap: 14px; }
 .brand-index { font: 700 0.75rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: 0.08em; color: var(--blue); }
-.login-brand h1 { margin: 0; font-size: clamp(2rem, 7vw, 3.25rem); line-height: 0.95; letter-spacing: -0.04em; }
+.login-brand h1 { margin: 0; font-family: "Archivo Variable", sans-serif; font-size: clamp(2rem, 7vw, 3.25rem); font-stretch: 112%; line-height: 0.95; letter-spacing: -0.04em; }
 .login-brand p { margin: 24px 0 0; max-width: 34ch; color: var(--muted); font-size: 1rem; line-height: 1.55; }
 
 .login-sheet form { display: grid; gap: 20px; padding: 32px 42px 38px; }
@@ -180,13 +189,16 @@ a { color: inherit; text-underline-offset: 3px; }
 .chart-legend span { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 0.7rem; }
 .chart-legend i { width: 13px; height: 2px; display: inline-block; background: currentColor; }
 .chart-cpu { color: var(--blue); stroke: var(--blue); }
-.chart-memory { color: var(--orange); stroke: var(--orange); }
+.chart-memory { color: var(--indigo); stroke: var(--indigo); }
 .chart-disk { color: var(--green); stroke: var(--green); }
 .metric-chart { display: block; width: 100%; height: auto; overflow: visible; }
 .chart-grid { stroke: #d8d6cc; stroke-width: 1; vector-effect: non-scaling-stroke; }
 .chart-axis { fill: #737168; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }
 .chart-line { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
 .empty-chart, .chart-loading { min-height: 250px; display: grid; place-items: center; color: var(--muted); font-size: 0.875rem; background-image: linear-gradient(rgba(23,23,19,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(23,23,19,.045) 1px, transparent 1px); background-size: 28px 28px; }
+.history-error { min-height: 250px; display: grid; place-content: center; justify-items: center; gap: 8px; padding: 28px; text-align: center; background: #fff0ef; color: #6f1b22; }
+.history-error span { max-width: 48ch; font-size: 0.875rem; line-height: 1.45; }
+.history-error button { margin-top: 6px; border: 1px solid currentColor; background: transparent; color: inherit; padding: 8px 12px; border-radius: 2px; cursor: pointer; font-weight: 700; }
 .chart-loading span { width: 120px; height: 2px; background: var(--line); position: relative; overflow: hidden; }
 .chart-loading span::after { content: ""; position: absolute; inset: 0; background: var(--blue); animation: scan 1s ease-in-out infinite; }
 @keyframes scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
@@ -207,7 +219,9 @@ a { color: inherit; text-underline-offset: 3px; }
 
 @media (max-width: 920px) {
   .workspace { grid-template-columns: 1fr; }
-  .system-list { min-height: auto; max-height: 430px; }
+  .detail-panel { grid-row: 1; }
+  .fleet-panel { grid-row: 2; }
+  .system-list { min-height: auto; max-height: 360px; }
   .status-strip { grid-template-columns: repeat(3, 1fr); }
   .refresh-cell { grid-column: 1 / -1; border-top: 1px solid var(--line); }
   .status-strip > div:nth-child(3) { border-right: 0; }

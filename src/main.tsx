@@ -81,22 +81,36 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
   const [stats, setStats] = useState<StatsPoint[]>([])
   const [loading, setLoading] = useState(true)
   const [historyLoading, setHistoryLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [fleetError, setFleetError] = useState("")
+  const [historyError, setHistoryError] = useState("")
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
 
   const load = useCallback(async () => {
-    setError("")
+    setFleetError("")
     try {
       const records = await listSystems(client)
       setSystems(records)
       setSelectedId((current) => current || records[0]?.id || "")
       setUpdatedAt(new Date())
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Could not load systems from this hub.")
+      setFleetError(cause instanceof Error ? cause.message : "Could not load systems from this hub.")
     } finally {
       setLoading(false)
     }
   }, [client])
+
+  const loadHistory = useCallback(async () => {
+    if (!selectedId) return
+    setHistoryError("")
+    setHistoryLoading(true)
+    try {
+      setStats(await listStats(client, selectedId, range))
+    } catch (cause) {
+      setHistoryError(cause instanceof Error ? cause.message : "Could not load system history.")
+    } finally {
+      setHistoryLoading(false)
+    }
+  }, [client, selectedId, range])
 
   useEffect(() => {
     void load()
@@ -115,14 +129,8 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
 
   useEffect(() => {
     if (!selectedId) return
-    let active = true
-    setHistoryLoading(true)
-    void listStats(client, selectedId, range)
-      .then((points) => { if (active) setStats(points) })
-      .catch((cause) => { if (active) setError(cause instanceof Error ? cause.message : "Could not load system history.") })
-      .finally(() => { if (active) setHistoryLoading(false) })
-    return () => { active = false }
-  }, [client, selectedId, range])
+    void loadHistory()
+  }, [loadHistory, selectedId])
 
   const selected = systems.find((system) => system.id === selectedId)
   const counts = useMemo(() => ({
@@ -147,7 +155,7 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
         <div class="refresh-cell"><span>{updatedAt ? `Updated ${updatedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : "Not updated"}</span><button type="button" onClick={() => void load()} disabled={loading}><RefreshIcon /> Refresh</button></div>
       </section>
 
-      {error && <div class="notice" role="alert"><strong>Connection issue</strong><span>{error}</span><button type="button" onClick={() => void load()}>Try again</button></div>}
+      {fleetError && <div class="notice" role="alert"><strong>Fleet unavailable</strong><span>{fleetError}</span><button type="button" onClick={() => void load()}>Reload fleet</button></div>}
 
       <div class="workspace">
         <section class="fleet-panel">
@@ -181,7 +189,7 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
               <div class="detail-heading">
                 <div><span class={`status-mark ${selected.status}`} /><div><h2>{selected.name}</h2><p>{selected.info.o || "System"}{selected.info.m ? ` · ${selected.info.m}` : ""}</p></div></div>
                 <div class="range-tabs" aria-label="History range">
-                  {(["1h", "12h", "24h"] as TimeRange[]).map((option) => <button type="button" class={range === option ? "active" : ""} onClick={() => setRange(option)} key={option}>{option}</button>)}
+                  {(["1h", "12h", "24h"] as TimeRange[]).map((option) => <button type="button" aria-pressed={range === option} class={range === option ? "active" : ""} onClick={() => setRange(option)} key={option}>{option}</button>)}
                 </div>
               </div>
               <div class="gauges">
@@ -190,7 +198,9 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
                 <Gauge label="Disk" amount={value(selected.info.dp)} />
               </div>
               <div class="history-heading"><h3>Utilization history</h3><span>{historyLoading ? "Loading readings…" : `${stats.length} readings`}</span></div>
-              {historyLoading ? <div class="chart-loading"><span /></div> : <MetricChart points={stats} />}
+              {historyError ? (
+                <div class="history-error" role="alert"><strong>History unavailable</strong><span>{historyError}</span><button type="button" onClick={() => void loadHistory()}>Reload history</button></div>
+              ) : historyLoading ? <div class="chart-loading"><span /></div> : <MetricChart points={stats} />}
             </>
           ) : (
             <div class="empty-detail"><span>SELECT</span><p>Choose a system to inspect its readings.</p></div>

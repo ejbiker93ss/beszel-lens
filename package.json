@@ -9,6 +9,7 @@
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
+    "@fontsource-variable/archivo": "^5.2.8",
     "pocketbase": "^0.26.2",
     "preact": "^10.27.2"
   },

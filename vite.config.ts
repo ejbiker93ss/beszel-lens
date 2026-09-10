@@ -5,6 +5,5 @@ export default defineConfig({
   plugins: [preact()],
   build: {
     target: "es2022",
-    sourcemap: true,
   },
 })

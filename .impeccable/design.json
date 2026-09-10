@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-10T09:19:28.9225768-05:00",
+  "title": "Design System: Beszel Lens",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Warm Paper", "canonical": "#f8f7f1", "tonalRamp": ["oklch(15% 0.01 95)", "oklch(27% 0.01 95)", "oklch(39% 0.01 95)", "oklch(51% 0.01 95)", "oklch(63% 0.01 95)", "oklch(75% 0.01 95)", "oklch(87% 0.01 95)", "oklch(95% 0.01 95)"] },
+      "canvas": { "role": "neutral", "displayName": "Workshop Canvas", "canonical": "#e8e7df", "tonalRamp": ["oklch(15% 0.012 95)", "oklch(27% 0.012 95)", "oklch(39% 0.012 95)", "oklch(51% 0.012 95)", "oklch(63% 0.012 95)", "oklch(75% 0.012 95)", "oklch(87% 0.012 95)", "oklch(95% 0.012 95)"] },
+      "ink": { "role": "neutral", "displayName": "Exact Ink", "canonical": "#171713", "tonalRamp": ["oklch(15% 0.008 105)", "oklch(27% 0.008 105)", "oklch(39% 0.008 105)", "oklch(51% 0.008 105)", "oklch(63% 0.008 105)", "oklch(75% 0.008 105)", "oklch(87% 0.008 105)", "oklch(95% 0.008 105)"] },
+      "muted-ink": { "role": "neutral", "displayName": "Muted Ledger Ink", "canonical": "#68675f", "tonalRamp": ["oklch(15% 0.012 95)", "oklch(27% 0.012 95)", "oklch(39% 0.012 95)", "oklch(51% 0.012 95)", "oklch(63% 0.012 95)", "oklch(75% 0.012 95)", "oklch(87% 0.012 95)", "oklch(95% 0.012 95)"] },
+      "rule": { "role": "neutral", "displayName": "Rule", "canonical": "#c9c7ba", "tonalRamp": ["oklch(15% 0.015 90)", "oklch(27% 0.015 90)", "oklch(39% 0.015 90)", "oklch(51% 0.015 90)", "oklch(63% 0.015 90)", "oklch(75% 0.015 90)", "oklch(87% 0.015 90)", "oklch(95% 0.015 90)"] },
+      "rule-strong": { "role": "neutral", "displayName": "Strong Rule", "canonical": "#98968b", "tonalRamp": ["oklch(15% 0.014 90)", "oklch(27% 0.014 90)", "oklch(39% 0.014 90)", "oklch(51% 0.014 90)", "oklch(63% 0.014 90)", "oklch(75% 0.014 90)", "oklch(87% 0.014 90)", "oklch(95% 0.014 90)"] },
+      "cobalt-ink": { "role": "primary", "displayName": "Cobalt Measurement Ink", "canonical": "#244fc7", "tonalRamp": ["oklch(15% 0.13 264)", "oklch(27% 0.16 264)", "oklch(39% 0.19 264)", "oklch(51% 0.2 264)", "oklch(63% 0.17 264)", "oklch(75% 0.13 264)", "oklch(87% 0.07 264)", "oklch(95% 0.03 264)"] },
+      "indigo-reading": { "role": "secondary", "displayName": "Neutral Indigo Reading", "canonical": "#67718e", "tonalRamp": ["oklch(15% 0.045 267)", "oklch(27% 0.06 267)", "oklch(39% 0.07 267)", "oklch(51% 0.075 267)", "oklch(63% 0.065 267)", "oklch(75% 0.05 267)", "oklch(87% 0.03 267)", "oklch(95% 0.015 267)"] },
+      "healthy-green": { "role": "secondary", "displayName": "Healthy Green", "canonical": "#217451", "tonalRamp": ["oklch(15% 0.06 158)", "oklch(27% 0.08 158)", "oklch(39% 0.1 158)", "oklch(51% 0.11 158)", "oklch(63% 0.095 158)", "oklch(75% 0.07 158)", "oklch(87% 0.04 158)", "oklch(95% 0.02 158)"] },
+      "warning-orange": { "role": "tertiary", "displayName": "Warning Orange", "canonical": "#c95416", "tonalRamp": ["oklch(15% 0.07 48)", "oklch(27% 0.11 48)", "oklch(39% 0.15 48)", "oklch(51% 0.18 48)", "oklch(63% 0.16 48)", "oklch(75% 0.12 48)", "oklch(87% 0.07 48)", "oklch(95% 0.03 48)"] },
+      "critical-red": { "role": "tertiary", "displayName": "Critical Red", "canonical": "#b92f38", "tonalRamp": ["oklch(15% 0.07 24)", "oklch(27% 0.12 24)", "oklch(39% 0.16 24)", "oklch(51% 0.19 24)", "oklch(63% 0.16 24)", "oklch(75% 0.12 24)", "oklch(87% 0.07 24)", "oklch(95% 0.03 24)"] },
+      "selected-wash": { "role": "neutral", "displayName": "Selected Wash", "canonical": "#e8ecfa", "tonalRamp": ["oklch(15% 0.025 265)", "oklch(27% 0.03 265)", "oklch(39% 0.035 265)", "oklch(51% 0.04 265)", "oklch(63% 0.04 265)", "oklch(75% 0.035 265)", "oklch(87% 0.025 265)", "oklch(95% 0.012 265)"] },
+      "error-wash": { "role": "neutral", "displayName": "Error Wash", "canonical": "#fff0ef", "tonalRamp": ["oklch(15% 0.025 24)", "oklch(27% 0.035 24)", "oklch(39% 0.045 24)", "oklch(51% 0.05 24)", "oklch(63% 0.045 24)", "oklch(75% 0.035 24)", "oklch(87% 0.02 24)", "oklch(95% 0.01 24)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Connection Display", "purpose": "The Beszel Lens title on the connection sheet only." },
+      "title": { "displayName": "Instrument Title", "purpose": "Panel, product, and selected-system titles." },
+      "body": { "displayName": "Operator Copy", "purpose": "Instructions, notices, and empty states." },
+      "label": { "displayName": "Measurement Label", "purpose": "Compact labels, timestamps, tabs, and the brand index." },
+      "reading": { "displayName": "Telemetry Reading", "purpose": "Tabular fleet counts and percentages." }
+    },
+    "shadows": [
+      { "name": "sheet-lift", "value": "0 18px 50px rgba(37, 35, 26, 0.1)", "purpose": "Separates the connection sheet from the gridded canvas." },
+      { "name": "summary-lift", "value": "0 8px 28px rgba(37, 35, 26, 0.05)", "purpose": "Gives the fleet summary a restrained ambient cue." },
+      { "name": "selection-rail", "value": "inset 3px 0 #244fc7", "purpose": "Marks the selected system without elevation." }
+    ],
+    "motion": [
+      { "name": "row-response", "value": "140ms ease-out", "purpose": "Row hover and selection response." },
+      { "name": "control-response", "value": "160ms ease-out", "purpose": "Button color and press response." },
+      { "name": "gauge-calibration", "value": "350ms cubic-bezier(.2,.8,.2,1)", "purpose": "Gauge fill changes." },
+      { "name": "reduced-motion", "value": "0.01ms", "purpose": "Effective motion removal when reduced motion is requested." }
+    ],
+    "breakpoints": [
+      { "name": "stack-workspace", "value": "920px" },
+      { "name": "compact-mobile", "value": "580px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The cobalt commit action used to open the dashboard.",
+      "html": "<button class=\"ds-btn-primary\">OPEN DASHBOARD</button>",
+      "css": ".ds-btn-primary { min-height: 46px; padding: 0 20px; border: 1px solid var(--blue, #244fc7); border-radius: 2px; background: var(--blue, #244fc7); color: #fff; font: 750 0.875rem/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 160ms ease-out, transform 160ms ease-out; } .ds-btn-primary:hover { background: #193da4; } .ds-btn-primary:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Connection Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A precise near-white field for hub credentials.",
+      "html": "<label class=\"ds-field-label\">BESZEL HUB URL<input class=\"ds-field-input\" placeholder=\"https://beszel.example.com\"></label>",
+      "css": ".ds-field-label { display: grid; gap: 8px; color: var(--muted, #68675f); font: 650 .875rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-field-input { width: 100%; border: 1px solid var(--line-strong, #98968b); border-radius: 2px; background: #fffef9; color: var(--ink, #171713); padding: 12px 13px; font: 1rem/1.2 ui-sans-serif, system-ui, sans-serif; } .ds-field-input:hover { border-color: var(--ink, #171713); } .ds-field-input:focus { border-color: var(--blue, #244fc7); outline: 3px solid rgba(36,79,199,.14); }"
+    },
+    {
+      "name": "Instrument Navigation",
+      "kind": "nav",
+      "description": "The ruled product header and its compact external action.",
+      "html": "<nav class=\"ds-nav\"><div class=\"ds-nav-brand\"><span>BL—01</span><strong>Beszel Lens</strong></div><button class=\"ds-nav-action\">↗ OPEN BESZEL</button></nav>",
+      "css": ".ds-nav { min-height: 58px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--ink, #171713); border-bottom: 1px solid var(--ink, #171713); color: var(--ink, #171713); } .ds-nav-brand { display: flex; align-items: center; gap: 14px; } .ds-nav-brand span { color: var(--blue, #244fc7); font: 700 .75rem/1 ui-monospace, Consolas, monospace; letter-spacing: .08em; } .ds-nav-brand strong { font: 700 1.02rem/1.2 ui-sans-serif, system-ui, sans-serif; letter-spacing: -.02em; } .ds-nav-action { min-height: 38px; padding: 0 12px; border: 1px solid transparent; border-radius: 2px; background: transparent; color: inherit; font: 700 .8125rem/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-nav-action:hover { border-color: var(--line-strong, #98968b); background: var(--paper, #f8f7f1); } .ds-nav-action:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
+    },
+    {
+      "name": "Range Tabs",
+      "kind": "button",
+      "refersTo": "range-tab-active",
+      "description": "A square segmented control for choosing the history window.",
+      "html": "<div class=\"ds-range\"><button class=\"ds-range-tab ds-active\">1h</button><button class=\"ds-range-tab\">12h</button><button class=\"ds-range-tab\">24h</button></div>",
+      "css": ".ds-range { display: inline-flex; border: 1px solid var(--line-strong, #98968b); } .ds-range-tab { min-width: 44px; height: 32px; border: 0; border-right: 1px solid var(--line-strong, #98968b); border-radius: 0; background: transparent; color: var(--ink, #171713); font: 700 .72rem/1 ui-monospace, Consolas, monospace; cursor: pointer; } .ds-range-tab:last-child { border-right: 0; } .ds-range-tab:hover { background: #ecebe4; } .ds-range-tab:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-range-tab.ds-active { background: var(--ink, #171713); color: var(--paper, #f8f7f1); }"
+    },
+    {
+      "name": "System Row",
+      "kind": "custom",
+      "refersTo": "system-row-selected",
+      "description": "The selected fleet record with identity and aligned telemetry.",
+      "html": "<button class=\"ds-system-row ds-selected\"><span class=\"ds-system-name\"><i></i><b>edge-node-01</b></span><span><small>CPU</small><b>42%</b></span><span><small>MEM</small><b>68%</b></span><span><small>DISK</small><b>31%</b></span></button>",
+      "css": ".ds-system-row { width: 100%; display: grid; grid-template-columns: minmax(140px,1fr) repeat(3,54px); gap: 13px; align-items: center; border: 0; border-bottom: 1px solid var(--line, #c9c7ba); padding: 14px 18px; background: transparent; color: var(--ink, #171713); text-align: right; cursor: pointer; transition: background 140ms ease-out, box-shadow 140ms ease-out; } .ds-system-row:hover { background: #efeee7; } .ds-system-row:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; } .ds-system-row.ds-selected { background: #e8ecfa; box-shadow: inset 3px 0 var(--blue, #244fc7); } .ds-system-row span { display: grid; gap: 4px; } .ds-system-row .ds-system-name { grid-template-columns: 9px 1fr; align-items: center; text-align: left; } .ds-system-name i { width: 9px; height: 9px; border-radius: 50%; background: var(--green, #217451); } .ds-system-row small { color: var(--muted, #68675f); font: .62rem/1 ui-monospace, Consolas, monospace; letter-spacing: .06em; } .ds-system-row b { font: 700 .82rem/1 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Utilization Gauge",
+      "kind": "custom",
+      "description": "A ruled telemetry cell with a thin calibrated fill.",
+      "html": "<div class=\"ds-gauge\"><div><span>CPU</span><strong>72%</strong></div><div class=\"ds-gauge-track\"><i></i></div></div>",
+      "css": ".ds-gauge { width: 240px; padding: 16px 18px 18px; border: 1px solid var(--line, #c9c7ba); background: var(--paper, #f8f7f1); color: var(--ink, #171713); } .ds-gauge > div:first-child { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; } .ds-gauge span { color: var(--muted, #68675f); font: .68rem/1 ui-monospace, Consolas, monospace; letter-spacing: .06em; } .ds-gauge strong { font: 700 1.15rem/1 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; } .ds-gauge-track { height: 4px; overflow: hidden; background: #d8d6cc; } .ds-gauge-track i { display: block; width: 72%; height: 100%; background: var(--blue, #244fc7); transition: width 350ms cubic-bezier(.2,.8,.2,1); } .ds-gauge:hover .ds-gauge-track i { width: 78%; }"
+    },
+    {
+      "name": "Critical Notice",
+      "kind": "custom",
+      "description": "An inline ruled failure boundary with a visible recovery action.",
+      "html": "<div class=\"ds-notice\"><strong>Fleet unavailable</strong><span>Could not load systems from this hub.</span><button>Reload fleet</button></div>",
+      "css": ".ds-notice { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--red, #b92f38); background: #fff0ef; color: #6f1b22; font: .875rem/1.45 ui-sans-serif, system-ui, sans-serif; } .ds-notice button { border: 0; background: transparent; color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; } .ds-notice button:hover { color: var(--red, #b92f38); } .ds-notice button:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Live Calibration Ledger",
+    "overview": "Beszel Lens looks like an instrument sheet that happens to be live: warm paper and canvas, exact black rules, compact measurements, and cobalt annotation ink. Its authority comes from precision and legibility rather than decorative chrome. The interface is dense enough for operators, but never cramped; generous outer margins frame tightly ruled internal regions.\n\nThe system deliberately refuses the generic rounded-card dashboard. Panels join a shared visual ledger, readings align, and status color stays quiet until it carries operational meaning. Motion is brief and mechanical: controls acknowledge input, gauges calibrate, and loading bars scan.",
+    "keyCharacteristics": [
+      "Warm paper surfaces on a slightly darker canvas.",
+      "Exact one-pixel rules organize information more often than whitespace or shadows.",
+      "Cobalt marks interaction and measurement; indigo and green distinguish normal data series.",
+      "Monospaced, tabular readings sit beside compact sans-serif titles and labels.",
+      "Orange and red appear only when the system needs attention."
+    ],
+    "rules": [
+      { "name": "The Exception Ink Rule", "body": "Orange and red communicate degraded, pending, critical, or failed states only; they never serve as general accents.", "section": "colors" },
+      { "name": "The One Cobalt Rule", "body": "Cobalt owns action, focus, active measurement, and selected-edge emphasis. Do not introduce a second interactive accent.", "section": "colors" },
+      { "name": "The Measured Number Rule", "body": "Operational numbers use monospaced, tabular figures; prose never imitates telemetry styling.", "section": "typography" },
+      { "name": "The One Display Moment Rule", "body": "Archivo's large display treatment belongs to the connection sheet only. The dashboard stays compact.", "section": "typography" },
+      { "name": "The Flat Ledger Rule", "body": "Panels and cells remain flat at rest; use rules, tonal fields, and a selection rail before adding elevation.", "section": "elevation" },
+      { "name": "The Two-Pixel Ceiling Rule", "body": "Controls may soften to 2px; structural containers remain square. Never turn the ledger into a collection of pills or rounded cards.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do organize dense information with one-pixel rules, aligned cells, and the 6/8/12/18/24px spacing rhythm.",
+      "Do keep current readings and historical series visually adjacent to the selected system.",
+      "Do preserve native sans for prose, Archivo for the single display moment, and mono tabular numerals for telemetry.",
+      "Do make abnormal state immediately scannable through semantic color and plain-language error boundaries.",
+      "Do honor reduced-motion preferences while keeping default transitions brief and mechanical."
+    ],
+    "donts": [
+      "Don't introduce rounded cards, pill controls, glass effects, or decorative gradients.",
+      "Don't use orange or red as brand decoration or for normal readings.",
+      "Don't add shadows to ordinary panels, rows, gauges, or charts.",
+      "Don't collapse the chart's information density on mobile; preserve the plot and allow deliberate horizontal inspection.",
+      "Don't imply that Beszel Lens replaces Beszel administration or is an official Beszel product."
+    ]
+  }
+}
