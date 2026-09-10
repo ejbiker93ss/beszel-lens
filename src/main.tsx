@@ -30,6 +30,7 @@ type ColumnKey = "system" | OptionalColumn
 interface FleetPreferences {
   filter: string
   sort: SortMode
+  refreshSeconds: number
   visibleColumns: OptionalColumn[]
   widths: Record<ColumnKey, number>
 }
@@ -37,6 +38,7 @@ interface FleetPreferences {
 const viewModeKey = "beszel-lens-view"
 const fleetPreferencesKey = "beszel-lens-fleet-preferences"
 const defaultWidths: Record<ColumnKey, number> = { system: 230, condition: 130, cpu: 120, memory: 120, drives: 420 }
+const standardRefreshOptions = [0, 15, 30, 60, 300]
 const optionalColumns: Array<{ key: OptionalColumn; label: string }> = [
   { key: "condition", label: "Condition" },
   { key: "cpu", label: "CPU" },
@@ -44,8 +46,9 @@ const optionalColumns: Array<{ key: OptionalColumn; label: string }> = [
   { key: "drives", label: "Drives" },
 ]
 
-function storedFleetPreferences(): FleetPreferences {
-  const fallback: FleetPreferences = { filter: "", sort: "smart", visibleColumns: optionalColumns.map((column) => column.key), widths: defaultWidths }
+function storedFleetPreferences(defaultRefreshSeconds: number): FleetPreferences {
+  const configuredRefresh = Number.isFinite(defaultRefreshSeconds) && defaultRefreshSeconds >= 15 ? Math.round(defaultRefreshSeconds) : 0
+  const fallback: FleetPreferences = { filter: "", sort: "smart", refreshSeconds: configuredRefresh, visibleColumns: optionalColumns.map((column) => column.key), widths: defaultWidths }
   try {
     const stored = JSON.parse(localStorage.getItem(fleetPreferencesKey) ?? "{}") as Partial<FleetPreferences>
     const visibleColumns = Array.isArray(stored.visibleColumns) ? stored.visibleColumns.filter((column): column is OptionalColumn => optionalColumns.some((option) => option.key === column)) : fallback.visibleColumns
@@ -57,6 +60,7 @@ function storedFleetPreferences(): FleetPreferences {
     return {
       filter: typeof stored.filter === "string" ? stored.filter : "",
       sort: sortModes.includes(stored.sort as SortMode) ? stored.sort as SortMode : "smart",
+      refreshSeconds: Number.isFinite(stored.refreshSeconds) && (standardRefreshOptions.includes(stored.refreshSeconds as number) || stored.refreshSeconds === configuredRefresh) ? Math.round(stored.refreshSeconds as number) : configuredRefresh,
       visibleColumns,
       widths,
     }
@@ -239,22 +243,28 @@ function ResizableHeader({ label, column, width, onResize }: { label: string; co
   return <th scope="col">{label}<span class="column-resizer" role="separator" aria-label={`Resize ${label} column`} aria-orientation="vertical" aria-valuemin={column === "drives" ? 240 : 90} aria-valuemax={900} aria-valuenow={width} tabIndex={0} onPointerDown={beginResize} onKeyDown={(event) => { if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); onResize(column, width + (event.key === "ArrowRight" ? 12 : -12)) } }} /></th>
 }
 
-function FleetToolbar({ count, filter, sort, viewMode, visibleColumns, onFilter, onSort, onViewMode, onToggleColumn }: {
+function FleetToolbar({ count, filter, sort, refreshSeconds, configuredRefreshSeconds, viewMode, visibleColumns, onFilter, onSort, onRefreshSeconds, onViewMode, onToggleColumn }: {
   count: number
   filter: string
   sort: SortMode
+  refreshSeconds: number
+  configuredRefreshSeconds: number
   viewMode: ViewMode
   visibleColumns: Set<OptionalColumn>
   onFilter: (value: string) => void
   onSort: (value: SortMode) => void
+  onRefreshSeconds: (value: number) => void
   onViewMode: (value: ViewMode) => void
   onToggleColumn: (value: OptionalColumn) => void
 }) {
   const orderLabel: Record<SortMode, string> = { smart: "highest risk first", name: "system name", cpu: "highest CPU first", memory: "highest RAM first", disk: "fullest drive first", uptime: "longest uptime first" }
+  const refreshOptions = standardRefreshOptions.includes(configuredRefreshSeconds) ? standardRefreshOptions : [...standardRefreshOptions, configuredRefreshSeconds].sort((a, b) => a - b)
+  const refreshLabel = (seconds: number) => seconds === 0 ? "Manual" : seconds < 60 ? `${seconds} seconds` : `${seconds / 60} minute${seconds === 60 ? "" : "s"}`
   return <div class="fleet-toolbar">
     <div class="fleet-toolbar-title"><ServerIcon /><span><strong>Fleet priority</strong><small>{count} systems · {orderLabel[sort]}</small></span></div>
     <label class="quick-filter"><span class="sr-only">Quick filter</span><input type="search" value={filter} placeholder="Filter systems…" onInput={(event) => onFilter(event.currentTarget.value)} /></label>
     <label class="toolbar-select"><span>Sort</span><select value={sort} onChange={(event) => onSort(event.currentTarget.value as SortMode)}><option value="smart">Smart</option><option value="name">System</option><option value="cpu">CPU</option><option value="memory">RAM</option><option value="disk">Fullest drive</option><option value="uptime">Uptime</option></select></label>
+    <label class="toolbar-select"><span>Refresh</span><select aria-label="Automatic refresh interval" value={refreshSeconds} onChange={(event) => onRefreshSeconds(Number(event.currentTarget.value))}>{refreshOptions.map((seconds) => <option value={seconds} key={seconds}>{refreshLabel(seconds)}{seconds === configuredRefreshSeconds ? " · default" : ""}</option>)}</select></label>
     <details class="column-chooser"><summary>Columns</summary><div class="column-menu"><span class="column-menu-title">Visible fields</span><label><input type="checkbox" checked disabled /> System</label>{optionalColumns.map((column) => <label key={column.key}><input type="checkbox" checked={visibleColumns.has(column.key)} onChange={() => onToggleColumn(column.key)} /> {column.label}</label>)}</div></details>
     <div class="view-switch" role="group" aria-label="Fleet view">
       <button type="button" aria-pressed={viewMode === "cards"} title="Card view" onClick={() => onViewMode("cards")}><GridIcon /><span>Cards</span></button>
@@ -310,7 +320,7 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
   const [fleetError, setFleetError] = useState("")
   const [historyError, setHistoryError] = useState("")
   const [viewMode, setViewMode] = useState<ViewMode>(storedViewMode)
-  const [preferences, setPreferences] = useState<FleetPreferences>(storedFleetPreferences)
+  const [preferences, setPreferences] = useState<FleetPreferences>(() => storedFleetPreferences(refreshIntervalSeconds))
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
   const historyRequest = useRef(0)
 
@@ -341,6 +351,11 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
     }
   }, [client, selectedId, range])
 
+  const refreshAll = useCallback(() => {
+    void load()
+    if (selectedId) void loadHistory()
+  }, [load, loadHistory, selectedId])
+
   const closeDetails = useCallback(() => {
     const systemId = selectedId
     historyRequest.current += 1
@@ -364,10 +379,10 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
   }, [client, load])
 
   useEffect(() => {
-    if (!Number.isFinite(refreshIntervalSeconds) || refreshIntervalSeconds < 15) return
-    const interval = window.setInterval(() => void load(), refreshIntervalSeconds * 1000)
+    if (!Number.isFinite(preferences.refreshSeconds) || preferences.refreshSeconds < 15) return
+    const interval = window.setInterval(refreshAll, preferences.refreshSeconds * 1000)
     return () => window.clearInterval(interval)
-  }, [load, refreshIntervalSeconds])
+  }, [preferences.refreshSeconds, refreshAll])
 
   useEffect(() => {
     if (selectedId) void loadHistory()
@@ -433,6 +448,7 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
   const resizeColumn = (column: ColumnKey, width: number) => setPreferences((current) => ({ ...current, widths: { ...current.widths, [column]: Math.max(column === "drives" ? 240 : 90, Math.min(900, Math.round(width))) } }))
   const displayedColumns: ColumnKey[] = ["system", ...optionalColumns.map((column) => column.key).filter((column) => visibleColumns.has(column))]
   const tableMinimumWidth = displayedColumns.reduce((total, column) => total + preferences.widths[column], 0)
+  const configuredRefreshSeconds = Number.isFinite(refreshIntervalSeconds) && refreshIntervalSeconds >= 15 ? Math.round(refreshIntervalSeconds) : 0
 
   return (
     <main class="dashboard-shell">
@@ -444,14 +460,14 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
             <button class="icon-button" type="button" onClick={onLogout} aria-label="Sign out" title="Sign out"><LogoutIcon /></button>
           </div>
         </header>
-        <FleetToolbar count={systems.length} filter={preferences.filter} sort={preferences.sort} viewMode={viewMode} visibleColumns={visibleColumns} onFilter={(value) => updatePreference("filter", value)} onSort={(value) => updatePreference("sort", value)} onViewMode={changeViewMode} onToggleColumn={toggleColumn} />
+        <FleetToolbar count={systems.length} filter={preferences.filter} sort={preferences.sort} refreshSeconds={preferences.refreshSeconds} configuredRefreshSeconds={configuredRefreshSeconds} viewMode={viewMode} visibleColumns={visibleColumns} onFilter={(value) => updatePreference("filter", value)} onSort={(value) => updatePreference("sort", value)} onRefreshSeconds={(value) => updatePreference("refreshSeconds", value)} onViewMode={changeViewMode} onToggleColumn={toggleColumn} />
       </div>
 
       <section class="status-strip" aria-label="Fleet summary">
         <div><span>Systems</span><strong>{systems.length}</strong></div>
         <div><span>Online</span><strong>{counts.up}</strong></div>
         <div class={counts.attention ? "needs-attention" : ""}><span>Attention</span><strong>{counts.attention}</strong></div>
-        <div class="refresh-cell"><span>{updatedAt ? `Updated ${updatedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : "Not updated"}</span><button type="button" onClick={() => void load()} disabled={loading}><RefreshIcon /> Refresh</button></div>
+        <div class="refresh-cell"><span>{updatedAt ? `Updated ${updatedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : "Not updated"}</span><button type="button" onClick={refreshAll} disabled={loading}><RefreshIcon /> Refresh</button></div>
       </section>
 
       {fleetError && <div class="notice" role="alert"><strong>Fleet unavailable</strong><span>{fleetError}</span><button type="button" onClick={() => void load()}>Reload fleet</button></div>}
