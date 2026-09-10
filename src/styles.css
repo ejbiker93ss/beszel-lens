@@ -164,7 +164,7 @@ a { color: inherit; text-underline-offset: 3px; }
 .column-chooser summary::-webkit-details-marker { display: none; }
 .column-chooser summary:hover { background: var(--surface-hover); }
 .column-chooser[open] summary { border-color: var(--blue); }
-.column-menu { position: absolute; z-index: 30; top: calc(100% + 7px); right: 0; width: min(190px, calc(100vw - 2 * var(--page-pad))); padding: 10px; display: grid; gap: 3px; border: 1px solid var(--line-strong); border-radius: var(--radius-control); background: var(--paper-raised); box-shadow: var(--dock-shadow); }
+.column-menu { position: absolute; z-index: 30; top: calc(100% + 7px); left: 0; width: min(190px, calc(100vw - 2 * var(--page-pad))); padding: 10px; display: grid; gap: 3px; border: 1px solid var(--line-strong); border-radius: var(--radius-control); background: var(--paper-raised); box-shadow: var(--dock-shadow); }
 .column-menu-title { padding: 4px 6px 7px; color: var(--muted); font: 700 0.62rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; text-transform: uppercase; letter-spacing: 0.055em; }
 .column-menu label { min-height: 34px; padding: 0 6px; display: flex; align-items: center; gap: 9px; border-radius: 6px; cursor: pointer; font-size: 0.76rem; }
 .column-menu label:hover { background: var(--surface-hover); }

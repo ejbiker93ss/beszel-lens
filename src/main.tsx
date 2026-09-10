@@ -260,12 +260,32 @@ function FleetToolbar({ count, filter, sort, refreshSeconds, configuredRefreshSe
   const orderLabel: Record<SortMode, string> = { smart: "highest risk first", name: "system name", cpu: "highest CPU first", memory: "highest RAM first", disk: "fullest drive first", uptime: "longest uptime first" }
   const refreshOptions = standardRefreshOptions.includes(configuredRefreshSeconds) ? standardRefreshOptions : [...standardRefreshOptions, configuredRefreshSeconds].sort((a, b) => a - b)
   const refreshLabel = (seconds: number) => seconds === 0 ? "Manual" : seconds < 60 ? `${seconds} seconds` : `${seconds / 60} minute${seconds === 60 ? "" : "s"}`
+  const columnChooser = useRef<HTMLDetailsElement>(null)
+
+  useEffect(() => {
+    const closeOnOutsidePress = (event: PointerEvent) => {
+      if (columnChooser.current?.open && !columnChooser.current.contains(event.target as Node)) columnChooser.current.open = false
+    }
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || !columnChooser.current?.open) return
+      event.preventDefault()
+      columnChooser.current.open = false
+      columnChooser.current.querySelector("summary")?.focus()
+    }
+    document.addEventListener("pointerdown", closeOnOutsidePress)
+    document.addEventListener("keydown", closeOnEscape)
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsidePress)
+      document.removeEventListener("keydown", closeOnEscape)
+    }
+  }, [])
+
   return <div class="fleet-toolbar">
     <div class="fleet-toolbar-title"><ServerIcon /><span><strong>Fleet priority</strong><small>{count} systems · {orderLabel[sort]}</small></span></div>
     <label class="quick-filter"><span class="sr-only">Quick filter</span><input type="search" value={filter} placeholder="Filter systems…" onInput={(event) => onFilter(event.currentTarget.value)} /></label>
     <label class="toolbar-select"><span>Sort</span><select value={sort} onChange={(event) => onSort(event.currentTarget.value as SortMode)}><option value="smart">Smart</option><option value="name">System</option><option value="cpu">CPU</option><option value="memory">RAM</option><option value="disk">Fullest drive</option><option value="uptime">Uptime</option></select></label>
     <label class="toolbar-select"><span>Refresh</span><select aria-label="Automatic refresh interval" value={refreshSeconds} onChange={(event) => onRefreshSeconds(Number(event.currentTarget.value))}>{refreshOptions.map((seconds) => <option value={seconds} key={seconds}>{refreshLabel(seconds)}{seconds === configuredRefreshSeconds ? " · default" : ""}</option>)}</select></label>
-    <details class="column-chooser"><summary>Columns</summary><div class="column-menu"><span class="column-menu-title">Visible fields</span><label><input type="checkbox" checked disabled /> System</label>{optionalColumns.map((column) => <label key={column.key}><input type="checkbox" checked={visibleColumns.has(column.key)} onChange={() => onToggleColumn(column.key)} /> {column.label}</label>)}</div></details>
+    <details class="column-chooser" ref={columnChooser}><summary>Columns</summary><div class="column-menu"><span class="column-menu-title">Visible fields</span><label><input type="checkbox" checked disabled /> System</label>{optionalColumns.map((column) => <label key={column.key}><input type="checkbox" checked={visibleColumns.has(column.key)} onChange={() => onToggleColumn(column.key)} /> {column.label}</label>)}</div></details>
     <div class="view-switch" role="group" aria-label="Fleet view">
       <button type="button" aria-pressed={viewMode === "cards"} title="Card view" onClick={() => onViewMode("cards")}><GridIcon /><span>Cards</span></button>
       <button type="button" aria-pressed={viewMode === "rows"} title="Row view" onClick={() => onViewMode("rows")}><RowsIcon /><span>Rows</span></button>
@@ -454,7 +474,11 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
 
   return (
     <main class="dashboard-shell">
-      <div class="topbar-dock">
+      <div class="topbar-dock" onMouseLeave={(event) => {
+        event.currentTarget.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((details) => { details.open = false })
+        const focused = document.activeElement
+        if (focused instanceof HTMLElement && event.currentTarget.contains(focused)) focused.blur()
+      }}>
         <header class="topbar">
           <div class="brand-lockup"><span class="brand-index">BL—01</span><strong>Beszel Lens</strong></div>
           <div class="topbar-actions">

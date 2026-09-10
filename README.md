@@ -29,7 +29,7 @@ Lens connects directly from your browser to an existing Beszel Hub. It leaves co
 - Follow the operating system's light or dark appearance automatically.
 - Keep desktop navigation out of the way until the pointer reaches the top edge, while preserving visible controls on touch devices.
 - Switch between aligned telemetry cards and a compact single-line, one-server-per-row data grid; the selected view is remembered in the browser.
-- Reveal the top-edge toolbar to quick-filter systems, choose visible fields, switch layout, select the automatic refresh cadence, and sort by Smart priority, system, CPU, RAM, fullest drive, or uptime.
+- Reveal the top-edge toolbar to quick-filter systems, choose visible fields, switch layout, select the automatic refresh cadence, and sort by Smart priority, system, CPU, RAM, fullest drive, or uptime. The field chooser dismisses on outside click, Escape, or when the pointer leaves the dock.
 - Drag row-column dividers to resize them; a synchronized scrollbar above the fleet keeps wide columns reachable on narrow screens. Filter, sort, refresh cadence, visible columns, widths, and layout persist in local browser storage.
 
 ## Run locally
