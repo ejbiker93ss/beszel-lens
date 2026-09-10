@@ -108,7 +108,7 @@
       "refersTo": "system-table",
       "description": "A semantic, risk-ranked table with one 42px single-line server row and inline CPU, RAM, and nonwrapping drive meters.",
       "html": "<table class=\"ds-system-table\"><thead><tr><th>System</th><th>Condition</th><th>CPU</th><th>RAM</th><th>Drives</th></tr></thead><tbody><tr><th><button>edge-node-01</button></th><td>Memory pressure</td><td>42%</td><td>84%</td><td>C: 61% · Archive 78%</td></tr></tbody></table>",
-      "css": ".ds-system-table { width: 100%; min-width: 900px; border-collapse: collapse; table-layout: fixed; border-radius: var(--radius-card, 14px); background: var(--paper, #f8f7f1); color: var(--ink, #171713); } .ds-system-table tbody tr { height: 42px; border-top: 1px solid var(--line, #c9c7ba); } .ds-system-table th, .ds-system-table td { padding: 5px 12px; text-align: left; white-space: nowrap; }"
+      "css": ".ds-system-table { width: 100%; min-width: 900px; border-collapse: collapse; table-layout: fixed; border-radius: var(--radius-card, 14px); background: var(--paper, #f8f7f1); color: var(--ink, #171713); } .ds-system-table tbody tr { height: 42px; border-top: 1px solid var(--line, #c9c7ba); } .ds-system-table th, .ds-system-table td { padding: 5px 12px; text-align: left; white-space: nowrap; } .ds-system-table th:nth-child(2) { width: 16%; } .ds-system-table th:nth-child(5) { width: 46%; }"
     },
     {
       "name": "Detail Panel",

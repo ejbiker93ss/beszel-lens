@@ -210,9 +210,9 @@ a { color: inherit; text-underline-offset: 3px; }
 .system-table thead { background: var(--neutral-wash); }
 .system-table thead th { height: 30px; padding: 0 12px; color: var(--muted); text-align: left; font: 700 0.62rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: 0.055em; text-transform: uppercase; }
 .system-table th:nth-child(1) { width: 20%; }
-.system-table th:nth-child(2) { width: 23%; }
+.system-table th:nth-child(2) { width: 16%; }
 .system-table th:nth-child(3), .system-table th:nth-child(4) { width: 9%; }
-.system-table th:nth-child(5) { width: 39%; }
+.system-table th:nth-child(5) { width: 46%; }
 .system-row > th, .system-row > td { height: 42px; padding: 5px 12px; border-top: 1px solid var(--line); vertical-align: middle; }
 .system-row:first-child > th, .system-row:first-child > td { border-top: 0; }
 .system-row:hover { background: var(--paper-raised); }
