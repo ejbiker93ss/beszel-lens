@@ -1,6 +1,6 @@
 # Beszel Lens deployment
 
-Run `Start-BeszelLens.cmd` from the root of the published folder. It requests administrator approval, mirrors the package to `C:\BeszelLens`, preserves the installed `App\appsettings.json`, and starts or updates the Docker container.
+Run `Start-BeszelLens.cmd` from the root of the published folder. It requests administrator approval, mirrors the package to `C:\BeszelLens`, preserves the installed `App\appsettings.json`, and starts a hidden dependency-free Windows static host.
 
 Edit `C:\BeszelLens\App\appsettings.json` once per target machine:
 
@@ -10,4 +10,4 @@ Edit `C:\BeszelLens\App\appsettings.json` once per target machine:
 
 Credentials never belong in appsettings. Each user signs in directly to the configured Beszel Hub.
 
-Use `Scripts\Stop-BeszelLens.cmd` to stop and remove the running container without deleting the installed package or settings.
+Use `Scripts\Stop-BeszelLens.cmd` to stop the local host without deleting the installed package or settings. Runtime logs and the process record are stored in `C:\ProgramData\BeszelLens`.

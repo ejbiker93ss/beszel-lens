@@ -39,20 +39,17 @@ if (-not (Test-IsAdministrator)) {
     exit $elevated.ExitCode
 }
 
+$installedStopScript = Join-Path $InstallPath "Scripts\Stop-BeszelLens.ps1"
+if (Test-Path -LiteralPath $installedStopScript -PathType Leaf) {
+    & $installedStopScript -InstallPath $InstallPath
+}
 if (-not $SkipUpdate) {
     & (Join-Path $PSScriptRoot "Update-BeszelLensFromShare.ps1") -SourcePath $SourcePath -InstallPath $InstallPath
 }
 
-$composePath = Join-Path $InstallPath "compose.yaml"
 $settingsPath = Join-Path $InstallPath "App\appsettings.json"
-if (-not (Test-Path -LiteralPath $composePath -PathType Leaf)) {
-    throw "compose.yaml was not found after update: $composePath"
-}
 if (-not (Test-Path -LiteralPath $settingsPath -PathType Leaf)) {
     throw "appsettings.json was not found after update: $settingsPath"
-}
-if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
-    throw "Docker is required on the target computer. Install Docker, then run Start-BeszelLens.cmd again."
 }
 
 $settings = Get-Content -LiteralPath $settingsPath -Raw | ConvertFrom-Json
@@ -61,20 +58,48 @@ if ($listenPort -lt 1 -or $listenPort -gt 65535) {
     throw "BeszelLens.ListenPort must be between 1 and 65535."
 }
 
-$env:BESZEL_LENS_PORT = [string]$listenPort
-Push-Location $InstallPath
-try {
-    & docker compose -f $composePath up -d --build --remove-orphans
-    if ($LASTEXITCODE -ne 0) {
-        throw "docker compose failed with exit code $LASTEXITCODE."
-    }
-}
-finally {
-    Pop-Location
+$serveScript = Join-Path $InstallPath "Scripts\Serve-BeszelLens.ps1"
+$appPath = Join-Path $InstallPath "App"
+if (-not (Test-Path -LiteralPath $serveScript -PathType Leaf)) {
+    throw "The Beszel Lens static host was not found after update: $serveScript"
 }
 
+$statePath = Join-Path $env:ProgramData "BeszelLens"
+New-Item -ItemType Directory -Force -Path $statePath | Out-Null
+$stdoutPath = Join-Path $statePath "beszel-lens.log"
+$stderrPath = Join-Path $statePath "beszel-lens.err.log"
+$serverArguments = @(
+    "-NoProfile",
+    "-ExecutionPolicy", "Bypass",
+    "-File", (Quote-Argument $serveScript),
+    "-RootPath", (Quote-Argument $appPath),
+    "-ListenPort", [string]$listenPort,
+    "-StatePath", (Quote-Argument $statePath)
+)
+$server = Start-Process -FilePath "powershell.exe" -ArgumentList $serverArguments -WindowStyle Hidden -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru
+
 $url = "http://localhost:$listenPort"
+$ready = $false
+$deadline = (Get-Date).AddSeconds(15)
+do {
+    Start-Sleep -Milliseconds 250
+    if ($server.HasExited) {
+        $details = if (Test-Path -LiteralPath $stderrPath) { (Get-Content -LiteralPath $stderrPath -Tail 8) -join " " } else { "No error log was created." }
+        throw "Beszel Lens stopped before it became ready. $details"
+    }
+    try {
+        $response = Invoke-WebRequest -Uri "$url/appsettings.json" -UseBasicParsing -TimeoutSec 2
+        $ready = $response.StatusCode -eq 200
+    }
+    catch { }
+} while (-not $ready -and (Get-Date) -lt $deadline)
+
+if (-not $ready) {
+    Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue
+    throw "Beszel Lens did not become ready at $url within 15 seconds. Check $stderrPath."
+}
+
 if (-not $NoBrowser) {
     Start-Process -FilePath $url | Out-Null
 }
-Write-Host "Beszel Lens is running at $url"
+Write-Host "Beszel Lens is running at $url (PID $($server.Id))"

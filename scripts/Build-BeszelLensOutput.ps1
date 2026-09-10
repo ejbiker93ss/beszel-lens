@@ -7,7 +7,6 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$deploymentFolder = Join-Path $repoRoot "deployment"
 $startupFolder = Join-Path $repoRoot "scripts\startup"
 if ([string]::IsNullOrWhiteSpace($OutputPath)) {
     $OutputPath = Join-Path $repoRoot "output\BeszelLens"
@@ -39,11 +38,8 @@ $scriptsOutput = Join-Path $resolvedOutputPath "Scripts"
 New-Item -ItemType Directory -Force -Path $appOutput, $scriptsOutput | Out-Null
 
 Get-ChildItem -LiteralPath (Join-Path $repoRoot "dist") -Force | Copy-Item -Destination $appOutput -Recurse -Force
-Copy-Item -LiteralPath (Join-Path $deploymentFolder "Dockerfile") -Destination $resolvedOutputPath -Force
-Copy-Item -LiteralPath (Join-Path $deploymentFolder "compose.yaml") -Destination $resolvedOutputPath -Force
-Copy-Item -LiteralPath (Join-Path $deploymentFolder "nginx.conf") -Destination $resolvedOutputPath -Force
 Get-ChildItem -LiteralPath $startupFolder -File | Copy-Item -Destination $scriptsOutput -Force
-Copy-Item -LiteralPath (Join-Path $deploymentFolder "Start-BeszelLens.cmd") -Destination $resolvedOutputPath -Force
+Copy-Item -LiteralPath (Join-Path $repoRoot "deployment\Start-BeszelLens.cmd") -Destination $resolvedOutputPath -Force
 
 $sourceCommit = "unknown"
 if (Get-Command git -ErrorAction SilentlyContinue) {

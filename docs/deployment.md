@@ -18,7 +18,7 @@ Or run `scripts\Publish-BeszelLens.cmd` to build and copy in one step. The defau
 
 For a repeatable local setup, copy `deployment.local.example.json` to `deployment.local.json` and set `FileSharePath`. The local file is ignored by Git, so private deployment topology does not enter the public repository.
 
-The build script runs `npm ci`, the production Vite build, packages only the static site and Docker runtime files, and writes `publish-manifest.json`.
+The build script runs `npm ci`, the production Vite build, packages the static site and dependency-free Windows host scripts, and writes `publish-manifest.json`.
 
 ## Install or update
 
@@ -27,12 +27,12 @@ Run `Start-BeszelLens.cmd` from the published share on the target computer. The 
 1. Requests administrator approval.
 2. Mirrors the package to `C:\BeszelLens`.
 3. Preserves the target computer's `App\appsettings.json`.
-4. Builds and starts the `beszel-lens` Docker container.
+4. Starts a hidden PowerShell static host and verifies it is responding.
 5. Opens the local Lens URL.
 
 The launcher accepts UNC share paths directly and normalizes command-shell quoting before resolving the package location.
 
-Docker is the only target-machine prerequisite.
+No Docker, Node.js, .NET runtime, IIS, or other target-machine prerequisite is required. Runtime logs and the host PID are stored in `C:\ProgramData\BeszelLens`.
 
 ## Runtime app settings
 

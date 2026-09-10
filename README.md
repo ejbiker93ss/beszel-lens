@@ -85,7 +85,7 @@ The repository includes a build/package/file-share workflow for internal Windows
 .\scripts\Copy-BeszelLensOutputToFileServer.ps1
 ```
 
-Run `scripts\Publish-BeszelLens.cmd -SharePath "\\server\share\Beszel Lens"` to perform both steps. For repeat use, copy `deployment.local.example.json` to the ignored `deployment.local.json` and set `FileSharePath`; the publish command can then be double-clicked without arguments. `BESZEL_LENS_SHARE` is also supported. On the target computer, run the package's root `Start-BeszelLens.cmd`; it installs under `C:\BeszelLens`, preserves machine-local settings across updates, and starts the Docker container.
+Run `scripts\Publish-BeszelLens.cmd -SharePath "\\server\share\Beszel Lens"` to perform both steps. For repeat use, copy `deployment.local.example.json` to the ignored `deployment.local.json` and set `FileSharePath`; the publish command can then be double-clicked without arguments. `BESZEL_LENS_SHARE` is also supported. On the target computer, run the package's root `Start-BeszelLens.cmd`; it installs under `C:\BeszelLens`, preserves machine-local settings across updates, and starts a hidden dependency-free Windows static host. Docker, Node.js, and IIS are not required on the target computer.
 
 See [deployment notes](docs/deployment.md) for settings, update behavior, and prerequisites.
 
@@ -106,7 +106,7 @@ Serve the generated `dist` directory from any internal static host. If the dashb
 ## Security
 
 - Credentials are sent directly from the browser to the Beszel Hub you enter.
-- The application does not have its own server and does not receive or proxy credentials.
+- The included Windows host only serves static files; it does not receive or proxy Beszel credentials.
 - Authentication state is stored by the PocketBase browser SDK.
 - Use a normal Beszel user account. Never expose a PocketBase superuser token or administrator password in this app.
 - Host both services over HTTPS outside a trusted local network.
