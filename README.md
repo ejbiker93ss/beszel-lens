@@ -43,19 +43,19 @@ Open the printed local URL and enter your Beszel Hub URL and user credentials.
 
 ## Self-host with Docker
 
-The container builds the static app and serves it as an unprivileged Nginx process on port `8080`.
+The container builds the static app and serves it as an unprivileged Nginx process on port `8093`.
 
 ```bash
 docker compose up -d --build
 ```
 
-Open `http://your-server:8080`, or put the container behind your existing internal HTTPS reverse proxy. No environment variables, database, volumes, or outbound server access are required.
+Open `http://your-server:8093`, or put the container behind your existing internal HTTPS reverse proxy. No environment variables, database, volumes, or outbound server access are required.
 
 Example Caddy route:
 
 ```caddyfile
 lens.internal.example {
-    reverse_proxy 127.0.0.1:8080
+    reverse_proxy 127.0.0.1:8093
 }
 ```
 
@@ -67,7 +67,7 @@ server {
     server_name lens.internal.example;
 
     location / {
-        proxy_pass http://127.0.0.1:8080;
+        proxy_pass http://127.0.0.1:8093;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Proto $scheme;
     }

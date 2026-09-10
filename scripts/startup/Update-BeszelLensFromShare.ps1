@@ -43,4 +43,10 @@ if (-not (Test-Path -LiteralPath $installedSettings -PathType Leaf)) {
     Copy-Item -LiteralPath (Join-Path $resolvedSourcePath "App\appsettings.json") -Destination $installedSettings -Force
 }
 
+$settings = Get-Content -LiteralPath $installedSettings -Raw | ConvertFrom-Json
+if ([int]$settings.BeszelLens.ListenPort -eq 8080) {
+    $settings.BeszelLens.ListenPort = 8093
+    $settings | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $installedSettings -Encoding UTF8
+}
+
 Write-Host "Updated Beszel Lens at $resolvedInstallPath"

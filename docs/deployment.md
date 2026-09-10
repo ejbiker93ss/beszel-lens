@@ -43,11 +43,13 @@ No Docker, Node.js, .NET runtime, IIS, or other target-machine prerequisite is r
   "BeszelLens": {
     "HubUrl": "",
     "RefreshIntervalSeconds": 60,
-    "ListenPort": 8080
+    "ListenPort": 8093
   }
 }
 ```
 
 `HubUrl` may contain the internal Beszel Hub URL, but never a username, password, auth token, or PocketBase superuser credential. Browser authentication remains per user. The locally stored hub URL takes precedence after a user has connected once.
+
+The Windows host listens on `ListenPort`, default `8093`. WebProxy can publish that backend as `http://127.0.0.1:8093`. If another local app already owns 8093, change `ListenPort` and the WebProxy backend together. An existing `C:\BeszelLens\App\appsettings.json` is preserved on update, so change the installed copy if the machine was previously configured for 8080.
 
 Because the app runs in each user's browser, that browser must be able to resolve and reach the internal Beszel Hub. If Lens is served over HTTPS, the Hub must also use HTTPS to avoid mixed-content blocking.

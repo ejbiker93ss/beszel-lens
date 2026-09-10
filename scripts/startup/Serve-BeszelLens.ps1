@@ -53,7 +53,12 @@ function Write-HttpResponse {
 $listener = [Net.Sockets.TcpListener]::new([Net.IPAddress]::Any, $ListenPort)
 
 try {
-    $listener.Start()
+    try {
+        $listener.Start()
+    }
+    catch {
+        throw "Beszel Lens could not bind TCP port $ListenPort. Choose a free ListenPort in App\\appsettings.json. $($_.Exception.InnerException.Message)"
+    }
     Write-Host "Beszel Lens static host listening on port $ListenPort"
 
     while ($true) {

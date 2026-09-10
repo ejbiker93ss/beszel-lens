@@ -80,13 +80,13 @@ $serverArguments = @(
 )
 $server = Start-Process -FilePath "powershell.exe" -ArgumentList $serverArguments -WindowStyle Hidden -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru
 
-$url = "http://localhost:$listenPort"
+$url = "http://127.0.0.1:$listenPort"
 $ready = $false
 $deadline = (Get-Date).AddSeconds(15)
 do {
     Start-Sleep -Milliseconds 250
     if ($server.HasExited) {
-        $details = if (Test-Path -LiteralPath $stderrPath) { (Get-Content -LiteralPath $stderrPath -Tail 8) -join " " } else { "No error log was created." }
+        $details = if (Test-Path -LiteralPath $stderrPath) { ((Get-Content -LiteralPath $stderrPath) | Select-Object -Last 8) -join " " } else { "No error log was created." }
         throw "Beszel Lens stopped before it became ready. $details"
     }
     try {
@@ -98,7 +98,8 @@ do {
 
 if (-not $ready) {
     Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue
-    throw "Beszel Lens did not become ready at $url within 15 seconds. Check $stderrPath."
+    $details = if (Test-Path -LiteralPath $stderrPath) { ((Get-Content -LiteralPath $stderrPath) | Select-Object -Last 8) -join " " } else { "No error log was created." }
+    throw "Beszel Lens did not become ready at $url within 15 seconds. $details"
 }
 
 if (-not $NoBrowser) {
