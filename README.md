@@ -73,6 +73,25 @@ server {
 
 When you open Lens, enter the internal HTTPS URL of your Beszel Hub. The browser running Lens must be able to resolve and reach that address.
 
+## Internal Windows deployment
+
+The repository includes a build/package/file-share workflow for internal Windows deployment:
+
+```powershell
+.\scripts\Build-BeszelLensOutput.ps1
+.\scripts\Copy-BeszelLensOutputToFileServer.ps1
+```
+
+Run `scripts\Publish-BeszelLens.cmd -SharePath "\\server\share\Beszel Lens"` to perform both steps, or set `BESZEL_LENS_SHARE` for a local deployment environment. On the target computer, run the package's root `Start-BeszelLens.cmd`; it installs under `C:\BeszelLens`, preserves machine-local settings across updates, and starts the Docker container.
+
+See [deployment notes](docs/deployment.md) for settings, update behavior, and prerequisites.
+
+## Runtime app settings
+
+`public\appsettings.json` becomes `App\appsettings.json` in the deployment package. It can provide the initial Beszel Hub URL, timed refresh interval, and listening port without rebuilding the frontend. The target-machine copy is preserved during later updates.
+
+Do not place credentials or tokens in this file. Users continue to authenticate directly with the Beszel Hub.
+
 ## Manual production build
 
 ```bash

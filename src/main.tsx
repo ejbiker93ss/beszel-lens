@@ -16,6 +16,7 @@ import {
   type TimeRange,
 } from "./beszel"
 import { MetricChart } from "./chart"
+import { loadAppSettings, type ResolvedAppSettings } from "./config"
 import { CloseIcon, ExternalIcon, GridIcon, LogoutIcon, RefreshIcon, RowsIcon, ServerIcon } from "./icons"
 import { assessSystem, driveReadings, rankSystems } from "./risk"
 import "./styles.css"
@@ -116,8 +117,8 @@ function CompactMeter({ label, amount, warning = 75, showLabel = false }: { labe
   )
 }
 
-function Login({ onConnect, busy, error }: { onConnect: (hub: string, email: string, password: string) => void; busy: boolean; error: string }) {
-  const [hub, setHub] = useState(storedHubUrl())
+function Login({ onConnect, busy, error, defaultHubUrl }: { onConnect: (hub: string, email: string, password: string) => void; busy: boolean; error: string; defaultHubUrl: string }) {
+  const [hub, setHub] = useState(storedHubUrl() || defaultHubUrl)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
@@ -222,7 +223,7 @@ function DetailPanel({ system, stats, range, loading, error, onRange, onReload, 
   )
 }
 
-function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: string; onLogout: () => void }) {
+function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { client: PocketBase; hubUrl: string; refreshIntervalSeconds: number; onLogout: () => void }) {
   const [systems, setSystems] = useState<SystemRecord[]>([])
   const [selectedId, setSelectedId] = useState("")
   const [range, setRange] = useState<TimeRange>("1h")
@@ -283,6 +284,12 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
     }).then((stop) => { unsubscribe = stop }).catch(() => undefined)
     return () => { unsubscribe?.(); void client.collection("systems").unsubscribe("*") }
   }, [client, load])
+
+  useEffect(() => {
+    if (!Number.isFinite(refreshIntervalSeconds) || refreshIntervalSeconds < 15) return
+    const interval = window.setInterval(() => void load(), refreshIntervalSeconds * 1000)
+    return () => window.clearInterval(interval)
+  }, [load, refreshIntervalSeconds])
 
   useEffect(() => {
     if (selectedId) void loadHistory()
@@ -376,8 +383,8 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
   )
 }
 
-function App() {
-  const initialHub = storedHubUrl()
+function App({ settings }: { settings: ResolvedAppSettings }) {
+  const initialHub = storedHubUrl() || settings.BeszelLens.HubUrl
   const clientRef = useRef<PocketBase | null>(initialHub ? createClient(initialHub) : null)
   const [client, setClient] = useState<PocketBase | null>(null)
   const [checking, setChecking] = useState(Boolean(initialHub))
@@ -416,7 +423,9 @@ function App() {
   }
 
   if (checking) return <main class="boot-screen"><span>BL—01</span><div class="boot-line" /></main>
-  return client ? <Dashboard client={client} hubUrl={client.baseURL} onLogout={logout} /> : <Login onConnect={(...args) => void connect(...args)} busy={busy} error={error} />
+  return client
+    ? <Dashboard client={client} hubUrl={client.baseURL} refreshIntervalSeconds={settings.BeszelLens.RefreshIntervalSeconds} onLogout={logout} />
+    : <Login defaultHubUrl={settings.BeszelLens.HubUrl} onConnect={(...args) => void connect(...args)} busy={busy} error={error} />
 }
 
-render(<App />, document.getElementById("app")!)
+void loadAppSettings().then((settings) => render(<App settings={settings} />, document.getElementById("app")!))

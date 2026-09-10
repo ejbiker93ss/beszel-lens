@@ -1,5 +1,7 @@
 node_modules/
 dist/
+output/
+artifacts/
 .env
 .DS_Store
 *.local
