@@ -9,6 +9,8 @@ $ErrorActionPreference = "Stop"
 if ([string]::IsNullOrWhiteSpace($SourcePath)) {
     $SourcePath = Split-Path -Parent $PSScriptRoot
 }
+$SourcePath = $SourcePath.Trim().Trim('"')
+$InstallPath = $InstallPath.Trim().Trim('"')
 $resolvedSource = Resolve-Path -LiteralPath $SourcePath -ErrorAction Stop
 $resolvedSourcePath = [IO.Path]::GetFullPath([string]$resolvedSource.ProviderPath).TrimEnd('\')
 $resolvedInstallPath = [IO.Path]::GetFullPath($InstallPath).TrimEnd('\')

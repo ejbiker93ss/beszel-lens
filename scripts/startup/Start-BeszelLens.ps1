@@ -11,6 +11,8 @@ $ErrorActionPreference = "Stop"
 if ([string]::IsNullOrWhiteSpace($SourcePath)) {
     $SourcePath = Split-Path -Parent $PSScriptRoot
 }
+$SourcePath = $SourcePath.Trim().Trim('"')
+$InstallPath = $InstallPath.Trim().Trim('"')
 
 function Test-IsAdministrator {
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()

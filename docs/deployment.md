@@ -30,6 +30,8 @@ Run `Start-BeszelLens.cmd` from the published share on the target computer. The 
 4. Builds and starts the `beszel-lens` Docker container.
 5. Opens the local Lens URL.
 
+The launcher accepts UNC share paths directly and normalizes command-shell quoting before resolving the package location.
+
 Docker is the only target-machine prerequisite.
 
 ## Runtime app settings
