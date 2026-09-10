@@ -306,11 +306,11 @@ Each card has an identity band and a variable-length stack of utilization bars, 
 
 ### Compact Row Grid
 
-Row mode is a semantic table with one server per 42px row and stable System, Condition, CPU, RAM, and Drives columns. The system-name control opens the same inline detail panel used by cards. CPU and RAM place their short semantic track and value side by side; every reported drive places its label, track, and value on that same line inside one nonwrapping drives cell. Normal systems leave Condition empty; only actionable or exceptional states earn text. The table scrolls horizontally on narrow viewports instead of collapsing columns or creating multi-line server rows.
+Row mode is a semantic table with one server per 42px row and stable System, Condition, CPU, RAM, and Drives columns. The system-name control opens the same inline detail panel used by cards. CPU and RAM place their short semantic track and value side by side; every reported drive places a compact, emphasized drive label, track, and value on that same line inside one nonwrapping drives cell. Normal systems leave Condition empty; only actionable or exceptional states earn text. The table scrolls horizontally on narrow viewports instead of collapsing columns or creating multi-line server rows.
 
 ### Utilization Bar
 
-Cards always show CPU, RAM, and the primary drive, followed by every extra drive in descending utilization order. Labels truncate safely; values remain visible as tabular numerals. Track height responds to card width from 6px to 9px. Fills are clamped to 0–100% and use healthy green below 60%, elevated gold from 60%, warning orange from the metric's warning threshold, and critical red from 90%. Missing readings show an em dash and a neutral diagonal-striped track.
+Cards always show CPU, RAM, and the primary drive, followed by every extra drive in descending utilization order. Windows drive labels collapse to their emphasized drive letter (`C`, `D`); Linux root remains `/`, while named mount points retain their name. Labels truncate safely; values remain visible as tabular numerals. Track height responds to card width from 6px to 9px. Fills are clamped to 0–100% and use healthy green below 60%, elevated gold from 60%, warning orange from the metric's warning threshold, and critical red from 90%. Missing readings show an em dash and a neutral diagonal-striped track.
 
 ### Detail Panel
 

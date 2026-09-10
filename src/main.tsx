@@ -43,6 +43,13 @@ function formatUptime(seconds: number | undefined) {
   return days ? `${days}d ${hours}h` : `${hours}h`
 }
 
+function compactDriveLabel(label: string, primary: boolean) {
+  const driveLetter = label.match(/^([a-z]):(?:\s+drive)?$/i)
+  if (driveLetter) return driveLetter[1].toUpperCase()
+  if (primary && label === "Primary disk") return "C"
+  return label.replace(/\s+drive$/i, "")
+}
+
 function metricTone(amount: number, warning = 75, critical = 90) {
   if (amount >= critical) return "critical"
   if (amount >= warning) return "warning"
@@ -152,7 +159,7 @@ function SystemCard({ system, selected, onSelect }: { system: SystemRecord; sele
       <div class="metric-bars" role="group" aria-label={`${system.name} current utilization`}>
         <MetricBar label="CPU" amount={system.info.cpu} />
         <MetricBar label="RAM" amount={system.info.mp} />
-        {drives.map((drive, index) => <MetricBar label={drive.label} amount={drive.value} warning={80} key={`${drive.label}-${index}`} />)}
+        {drives.map((drive, index) => <MetricBar label={compactDriveLabel(drive.label, drive.primary)} amount={drive.value} warning={80} key={`${drive.label}-${index}`} />)}
       </div>
     </article>
   )
@@ -172,7 +179,7 @@ function SystemRow({ system, selected, onSelect }: { system: SystemRecord; selec
       <td class={`row-condition tone-${risk.tone}`}>{risk.tone !== "normal" && <strong>{risk.label}</strong>}</td>
       <td><CompactMeter label={`${system.name} CPU`} amount={system.info.cpu} /></td>
       <td><CompactMeter label={`${system.name} RAM`} amount={system.info.mp} /></td>
-      <td><div class="row-drives" role="group" aria-label={`${system.name} drive utilization`}>{drives.map((drive, index) => <CompactMeter label={drive.label} amount={drive.value} warning={80} showLabel key={`${drive.label}-${index}`} />)}</div></td>
+      <td><div class="row-drives" role="group" aria-label={`${system.name} drive utilization`}>{drives.map((drive, index) => <CompactMeter label={compactDriveLabel(drive.label, drive.primary)} amount={drive.value} warning={80} showLabel key={`${drive.label}-${index}`} />)}</div></td>
     </tr>
   )
 }
