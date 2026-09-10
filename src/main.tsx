@@ -11,11 +11,12 @@ import {
   signOut,
   storedHubUrl,
   subscribeToSystems,
+  timeRanges,
   type StatsPoint,
   type SystemRecord,
   type TimeRange,
 } from "./beszel"
-import { MetricChart } from "./chart"
+import { MetricsDashboard } from "./chart"
 import { loadAppSettings, type ResolvedAppSettings } from "./config"
 import { CloseIcon, ExternalIcon, GridIcon, LogoutIcon, RefreshIcon, RowsIcon, ServerIcon } from "./icons"
 import { assessSystem, driveReadings, rankSystems } from "./risk"
@@ -211,14 +212,12 @@ function DetailPanel({ system, stats, range, loading, error, onRange, onReload, 
         {drives.map((drive, index) => <Gauge label={compactDriveLabel(drive.label, drive.primary)} accessibleLabel={drive.label} amount={drive.value} warning={80} key={`${drive.label}-${index}`} />)}
       </div>
       <div class="history-heading">
-        <div><h3>Utilization history</h3><span>{loading ? "Loading readings…" : `${stats.length} readings`}</span></div>
-        <div class="range-tabs" aria-label="History range">
-          {(["1h", "12h", "24h"] as TimeRange[]).map((option) => <button type="button" aria-pressed={range === option} class={range === option ? "active" : ""} onClick={() => onRange(option)} key={option}>{option}</button>)}
-        </div>
+        <div><h3>System history</h3><span>{loading ? "Loading readings…" : `${stats.length} readings`}</span></div>
+        <label class="range-select"><span>Look back</span><select aria-label="History lookback range" value={range} onChange={(event) => onRange(event.currentTarget.value as TimeRange)}>{timeRanges.map((option) => <option value={option.value} key={option.value}>{option.label}</option>)}</select></label>
       </div>
       {error ? (
         <div class="history-error" role="alert"><strong>History unavailable</strong><span>{error}</span><button type="button" onClick={onReload}>Reload history</button></div>
-      ) : loading ? <div class="chart-loading"><span /></div> : <MetricChart points={stats} />}
+      ) : loading ? <div class="chart-loading"><span /></div> : <MetricsDashboard points={stats} />}
     </section>
   )
 }
