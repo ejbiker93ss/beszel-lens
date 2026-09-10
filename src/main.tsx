@@ -23,8 +23,47 @@ import { assessSystem, driveReadings, rankSystems } from "./risk"
 import "./styles.css"
 
 type ViewMode = "cards" | "rows"
+type SortMode = "smart" | "name" | "cpu" | "memory" | "disk" | "uptime"
+type OptionalColumn = "condition" | "cpu" | "memory" | "drives"
+type ColumnKey = "system" | OptionalColumn
+
+interface FleetPreferences {
+  filter: string
+  sort: SortMode
+  visibleColumns: OptionalColumn[]
+  widths: Record<ColumnKey, number>
+}
 
 const viewModeKey = "beszel-lens-view"
+const fleetPreferencesKey = "beszel-lens-fleet-preferences"
+const defaultWidths: Record<ColumnKey, number> = { system: 230, condition: 130, cpu: 120, memory: 120, drives: 420 }
+const optionalColumns: Array<{ key: OptionalColumn; label: string }> = [
+  { key: "condition", label: "Condition" },
+  { key: "cpu", label: "CPU" },
+  { key: "memory", label: "RAM" },
+  { key: "drives", label: "Drives" },
+]
+
+function storedFleetPreferences(): FleetPreferences {
+  const fallback: FleetPreferences = { filter: "", sort: "smart", visibleColumns: optionalColumns.map((column) => column.key), widths: defaultWidths }
+  try {
+    const stored = JSON.parse(localStorage.getItem(fleetPreferencesKey) ?? "{}") as Partial<FleetPreferences>
+    const visibleColumns = Array.isArray(stored.visibleColumns) ? stored.visibleColumns.filter((column): column is OptionalColumn => optionalColumns.some((option) => option.key === column)) : fallback.visibleColumns
+    const sortModes: SortMode[] = ["smart", "name", "cpu", "memory", "disk", "uptime"]
+    const widths = Object.fromEntries((Object.keys(defaultWidths) as ColumnKey[]).map((column) => {
+      const candidate = stored.widths?.[column]
+      return [column, Number.isFinite(candidate) ? Math.max(column === "drives" ? 240 : 90, Math.min(900, candidate as number)) : defaultWidths[column]]
+    })) as Record<ColumnKey, number>
+    return {
+      filter: typeof stored.filter === "string" ? stored.filter : "",
+      sort: sortModes.includes(stored.sort as SortMode) ? stored.sort as SortMode : "smart",
+      visibleColumns,
+      widths,
+    }
+  } catch {
+    return fallback
+  }
+}
 
 function storedViewMode(): ViewMode {
   try {
@@ -144,7 +183,7 @@ function Login({ onConnect, busy, error, defaultHubUrl }: { onConnect: (hub: str
   )
 }
 
-function SystemCard({ system, selected, onSelect }: { system: SystemRecord; selected: boolean; onSelect: () => void }) {
+function SystemCard({ system, selected, visibleColumns, onSelect }: { system: SystemRecord; selected: boolean; visibleColumns: Set<OptionalColumn>; onSelect: () => void }) {
   const risk = assessSystem(system)
   const drives = driveReadings(system)
   return (
@@ -155,18 +194,18 @@ function SystemCard({ system, selected, onSelect }: { system: SystemRecord; sele
           <strong title={system.name}>{system.name}</strong>
           <span class="uptime">{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</span>
         </div>
-        {risk.tone !== "normal" && <div class={`card-condition tone-${risk.tone}`}><b>{risk.label}</b><small>{risk.detail}</small></div>}
+        {visibleColumns.has("condition") && risk.tone !== "normal" && <div class={`card-condition tone-${risk.tone}`}><b>{risk.label}</b><small>{risk.detail}</small></div>}
       </button>
-      <div class="metric-bars" role="group" aria-label={`${system.name} current utilization`}>
-        <MetricBar label="CPU" amount={system.info.cpu} />
-        <MetricBar label="RAM" amount={system.info.mp} />
-        {drives.map((drive, index) => <MetricBar label={compactDriveLabel(drive.label, drive.primary)} amount={drive.value} warning={80} key={`${drive.label}-${index}`} />)}
-      </div>
+      {(visibleColumns.has("cpu") || visibleColumns.has("memory") || visibleColumns.has("drives")) && <div class="metric-bars" role="group" aria-label={`${system.name} current utilization`}>
+        {visibleColumns.has("cpu") && <MetricBar label="CPU" amount={system.info.cpu} />}
+        {visibleColumns.has("memory") && <MetricBar label="RAM" amount={system.info.mp} />}
+        {visibleColumns.has("drives") && drives.map((drive, index) => <MetricBar label={compactDriveLabel(drive.label, drive.primary)} amount={drive.value} warning={80} key={`${drive.label}-${index}`} />)}
+      </div>}
     </article>
   )
 }
 
-function SystemRow({ system, selected, onSelect }: { system: SystemRecord; selected: boolean; onSelect: () => void }) {
+function SystemRow({ system, selected, visibleColumns, onSelect }: { system: SystemRecord; selected: boolean; visibleColumns: Set<OptionalColumn>; onSelect: () => void }) {
   const risk = assessSystem(system)
   const drives = driveReadings(system)
   return (
@@ -177,12 +216,51 @@ function SystemRow({ system, selected, onSelect }: { system: SystemRecord; selec
           <span><strong title={system.name}>{system.name}</strong><small>{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</small></span>
         </button>
       </th>
-      <td class={`row-condition tone-${risk.tone}`}>{risk.tone !== "normal" && <strong>{risk.label}</strong>}</td>
-      <td><CompactMeter label={`${system.name} CPU`} amount={system.info.cpu} /></td>
-      <td><CompactMeter label={`${system.name} RAM`} amount={system.info.mp} /></td>
-      <td><div class="row-drives" role="group" aria-label={`${system.name} drive utilization`}>{drives.map((drive, index) => <CompactMeter label={compactDriveLabel(drive.label, drive.primary)} amount={drive.value} warning={80} showLabel key={`${drive.label}-${index}`} />)}</div></td>
+      {visibleColumns.has("condition") && <td class={`row-condition tone-${risk.tone}`}>{risk.tone !== "normal" && <strong>{risk.label}</strong>}</td>}
+      {visibleColumns.has("cpu") && <td><CompactMeter label={`${system.name} CPU`} amount={system.info.cpu} /></td>}
+      {visibleColumns.has("memory") && <td><CompactMeter label={`${system.name} RAM`} amount={system.info.mp} /></td>}
+      {visibleColumns.has("drives") && <td><div class="row-drives" role="group" aria-label={`${system.name} drive utilization`}>{drives.map((drive, index) => <CompactMeter label={compactDriveLabel(drive.label, drive.primary)} amount={drive.value} warning={80} showLabel key={`${drive.label}-${index}`} />)}</div></td>}
     </tr>
   )
+}
+
+function ResizableHeader({ label, column, width, onResize }: { label: string; column: ColumnKey; width: number; onResize: (column: ColumnKey, width: number) => void }) {
+  const beginResize = (event: PointerEvent) => {
+    event.preventDefault()
+    const header = (event.currentTarget as HTMLElement).parentElement
+    if (!header) return
+    const startX = event.clientX
+    const startWidth = header.getBoundingClientRect().width
+    const move = (moveEvent: PointerEvent) => onResize(column, startWidth + moveEvent.clientX - startX)
+    const stop = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", stop) }
+    window.addEventListener("pointermove", move)
+    window.addEventListener("pointerup", stop, { once: true })
+  }
+  return <th scope="col">{label}<span class="column-resizer" role="separator" aria-label={`Resize ${label} column`} aria-orientation="vertical" aria-valuemin={column === "drives" ? 240 : 90} aria-valuemax={900} aria-valuenow={width} tabIndex={0} onPointerDown={beginResize} onKeyDown={(event) => { if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); onResize(column, width + (event.key === "ArrowRight" ? 12 : -12)) } }} /></th>
+}
+
+function FleetToolbar({ count, filter, sort, viewMode, visibleColumns, onFilter, onSort, onViewMode, onToggleColumn }: {
+  count: number
+  filter: string
+  sort: SortMode
+  viewMode: ViewMode
+  visibleColumns: Set<OptionalColumn>
+  onFilter: (value: string) => void
+  onSort: (value: SortMode) => void
+  onViewMode: (value: ViewMode) => void
+  onToggleColumn: (value: OptionalColumn) => void
+}) {
+  const orderLabel: Record<SortMode, string> = { smart: "highest risk first", name: "system name", cpu: "highest CPU first", memory: "highest RAM first", disk: "fullest drive first", uptime: "longest uptime first" }
+  return <div class="fleet-toolbar">
+    <div class="fleet-toolbar-title"><ServerIcon /><span><strong>Fleet priority</strong><small>{count} systems · {orderLabel[sort]}</small></span></div>
+    <label class="quick-filter"><span class="sr-only">Quick filter</span><input type="search" value={filter} placeholder="Filter systems…" onInput={(event) => onFilter(event.currentTarget.value)} /></label>
+    <label class="toolbar-select"><span>Sort</span><select value={sort} onChange={(event) => onSort(event.currentTarget.value as SortMode)}><option value="smart">Smart</option><option value="name">System</option><option value="cpu">CPU</option><option value="memory">RAM</option><option value="disk">Fullest drive</option><option value="uptime">Uptime</option></select></label>
+    <details class="column-chooser"><summary>Columns</summary><div class="column-menu"><span class="column-menu-title">Visible fields</span><label><input type="checkbox" checked disabled /> System</label>{optionalColumns.map((column) => <label key={column.key}><input type="checkbox" checked={visibleColumns.has(column.key)} onChange={() => onToggleColumn(column.key)} /> {column.label}</label>)}</div></details>
+    <div class="view-switch" role="group" aria-label="Fleet view">
+      <button type="button" aria-pressed={viewMode === "cards"} title="Card view" onClick={() => onViewMode("cards")}><GridIcon /><span>Cards</span></button>
+      <button type="button" aria-pressed={viewMode === "rows"} title="Row view" onClick={() => onViewMode("rows")}><RowsIcon /><span>Rows</span></button>
+    </div>
+  </div>
 }
 
 function DetailPanel({ system, stats, range, loading, error, onRange, onReload, onClose }: {
@@ -232,6 +310,7 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
   const [fleetError, setFleetError] = useState("")
   const [historyError, setHistoryError] = useState("")
   const [viewMode, setViewMode] = useState<ViewMode>(storedViewMode)
+  const [preferences, setPreferences] = useState<FleetPreferences>(storedFleetPreferences)
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
   const historyRequest = useRef(0)
 
@@ -303,7 +382,28 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
     return () => window.removeEventListener("keydown", closeOnEscape)
   }, [closeDetails, selectedId])
 
-  const rankedSystems = useMemo(() => rankSystems(systems), [systems])
+  useEffect(() => {
+    try { localStorage.setItem(fleetPreferencesKey, JSON.stringify(preferences)) } catch { /* Storage can be unavailable in hardened browsers. */ }
+  }, [preferences])
+
+  const visibleColumns = useMemo(() => new Set(preferences.visibleColumns), [preferences.visibleColumns])
+  const rankedSystems = useMemo(() => {
+    const query = preferences.filter.trim().toLocaleLowerCase()
+    const filtered = systems.filter((system) => {
+      if (!query) return true
+      const risk = assessSystem(system)
+      return [system.name, system.status, risk.label, risk.detail, system.info.o, system.info.m].some((value) => value?.toLocaleLowerCase().includes(query))
+    })
+    if (preferences.sort === "smart") return rankSystems(filtered)
+    const value = (system: SystemRecord) => {
+      if (preferences.sort === "cpu") return system.info.cpu ?? -1
+      if (preferences.sort === "memory") return system.info.mp ?? -1
+      if (preferences.sort === "disk") return Math.max(-1, ...driveReadings(system).map((drive) => drive.value ?? -1))
+      if (preferences.sort === "uptime") return system.info.u ?? -1
+      return 0
+    }
+    return [...filtered].sort((a, b) => preferences.sort === "name" ? a.name.localeCompare(b.name, undefined, { numeric: true }) : value(b) - value(a) || a.name.localeCompare(b.name, undefined, { numeric: true }))
+  }, [preferences.filter, preferences.sort, systems])
   const selected = systems.find((system) => system.id === selectedId)
   const counts = useMemo(() => ({
     up: systems.filter((system) => system.status === "up").length,
@@ -328,20 +428,23 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
     try { localStorage.setItem(viewModeKey, mode) } catch { /* Storage can be unavailable in hardened browsers. */ }
   }
 
+  const updatePreference = <K extends keyof FleetPreferences>(key: K, value: FleetPreferences[K]) => setPreferences((current) => ({ ...current, [key]: value }))
+  const toggleColumn = (column: OptionalColumn) => setPreferences((current) => ({ ...current, visibleColumns: current.visibleColumns.includes(column) ? current.visibleColumns.filter((item) => item !== column) : [...current.visibleColumns, column] }))
+  const resizeColumn = (column: ColumnKey, width: number) => setPreferences((current) => ({ ...current, widths: { ...current.widths, [column]: Math.max(column === "drives" ? 240 : 90, Math.min(900, Math.round(width))) } }))
+  const displayedColumns: ColumnKey[] = ["system", ...optionalColumns.map((column) => column.key).filter((column) => visibleColumns.has(column))]
+  const tableMinimumWidth = displayedColumns.reduce((total, column) => total + preferences.widths[column], 0)
+
   return (
     <main class="dashboard-shell">
       <div class="topbar-dock">
         <header class="topbar">
           <div class="brand-lockup"><span class="brand-index">BL—01</span><strong>Beszel Lens</strong></div>
           <div class="topbar-actions">
-            <div class="view-switch" role="group" aria-label="Fleet view">
-              <button type="button" aria-pressed={viewMode === "cards"} title="Card view" onClick={() => changeViewMode("cards")}><GridIcon /><span>Cards</span></button>
-              <button type="button" aria-pressed={viewMode === "rows"} title="Row view" onClick={() => changeViewMode("rows")}><RowsIcon /><span>Rows</span></button>
-            </div>
             <a class="icon-button labeled" href={hubUrl} target="_blank" rel="noreferrer"><ExternalIcon /> Open Beszel</a>
             <button class="icon-button" type="button" onClick={onLogout} aria-label="Sign out" title="Sign out"><LogoutIcon /></button>
           </div>
         </header>
+        <FleetToolbar count={systems.length} filter={preferences.filter} sort={preferences.sort} viewMode={viewMode} visibleColumns={visibleColumns} onFilter={(value) => updatePreference("filter", value)} onSort={(value) => updatePreference("sort", value)} onViewMode={changeViewMode} onToggleColumn={toggleColumn} />
       </div>
 
       <section class="status-strip" aria-label="Fleet summary">
@@ -354,26 +457,23 @@ function Dashboard({ client, hubUrl, refreshIntervalSeconds, onLogout }: { clien
       {fleetError && <div class="notice" role="alert"><strong>Fleet unavailable</strong><span>{fleetError}</span><button type="button" onClick={() => void load()}>Reload fleet</button></div>}
 
       <section class="fleet-section">
-        <div class="fleet-heading">
-          <div><ServerIcon /><div><h1>Fleet priority</h1><p>Highest risk first</p></div></div>
-          <span>{systems.length} registered</span>
-        </div>
         {selected && <DetailPanel system={selected} stats={stats} range={range} loading={historyLoading} error={historyError} onRange={setRange} onReload={() => void loadHistory()} onClose={closeDetails} />}
         {loading ? (
           <div class="card-skeleton" aria-label="Loading systems"><span/><span/><span/><span/><span/><span/></div>
         ) : rankedSystems.length && viewMode === "cards" ? (
           <div class="system-grid">
-            {rankedSystems.map((system) => <SystemCard system={system} selected={selectedId === system.id} onSelect={() => selectSystem(system.id)} key={system.id} />)}
+            {rankedSystems.map((system) => <SystemCard system={system} selected={selectedId === system.id} visibleColumns={visibleColumns} onSelect={() => selectSystem(system.id)} key={system.id} />)}
           </div>
         ) : rankedSystems.length ? (
           <div class="row-view">
-            <table class="system-table">
-              <thead><tr><th scope="col">System</th><th scope="col">Condition</th><th scope="col">CPU</th><th scope="col">RAM</th><th scope="col">Drives</th></tr></thead>
-              <tbody>{rankedSystems.map((system) => <SystemRow system={system} selected={selectedId === system.id} onSelect={() => selectSystem(system.id)} key={system.id} />)}</tbody>
+            <table class="system-table" style={{ minWidth: `${tableMinimumWidth}px` }}>
+              <colgroup>{displayedColumns.map((column) => <col style={{ width: `${preferences.widths[column]}px` }} key={column} />)}</colgroup>
+              <thead><tr><ResizableHeader label="System" column="system" width={preferences.widths.system} onResize={resizeColumn} />{visibleColumns.has("condition") && <ResizableHeader label="Condition" column="condition" width={preferences.widths.condition} onResize={resizeColumn} />}{visibleColumns.has("cpu") && <ResizableHeader label="CPU" column="cpu" width={preferences.widths.cpu} onResize={resizeColumn} />}{visibleColumns.has("memory") && <ResizableHeader label="RAM" column="memory" width={preferences.widths.memory} onResize={resizeColumn} />}{visibleColumns.has("drives") && <ResizableHeader label="Drives" column="drives" width={preferences.widths.drives} onResize={resizeColumn} />}</tr></thead>
+              <tbody>{rankedSystems.map((system) => <SystemRow system={system} selected={selectedId === system.id} visibleColumns={visibleColumns} onSelect={() => selectSystem(system.id)} key={system.id} />)}</tbody>
             </table>
           </div>
         ) : (
-          <div class="empty-state"><ServerIcon /><h3>No systems found</h3><p>This account does not have access to any Beszel systems yet.</p><a href={hubUrl} target="_blank" rel="noreferrer">Open Beszel to add one <ExternalIcon /></a></div>
+          <div class="empty-state"><ServerIcon /><h3>{systems.length ? "No matching systems" : "No systems found"}</h3><p>{systems.length ? "Try a different quick filter." : "This account does not have access to any Beszel systems yet."}</p>{!systems.length && <a href={hubUrl} target="_blank" rel="noreferrer">Open Beszel to add one <ExternalIcon /></a>}</div>
         )}
       </section>
 
