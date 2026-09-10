@@ -100,11 +100,12 @@ function CompactMeter({ label, amount, warning = 75, showLabel = false }: { labe
   const meterProps = available ? { "aria-valuenow": percent } : { "aria-valuetext": "Unavailable" }
 
   return (
-    <div class={`compact-meter ${tone}`}>
-      <div class="compact-meter-label">{showLabel && <span title={label}>{label}</span>}<strong>{available ? `${rounded}%` : "—"}</strong></div>
+    <div class={`compact-meter ${tone} ${showLabel ? "labeled" : ""}`}>
+      {showLabel && <span class="compact-meter-name" title={label}>{label}</span>}
       <div class="compact-meter-track" role="meter" aria-label={`${label} usage`} aria-valuemin={0} aria-valuemax={100} {...meterProps}>
         <span style={{ transform: `scaleX(${percent / 100})` }} />
       </div>
+      <strong class="compact-meter-value">{available ? `${rounded}%` : "—"}</strong>
     </div>
   )
 }
@@ -148,7 +149,7 @@ function SystemCard({ system, selected, onSelect }: { system: SystemRecord; sele
         </div>
         <div class={`card-condition tone-${risk.tone}`}>
           <b>{risk.tone === "normal" ? "Within limits" : risk.label}</b>
-          <small>{risk.detail}</small>
+          {risk.tone !== "normal" && <small>{risk.detail}</small>}
         </div>
       </button>
       <div class="metric-bars" role="group" aria-label={`${system.name} current utilization`}>
@@ -171,7 +172,7 @@ function SystemRow({ system, selected, onSelect }: { system: SystemRecord; selec
           <span><strong title={system.name}>{system.name}</strong><small>{system.status === "up" ? `Up ${formatUptime(system.info.u)}` : system.status}</small></span>
         </button>
       </th>
-      <td class={`row-condition tone-${risk.tone}`}><strong>{risk.tone === "normal" ? "Within limits" : risk.label}</strong><small>{risk.detail}</small></td>
+      <td class={`row-condition tone-${risk.tone}`}><strong>{risk.tone === "normal" ? "Within limits" : risk.label}</strong></td>
       <td><CompactMeter label={`${system.name} CPU`} amount={system.info.cpu} /></td>
       <td><CompactMeter label={`${system.name} RAM`} amount={system.info.mp} /></td>
       <td><div class="row-drives" role="group" aria-label={`${system.name} drive utilization`}>{drives.map((drive, index) => <CompactMeter label={drive.label} amount={drive.value} warning={80} showLabel key={`${drive.label}-${index}`} />)}</div></td>
@@ -196,7 +197,7 @@ function DetailPanel({ system, stats, range, loading, error, onRange, onReload, 
         <div><span class={`status-mark ${system.status}`} /><div><h2>{system.name}</h2><p>{system.info.o || "System"}{system.info.m ? ` · ${system.info.m}` : ""}</p></div></div>
         <button class="close-button" type="button" onClick={onClose}><CloseIcon /> Close</button>
       </div>
-      <div class={`detail-alert tone-${risk.tone}`}><span>{risk.label}</span><strong>{risk.value}</strong><small>{risk.detail}</small></div>
+      <div class={`detail-alert tone-${risk.tone}`}><span>{risk.label}</span><strong>{risk.value}</strong>{risk.detail && <small>{risk.detail}</small>}</div>
       <div class="gauges">
         <Gauge label="CPU" amount={value(system.info.cpu)} />
         <Gauge label="Memory" amount={value(system.info.mp)} />

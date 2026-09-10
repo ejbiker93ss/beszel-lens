@@ -116,7 +116,7 @@ export function assessSystem(system: SystemRecord): RiskAssessment {
     ...dominant,
     score: dominant.score + Math.min(12, Math.max(0, elevated - 1) * 4),
     label: dominant.tone === "normal" ? dominant.detail.replace(/ (utilization|usage)$/, "") : dominant.label,
-    detail: dominant.tone === "normal" ? "Highest current reading" : dominant.detail,
+    detail: dominant.tone === "normal" ? "" : dominant.detail,
   }
 }
 

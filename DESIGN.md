@@ -145,7 +145,7 @@ components:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.card}"
-    rowHeight: "58px"
+    rowHeight: "42px"
 ---
 
 # Design System: Beszel Lens
@@ -240,7 +240,7 @@ Dark mode replaces the paper field with charcoal canvas and instrument surfaces 
 
 The dashboard occupies the full viewport width with fluid 10–28px horizontal padding. On precise-pointer devices, the low ruled header is a fixed overlay translated fully above the viewport; a transparent 22px top-edge proximity zone, pointer hover, or keyboard focus reveals it without moving the fleet. Touch and non-hover devices retain the header in normal flow. The rounded fleet summary therefore leads the resting desktop view directly into the priority grid. The fleet uses `auto-fill` tracks whose target minimum is itself fluid from 230px to 320px (`clamp(230px, 14vw, 320px)`), while never exceeding the available width. Gaps scale from 8px to 14px. Risk tone, weighted score, name, and stable ID determine DOM and reading order.
 
-Cards establish an inline-size container so header type and utilization-track thickness respond to the actual card width rather than only the viewport. Every CSS-grid row stretches its cards to the tallest card in that row, so systems without extra drives retain a complete aligned card surface. The navigation's Cards/Rows switch is stored locally and changes only presentation, never risk order or selection. Row mode uses a compact table with one 58px server row and columns for identity, condition, CPU, RAM, and drives; extra drives remain on the same row and overflow horizontally inside their cell when necessary. At 720px, the summary becomes three count cells with refresh spanning the next row. At 520px, the card grid becomes a single full-width column, navigation switch labels disappear while its icons retain 44px touch targets, the external action becomes icon-only, gauges stack, and range tabs stretch across the detail panel. The row table preserves its compact desktop geometry inside deliberate horizontal overflow. The history plot keeps a 520px minimum width inside deliberate horizontal overflow.
+Cards establish an inline-size container so header type and utilization-track thickness respond to the actual card width rather than only the viewport. Every CSS-grid row stretches its cards to the tallest card in that row, so systems without extra drives retain a complete aligned card surface. The navigation's Cards/Rows switch is stored locally and changes only presentation, never risk order or selection. Row mode uses a compact table with one 42px server row and columns for identity, condition, CPU, RAM, and drives; identity, condition, tracks, labels, and values all stay in one horizontal band. Extra drives remain on that same row and overflow horizontally inside their cell when necessary. At 720px, the summary becomes three count cells with refresh spanning the next row. At 520px, the card grid becomes a single full-width column, navigation switch labels disappear while its icons retain 44px touch targets, the external action becomes icon-only, gauges stack, and range tabs stretch across the detail panel. The row table preserves its compact desktop geometry inside deliberate horizontal overflow. The history plot keeps a 520px minimum width inside deliberate horizontal overflow.
 
 Selecting a card inserts a full-width detail panel between the priority heading and the card grid. The panel participates in normal document flow, remains nonmodal, and leaves every fleet card available below it. Closing the panel removes that inspection region without changing risk order.
 
@@ -306,7 +306,7 @@ Each card has three dense bands: status/name/uptime, a compact explanation of th
 
 ### Compact Row Grid
 
-Row mode is a semantic table with one server per 58px row and stable System, Condition, CPU, RAM, and Drives columns. The system-name control opens the same inline detail panel used by cards. CPU and RAM use short semantic meters; every reported drive appears as a labeled mini-meter within a single nonwrapping drives cell. The table scrolls horizontally on narrow viewports instead of collapsing columns or creating multi-line server rows.
+Row mode is a semantic table with one server per 42px row and stable System, Condition, CPU, RAM, and Drives columns. The system-name control opens the same inline detail panel used by cards. CPU and RAM place their short semantic track and value side by side; every reported drive places its label, track, and value on that same line inside one nonwrapping drives cell. Normal systems say only “Within limits,” without redundant supporting copy. The table scrolls horizontally on narrow viewports instead of collapsing columns or creating multi-line server rows.
 
 ### Utilization Bar
 
