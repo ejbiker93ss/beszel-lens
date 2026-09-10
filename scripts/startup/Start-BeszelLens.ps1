@@ -40,7 +40,9 @@ if (-not (Test-IsAdministrator)) {
 }
 
 $installedStopScript = Join-Path $InstallPath "Scripts\Stop-BeszelLens.ps1"
-if (Test-Path -LiteralPath $installedStopScript -PathType Leaf) {
+$installedServeScript = Join-Path $InstallPath "Scripts\Serve-BeszelLens.ps1"
+if ((Test-Path -LiteralPath $installedStopScript -PathType Leaf) -and
+    (Test-Path -LiteralPath $installedServeScript -PathType Leaf)) {
     & $installedStopScript -InstallPath $InstallPath
 }
 if (-not $SkipUpdate) {
