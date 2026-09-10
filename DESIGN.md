@@ -18,6 +18,26 @@ colors:
   neutral-wash: "#efeee7"
   warning-wash: "#fff0e8"
   error-wash: "#fff0ef"
+  dark-paper: "#1b1d1a"
+  dark-paper-raised: "#232620"
+  dark-canvas: "#121311"
+  dark-ink: "#f1f0e8"
+  dark-muted-ink: "#aaa99f"
+  dark-rule: "#373a34"
+  dark-rule-strong: "#5b5f56"
+  dark-cobalt: "#86a5ff"
+  dark-indigo: "#aeb9dc"
+  dark-healthy-green: "#4ec690"
+  dark-elevated-gold: "#d9ad45"
+  dark-warning-orange: "#f08a51"
+  dark-critical-red: "#f06b73"
+  dark-surface-hover: "#292c26"
+  dark-track: "#343730"
+  dark-neutral-wash: "#262923"
+  dark-warning-wash: "#38271f"
+  dark-warning-ink: "#ffb27f"
+  dark-error-wash: "#382123"
+  dark-error-ink: "#ffafb4"
 typography:
   display:
     fontFamily: "Archivo Variable, sans-serif"
@@ -129,13 +149,15 @@ components:
 
 **Creative North Star: "The Risk Calibration Index"**
 
-Beszel Lens is a warm, compact field of live instrument cards that uses the full viewport rather than stopping at an arbitrary desktop container. It keeps the calibration-sheet precision of muted paper, exact rules, terse labels, and cobalt measurement ink, then makes the fleet easier to scan through restrained rounding and a risk-driven reading order. The result feels operational and composed rather than decorative.
+Beszel Lens is a compact field of live instrument cards that uses the full viewport rather than stopping at an arbitrary desktop container. It keeps the calibration-sheet precision of muted paper by day and charcoal instrument surfaces at night, with exact rules, terse labels, and cobalt measurement ink. The result feels operational and composed rather than decorative.
 
 The interface leads with the system that needs attention most. Each card explains why it holds that position in one compact condition line, then exposes CPU, RAM, the primary disk, and every extra drive as semantic utilization bars. Neutral cards form the steady baseline; exception color appears at the border, condition, and individual bars only when warranted. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.
 
 **Key Characteristics:**
 
 - A full-viewport auto-fill grid fluidly targets 230–320px cards and puts the highest-risk system first.
+- Automatic light and dark palettes follow the operating system without a manual mode toggle.
+- Desktop navigation stays off-canvas until the pointer reaches the top edge or keyboard focus enters it; touch navigation remains visible.
 - Warm neutral surfaces carry normal state; color is concentrated on interaction and exceptions.
 - Fourteen-pixel cards and nine-pixel controls soften the instrument language without becoming pill-heavy.
 - Compact condition copy explains rank without a large risk number.
@@ -144,7 +166,7 @@ The interface leads with the system that needs attention most. Each card explain
 
 ## Colors
 
-The palette preserves archival neutrals and cobalt interaction ink while assigning a discrete green/gold/orange/red sequence to utilization severity.
+The palette preserves archival neutrals and cobalt interaction ink while assigning a discrete green/gold/orange/red sequence to utilization severity. Every role has a dark counterpart selected with `prefers-color-scheme`.
 
 ### Primary
 
@@ -171,6 +193,10 @@ The palette preserves archival neutrals and cobalt interaction ink while assigni
 - **Rule and Strong Rule:** Two levels of quiet structure for card borders, dividers, and controls.
 - **Neutral Wash:** The normal risk-summary field and neutral hover fill.
 - **Warning and Error Washes:** Localized fields inside the detail panel and inline error boundaries.
+
+### Automatic Dark Theme
+
+Dark mode replaces the paper field with charcoal canvas and instrument surfaces while lifting text, rules, cobalt, and semantic telemetry colors for contrast. Tracks and localized washes remain darker than their surrounding surface. Browser form controls, selection, scrollbars, and the browser theme color follow the same system preference; there is no stored application override.
 
 ### Named Rules
 
@@ -206,7 +232,7 @@ The palette preserves archival neutrals and cobalt interaction ink while assigni
 
 ## Layout
 
-The dashboard occupies the full viewport width with fluid 10–28px horizontal padding. A low ruled header leads into a rounded four-cell fleet summary and then the priority heading. The fleet uses `auto-fill` tracks whose target minimum is itself fluid from 230px to 320px (`clamp(230px, 14vw, 320px)`), while never exceeding the available width. Gaps scale from 8px to 14px. Risk tone, weighted score, name, and stable ID determine DOM and reading order.
+The dashboard occupies the full viewport width with fluid 10–28px horizontal padding. On precise-pointer devices, the low ruled header is a fixed overlay translated fully above the viewport; a transparent 22px top-edge proximity zone, pointer hover, or keyboard focus reveals it without moving the fleet. Touch and non-hover devices retain the header in normal flow. The rounded fleet summary therefore leads the resting desktop view directly into the priority grid. The fleet uses `auto-fill` tracks whose target minimum is itself fluid from 230px to 320px (`clamp(230px, 14vw, 320px)`), while never exceeding the available width. Gaps scale from 8px to 14px. Risk tone, weighted score, name, and stable ID determine DOM and reading order.
 
 Cards establish an inline-size container so header type and utilization-track thickness respond to the actual card width rather than only the viewport. At 720px, the summary becomes three count cells with refresh spanning the next row. At 520px, the grid becomes a single full-width column, the external action becomes icon-only, gauges stack, and range tabs stretch across the detail panel. The history plot keeps a 520px minimum width inside deliberate horizontal overflow.
 
@@ -262,7 +288,7 @@ Circular geometry is reserved for live indicators and motion tracks: status mark
 
 ### Navigation
 
-The top bar is a low, bottom-ruled instrument header. The brand index uses cobalt mono text; product name and actions remain neutral. External navigation is labeled on wider screens and collapses to a 40px icon target below 520px.
+The top bar is a low, bottom-ruled instrument header. On mouse and trackpad systems it remains completely off-canvas until the pointer reaches the top 22px or focus enters a control, then arrives as a fixed overlay with a short ease-out transition. It hides again when pointer and focus leave. Touch systems keep it visible so navigation never depends on hover. The brand index uses cobalt mono text; product name and actions remain neutral. External navigation is labeled on wider screens and collapses to a 40px icon target below 520px.
 
 ### Fleet Summary
 
@@ -297,6 +323,8 @@ Gauges use five-pixel fully capped tracks. Fill changes from cobalt to warning o
 - **Do** use 14px cards, 9px controls, and full caps for status and progress geometry.
 - **Do** inspect a selected system in the inline panel above the grid while preserving the risk-ranked card order.
 - **Do** honor reduced-motion preferences while keeping default transitions brief and mechanical.
+- **Do** follow the operating-system color preference and preserve semantic meaning and contrast in both palettes.
+- **Do** keep top-bar actions keyboard-accessible and permanently visible on devices without hover.
 
 ### Don't:
 
@@ -308,3 +336,4 @@ Gauges use five-pixel fully capped tracks. Fill changes from cobalt to warning o
 - **Don't** add elevation to resting cards or summary cells.
 - **Don't** collapse the chart's information density on mobile; preserve the plot and allow deliberate horizontal inspection.
 - **Don't** imply that Beszel Lens replaces Beszel administration or is an official Beszel product.
+- **Don't** make critical navigation depend on hover for touch or keyboard users.

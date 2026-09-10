@@ -25,6 +25,8 @@ Lens connects directly from your browser to an existing Beszel Hub. It leaves co
 - Receive current system updates through PocketBase realtime events.
 - Jump back to Beszel for administration.
 - Use the full browser width with a fluid card grid that grows readings when space is available and collapses cleanly on mobile.
+- Follow the operating system's light or dark appearance automatically.
+- Keep desktop navigation out of the way until the pointer reaches the top edge, while preserving visible controls on touch devices.
 
 ## Run locally
 

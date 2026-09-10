@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-10T11:13:02.2169762-05:00",
+  "generatedAt": "2026-09-10T12:00:00-05:00",
   "title": "Design System: Beszel Lens",
   "extensions": {
     "colorMeta": {
@@ -21,6 +21,11 @@
       "warning-wash": { "role": "neutral", "displayName": "Warning Wash", "canonical": "#fff0e8", "tonalRamp": ["oklch(15% 0.03 48)", "oklch(27% 0.04 48)", "oklch(39% 0.05 48)", "oklch(51% 0.055 48)", "oklch(63% 0.05 48)", "oklch(75% 0.04 48)", "oklch(87% 0.025 48)", "oklch(95% 0.012 48)"] },
       "error-wash": { "role": "neutral", "displayName": "Error Wash", "canonical": "#fff0ef", "tonalRamp": ["oklch(15% 0.025 24)", "oklch(27% 0.035 24)", "oklch(39% 0.045 24)", "oklch(51% 0.05 24)", "oklch(63% 0.045 24)", "oklch(75% 0.035 24)", "oklch(87% 0.02 24)", "oklch(95% 0.01 24)"] }
     },
+    "themeModes": {
+      "strategy": "Automatic via prefers-color-scheme with no stored override.",
+      "light": { "canvas": "#e8e7df", "paper": "#f8f7f1", "ink": "#171713", "muted": "#68675f", "rule": "#c9c7ba", "track": "#d8d6cc", "cobalt": "#244fc7", "green": "#217451", "gold": "#9b7211", "orange": "#c95416", "red": "#b92f38" },
+      "dark": { "canvas": "#121311", "paper": "#1b1d1a", "paperRaised": "#232620", "ink": "#f1f0e8", "muted": "#aaa99f", "rule": "#373a34", "ruleStrong": "#5b5f56", "track": "#343730", "cobalt": "#86a5ff", "indigo": "#aeb9dc", "green": "#4ec690", "gold": "#d9ad45", "orange": "#f08a51", "red": "#f06b73", "surfaceHover": "#292c26", "neutralWash": "#262923", "warningWash": "#38271f", "warningInk": "#ffb27f", "errorWash": "#382123", "errorInk": "#ffafb4" }
+    },
     "typographyMeta": {
       "display": { "displayName": "Connection Display", "purpose": "The Beszel Lens title on the connection sheet." },
       "signal": { "displayName": "Detail Risk Signal", "purpose": "The dominant risk value inside the expanded detail alert only." },
@@ -40,6 +45,7 @@
       { "name": "card-response", "value": "150ms ease-out", "purpose": "Card border, surface, lift, and shadow response." },
       { "name": "control-response", "value": "160ms ease-out", "purpose": "Primary button color and press response." },
       { "name": "detail-entry", "value": "220ms cubic-bezier(.16, 1, .3, 1)", "purpose": "Short downward arrival of the inline detail panel." },
+      { "name": "topbar-reveal", "value": "220ms cubic-bezier(.16, 1, .3, 1)", "purpose": "Reveals desktop navigation from the top edge without moving dashboard content." },
       { "name": "gauge-calibration", "value": "350ms cubic-bezier(.2,.8,.2,1)", "purpose": "Gauge fill changes." },
       { "name": "reduced-motion", "value": "0.01ms", "purpose": "Effective motion removal when reduced motion is requested." }
     ],
@@ -68,7 +74,7 @@
     {
       "name": "Instrument Navigation",
       "kind": "nav",
-      "description": "The low ruled product header and compact external action.",
+      "description": "A low ruled product header that hides off-canvas on precise-pointer devices, reveals from a 22px top-edge zone or keyboard focus, and remains visible on touch devices.",
       "html": "<nav class=\"ds-nav\"><div class=\"ds-nav-brand\"><span>BL—01</span><strong>Beszel Lens</strong></div><button class=\"ds-nav-action\">↗ OPEN BESZEL</button></nav>",
       "css": ".ds-nav { min-height: 54px; padding: 0 4px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line-strong, #98968b); color: var(--ink, #171713); } .ds-nav-brand { display: flex; align-items: center; gap: 14px; } .ds-nav-brand span { color: var(--blue, #244fc7); font: 700 .75rem/1 ui-monospace, Consolas, monospace; letter-spacing: .08em; } .ds-nav-brand strong { font: 700 1.02rem/1.2 ui-sans-serif, system-ui, sans-serif; letter-spacing: -.02em; } .ds-nav-action { min-height: 38px; padding: 0 12px; border: 1px solid transparent; border-radius: var(--radius-control, 9px); background: transparent; color: inherit; font: 700 .8125rem/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-nav-action:hover { border-color: var(--line-strong, #98968b); background: var(--paper, #f8f7f1); } .ds-nav-action:focus-visible { outline: 3px solid rgba(36,79,199,.35); outline-offset: 2px; }"
     },
@@ -114,9 +120,11 @@
   ],
   "narrative": {
     "northStar": "The Risk Calibration Index",
-    "overview": "Beszel Lens is a warm, compact field of live instrument cards that uses the full viewport rather than stopping at an arbitrary desktop container. It keeps the calibration-sheet precision of muted paper, exact rules, terse labels, and cobalt measurement ink, then makes the fleet easier to scan through restrained rounding and a risk-driven reading order. The result feels operational and composed rather than decorative.\n\nThe interface leads with the system that needs attention most. Each card explains why it holds that position in one compact condition line, then exposes CPU, RAM, the primary disk, and every extra drive as semantic utilization bars. Neutral cards form the steady baseline; exception color appears at the border, condition, and individual bars only when warranted. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order. Motion is short and mechanical: cards lift by one pixel, the detail panel settles into place, gauges calibrate, and loading bars scan.",
+    "overview": "Beszel Lens is a compact field of live instrument cards that uses the full viewport rather than stopping at an arbitrary desktop container. Its calibration-sheet precision adapts from warm paper by day to charcoal instrument surfaces at night through the operating-system color preference.\n\nThe interface leads with the system that needs attention most. Each card explains why it holds that position, then exposes CPU, RAM, the primary disk, and every extra drive as semantic utilization bars. On precise-pointer desktops the navigation bar stays off-canvas until the pointer reaches the top edge or keyboard focus enters it; touch devices keep it visible. Selecting a card expands a nonmodal inspection panel directly above the grid while preserving the fleet's ranked order.",
     "keyCharacteristics": [
       "A full-viewport auto-fill grid fluidly targets 230–320px cards and puts the highest-risk system first.",
+      "Automatic light and dark palettes follow the operating system without a manual toggle.",
+      "Desktop navigation reveals from the top edge while touch navigation remains visible.",
       "Warm neutral surfaces carry normal state; color is concentrated on interaction and exceptions.",
       "Fourteen-pixel cards and nine-pixel controls soften the instrument language without becoming pill-heavy.",
       "Compact condition copy explains rank without a large risk number.",
@@ -141,7 +149,9 @@
       "Do keep normal card surfaces neutral and concentrate exception color on borders, conditions, individual bars, and localized alerts.",
       "Do use 14px cards, 9px controls, and full caps for status and progress geometry.",
       "Do inspect a selected system in the inline panel above the grid while preserving the risk-ranked card order.",
-      "Do honor reduced-motion preferences while keeping default transitions brief and mechanical."
+      "Do honor reduced-motion preferences while keeping default transitions brief and mechanical.",
+      "Do follow the operating-system color preference and preserve semantic contrast in both palettes.",
+      "Do keep top-bar actions keyboard-accessible and permanently visible on devices without hover."
     ],
     "donts": [
       "Don't turn the fleet back into a sequential table or manually arranged dashboard grid.",
@@ -151,7 +161,8 @@
       "Don't use pill shapes for text actions, cards, or general containers.",
       "Don't add elevation to resting cards or summary cells.",
       "Don't collapse the chart's information density on mobile; preserve the plot and allow deliberate horizontal inspection.",
-      "Don't imply that Beszel Lens replaces Beszel administration or is an official Beszel product."
+      "Don't imply that Beszel Lens replaces Beszel administration or is an official Beszel product.",
+      "Don't make critical navigation depend on hover for touch or keyboard users."
     ]
   }
 }

@@ -263,13 +263,15 @@ function Dashboard({ client, hubUrl, onLogout }: { client: PocketBase; hubUrl: s
 
   return (
     <main class="dashboard-shell">
-      <header class="topbar">
-        <div class="brand-lockup"><span class="brand-index">BL—01</span><strong>Beszel Lens</strong></div>
-        <div class="topbar-actions">
-          <a class="icon-button labeled" href={hubUrl} target="_blank" rel="noreferrer"><ExternalIcon /> Open Beszel</a>
-          <button class="icon-button" type="button" onClick={onLogout} aria-label="Sign out" title="Sign out"><LogoutIcon /></button>
-        </div>
-      </header>
+      <div class="topbar-dock">
+        <header class="topbar">
+          <div class="brand-lockup"><span class="brand-index">BL—01</span><strong>Beszel Lens</strong></div>
+          <div class="topbar-actions">
+            <a class="icon-button labeled" href={hubUrl} target="_blank" rel="noreferrer"><ExternalIcon /> Open Beszel</a>
+            <button class="icon-button" type="button" onClick={onLogout} aria-label="Sign out" title="Sign out"><LogoutIcon /></button>
+          </div>
+        </header>
+      </div>
 
       <section class="status-strip" aria-label="Fleet summary">
         <div><span>Systems</span><strong>{systems.length}</strong></div>
