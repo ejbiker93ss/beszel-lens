@@ -16,6 +16,8 @@ Or run `scripts\Publish-BeszelLens.cmd` to build and copy in one step. The defau
 - Local package: `output\BeszelLens`
 - Internal app share: supplied with `-SharePath` or the `BESZEL_LENS_SHARE` environment variable
 
+For a repeatable local setup, copy `deployment.local.example.json` to `deployment.local.json` and set `FileSharePath`. The local file is ignored by Git, so private deployment topology does not enter the public repository.
+
 The build script runs `npm ci`, the production Vite build, packages only the static site and Docker runtime files, and writes `publish-manifest.json`.
 
 ## Install or update

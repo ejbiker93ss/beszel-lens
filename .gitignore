@@ -2,6 +2,7 @@ node_modules/
 dist/
 output/
 artifacts/
+deployment.local.json
 .env
 .DS_Store
 *.local

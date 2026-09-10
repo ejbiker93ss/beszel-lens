@@ -14,7 +14,14 @@ if ([string]::IsNullOrWhiteSpace($SharePath)) {
     $SharePath = $env:BESZEL_LENS_SHARE
 }
 if ([string]::IsNullOrWhiteSpace($SharePath)) {
-    throw "Provide -SharePath or set the BESZEL_LENS_SHARE environment variable."
+    $localSettingsPath = Join-Path $repoRoot "deployment.local.json"
+    if (Test-Path -LiteralPath $localSettingsPath -PathType Leaf) {
+        $localSettings = Get-Content -LiteralPath $localSettingsPath -Raw | ConvertFrom-Json
+        $SharePath = [string]$localSettings.FileSharePath
+    }
+}
+if ([string]::IsNullOrWhiteSpace($SharePath)) {
+    throw "Provide -SharePath, set BESZEL_LENS_SHARE, or create deployment.local.json from the example."
 }
 
 if (-not (Test-Path -LiteralPath (Join-Path $OutputPath "App\index.html") -PathType Leaf)) {

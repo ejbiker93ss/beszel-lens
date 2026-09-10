@@ -82,7 +82,7 @@ The repository includes a build/package/file-share workflow for internal Windows
 .\scripts\Copy-BeszelLensOutputToFileServer.ps1
 ```
 
-Run `scripts\Publish-BeszelLens.cmd -SharePath "\\server\share\Beszel Lens"` to perform both steps, or set `BESZEL_LENS_SHARE` for a local deployment environment. On the target computer, run the package's root `Start-BeszelLens.cmd`; it installs under `C:\BeszelLens`, preserves machine-local settings across updates, and starts the Docker container.
+Run `scripts\Publish-BeszelLens.cmd -SharePath "\\server\share\Beszel Lens"` to perform both steps. For repeat use, copy `deployment.local.example.json` to the ignored `deployment.local.json` and set `FileSharePath`; the publish command can then be double-clicked without arguments. `BESZEL_LENS_SHARE` is also supported. On the target computer, run the package's root `Start-BeszelLens.cmd`; it installs under `C:\BeszelLens`, preserves machine-local settings across updates, and starts the Docker container.
 
 See [deployment notes](docs/deployment.md) for settings, update behavior, and prerequisites.
 
