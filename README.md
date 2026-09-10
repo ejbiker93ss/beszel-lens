@@ -33,13 +33,48 @@ npm run dev
 
 Open the printed local URL and enter your Beszel Hub URL and user credentials.
 
-## Production build
+## Self-host with Docker
+
+The container builds the static app and serves it as an unprivileged Nginx process on port `8080`.
+
+```bash
+docker compose up -d --build
+```
+
+Open `http://your-server:8080`, or put the container behind your existing internal HTTPS reverse proxy. No environment variables, database, volumes, or outbound server access are required.
+
+Example Caddy route:
+
+```caddyfile
+lens.internal.example {
+    reverse_proxy 127.0.0.1:8080
+}
+```
+
+Example Nginx route:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name lens.internal.example;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+When you open Lens, enter the internal HTTPS URL of your Beszel Hub. The browser running Lens must be able to resolve and reach that address.
+
+## Manual production build
 
 ```bash
 npm run build
 ```
 
-Serve the generated `dist` directory from any static host. If the dashboard and Beszel Hub use different origins, your proxy and Beszel deployment must allow the browser to reach the Hub API.
+Serve the generated `dist` directory from any internal static host. If the dashboard and Beszel Hub use different origins, your proxy and Beszel deployment must allow the browser to reach the Hub API.
 
 ## Security
 

@@ -1,0 +1,7 @@
+.git
+.impeccable
+.openai
+dist
+node_modules
+*.tsbuildinfo
+npm-debug.log*
