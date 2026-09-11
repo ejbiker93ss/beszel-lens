@@ -247,7 +247,7 @@ a { color: inherit; text-underline-offset: 3px; }
 .system-row.selected { background: color-mix(in srgb, var(--blue) 9%, var(--paper)); }
 .row-open { appearance: none; width: 100%; min-width: 0; padding: 2px 0; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 9px; border: 0; border-radius: var(--radius-control); background: transparent; text-align: left; cursor: pointer; }
 .row-open > span:last-child { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 8px; }
-.row-open strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.78rem; }
+.row-open strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.92rem; line-height: 1.05; letter-spacing: -0.02em; }
 .row-open small { color: var(--muted); font: 0.59rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; text-transform: capitalize; white-space: nowrap; }
 .row-condition { min-width: 0; }
 .row-condition strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
